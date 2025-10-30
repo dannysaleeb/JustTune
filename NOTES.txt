@@ -2,13 +2,12 @@ STRUCTURE
 
 just-tune/
 ├─ node_modules/
-├─ public/
 ├─ src/
 │  ├─ components/
 │  ├─ audio/
 │  ├─ classes/
 │  ├─ utils/
-│  ├─ App.jsx
+│  ├─ App.jsx (this is the main program)
 │  └─ main.jsx
 ├─ package.json
 └─ vite.config.js
