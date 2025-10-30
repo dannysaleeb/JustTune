@@ -13,8 +13,18 @@ just-tune/
 ├─ package.json
 └─ vite.config.js
 
+# A list here of each elements input / output would make sense?
+e.g. piano takes touch/mouse in, outputs MIDI note (in format ...)
+
 # components
 - piano
-- staff display
+- notation: staff display
+- partialselector
+- centdeviationcontrol
+- playback
+
+# utils
+- partials.js # for returning partials from fundamental + partial numbers + input cent deviation
+
 # audio
 # classes
