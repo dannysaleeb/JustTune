@@ -22,12 +22,12 @@ e.g. piano takes touch/mouse in, outputs MIDI note (in format ...)
 # components
 - piano
 - notation: staff display
-- partialselector
+- partialselector: for partials selection by user
 - centdeviationcontrol
 - playback
 
 # utils
-- partials.js # for returning partial note names from fundamental (change to MIDI note in > freq. out?) + partial numbers + input cent deviation
+- partials.js # for returning partial note names from fundamental (change to MIDI note in > freq. out??) + partial numbers + input cent deviation
 
 # audio
 # classes
