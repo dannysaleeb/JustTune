@@ -3,6 +3,7 @@ STRUCTURE
 just-tune/
 ├─ node_modules/
 ├─ src/
+│  ├─ assets/
 │  ├─ components/
 │  ├─ audio/
 │  ├─ classes/
@@ -14,6 +15,9 @@ just-tune/
 
 # A list here of each elements input / output would make sense?
 e.g. piano takes touch/mouse in, outputs MIDI note (in format ...)
+
+# assets
+- for fonts / images etc.
 
 # components
 - piano
