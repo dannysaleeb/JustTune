@@ -1,0 +1,20 @@
+STRUCTURE
+
+just-tune/
+├─ node_modules/
+├─ public/
+├─ src/
+│  ├─ components/
+│  ├─ audio/
+│  ├─ classes/
+│  ├─ utils/
+│  ├─ App.jsx
+│  └─ main.jsx
+├─ package.json
+└─ vite.config.js
+
+# components
+- piano
+- staff display
+# audio
+# classes
