@@ -5,8 +5,6 @@ just-tune/
 ├─ src/
 │  ├─ assets/
 │  ├─ components/
-│  ├─ audio/
-│  ├─ classes/
 │  ├─ utils/
 │  ├─ App.jsx (this is the main program)
 │  └─ main.jsx
@@ -20,14 +18,11 @@ e.g. piano takes touch/mouse in, outputs MIDI note (in format ...)
 - for fonts / images etc.
 
 # components
-- piano
-- notation: staff display
-- partialselector: for partials selection by user
-- centdeviationcontrol
-- playback
+- piano (piano keyboard user input)
+- notation (staff display)
+- partialselector (for partials selection by user)
+- centdeviationcontrol (for user input cent deviation)
+- playback (for audio)
 
 # utils
 - partials.js # for returning partial note names from fundamental (change to MIDI note in > freq. out??) + partial numbers + input cent deviation
-
-# audio
-# classes
