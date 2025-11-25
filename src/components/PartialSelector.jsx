@@ -1,3 +1,5 @@
+// this seems to work
+
 import React, { useState, useEffect } from "react";
 
 // max partials 6 at the minute
@@ -92,3 +94,4 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
 }
 
 export default PartialSelector;
+
