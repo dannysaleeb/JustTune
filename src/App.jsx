@@ -55,8 +55,7 @@ function App() {
 
       {/* Placeholder notation: removed from app as printing everything anyway */}
 
-      {/* Continuous playback: this will now hear the adjusted frequency */}
-      <Playback note={note} partials={partials} />
+      {/* Placeholder playback */}
 
       {/* Partial selector */}
       <PartialSelector
