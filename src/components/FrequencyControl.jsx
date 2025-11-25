@@ -1,0 +1,1 @@
+// problems with feedback loops updating the fundamental - react doesn't think the fundamental has changed if you just change the freq?

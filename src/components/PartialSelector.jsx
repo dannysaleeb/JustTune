@@ -1,54 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-// for choosing the partials
+// max partials 6 at the minute
+function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
+  const [selectedPartials, setSelectedPartials] = useState([]);
 
-function PartialSelector({ partials, onChange }) {
-  // Store local input as a string
-  const [inputValue, setInputValue] = useState(partials.join(","));
+  // update partials if the fundamental changes
+  useEffect(() => {
+    if (!fundamental) return;
 
-  const handleSetPartials = () => {
-    // Split input by commas, trim spaces, convert to numbers
-    const parsed = inputValue
-      .split(",")
-      .map((p) => parseInt(p.trim(), 10))
-      .filter((p) => !isNaN(p) && p > 0); // keep only positive numbers
+    setSelectedPartials((prev) =>
+      prev
+        .map((p) => fundamental.getPartial(p.partialNumber))
+        .sort((a, b) => a.partialNumber - b.partialNumber) // sorting by partial number
+    );
+  }, [fundamental]);
 
-    if (parsed.length > 0) {
-      onChange(parsed);
-    }
+  // Notify parent when selectedPartials changes
+  useEffect(() => {
+    onChange?.(
+      [...selectedPartials].sort((a, b) => a.partialNumber - b.partialNumber)
+    );
+  }, [selectedPartials, onChange]);
+
+  const toggle = (partialNumber) => {
+    if (!fundamental) return;
+
+    setSelectedPartials((prev) => {
+      const existsIndex = prev.findIndex((p) => p.partialNumber === partialNumber);
+      let newSelected = [...prev];
+
+      if (existsIndex !== -1) {
+        // Deselect
+        newSelected.splice(existsIndex, 1);
+      } else if (prev.length < maxPartials) {
+        // Select only if under max 6
+        newSelected.push(fundamental.getPartial(partialNumber));
+      }
+
+      // sort results by partialNumber, I suppose this is how we'll notate?
+      return newSelected.sort((a, b) => a.partialNumber - b.partialNumber);
+    });
   };
 
+  const selectedSet = new Set(selectedPartials.map((p) => p.partialNumber));
+  const maxReached = selectedPartials.length >= maxPartials;
+
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <label>
-        Partials: (comma separated)
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="e.g. 1,2,3"
-          style={{
-            marginLeft: "5px",
-            padding: "4px 8px",
-            fontSize: "14px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            width: "120px",
-          }}
-        />
-      </label>
-      <button
-        onClick={handleSetPartials}
-        style={{
-          marginLeft: "10px",
-          padding: "4px 8px",
-          fontSize: "14px",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Set Partials
-      </button>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(8, 1fr)",
+        gap: "6px",
+        width: "100%",
+        maxWidth: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      {Array.from({ length: 24 }, (_, i) => i + 1).map((num) => {
+        const isSelected = selectedSet.has(num);
+        const disabled = !isSelected && maxReached; // disabling clicking on the grid if max selected (better?)
+
+        return (
+          <div
+            key={num}
+            onClick={() => !disabled && toggle(num)}
+            style={{
+              aspectRatio: "1",
+              minWidth: "30px",
+              maxWidth: "50px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: disabled ? "not-allowed" : "pointer",
+              borderRadius: "4px",
+              userSelect: "none",
+              WebkitTapHighlightColor: "transparent",
+              backgroundColor: isSelected ? "#4CAF50" : disabled ? "#ccc" : "#eee",
+              color: isSelected ? "white" : disabled ? "rgb(160,160,160)" : "black",
+              border: "1px solid #ccc",
+              fontSize: "14px",
+              boxSizing: "border-box",
+              transition: "background-color 0.15s ease",
+            }}
+          >
+            {num}
+          </div>
+        );
+      })}
     </div>
   );
 }
