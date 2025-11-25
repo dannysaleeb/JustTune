@@ -1,3 +1,5 @@
+// ignore this should be completely rewritten
+
 import React from "react";
 
 function Notation({ fundamental, partials }) {
@@ -49,5 +51,6 @@ function Notation({ fundamental, partials }) {
     </div>
   );
 }
+
 
 export default Notation;
