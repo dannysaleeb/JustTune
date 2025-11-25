@@ -1,12 +1,6 @@
 // this import is mental, there is probably a better way
 import * as Tone from "tone";
-import fs from "node:fs/promises";
-
-const keys = JSON.parse(
-    await fs.readFile(
-        new URL("../assets/keys.json", import.meta.url)
-    )
-);
+import keys from "../assets/keys.json"; // import is different for the app, just need this (removed json parse...)
 
 // GLOBALS (can live here)
 const NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -154,38 +148,10 @@ class Note {
     }
 }
 
-
-//-----------------//
-// USAGE / TESTING //
-//-----------------//
-
-// KEYBOARD SELECTION
-const midikey = 37; // represents partialNum 3 button pressed
-
-// print first 5 partial note information and frequency values from related midikey selection
-const f = new Fundamental(midikey);
-
-for (let partialButton=1; partialButton < 6; partialButton++) {
-  const partial = f.getPartial(partialButton);
-  console.log(partial.note);
-  console.log(`frequency: ${partial.frequency}`)
-}
-
-// adjust fundamental frequency by cents amount
-f.adjustFreqByCents(50);
-
-console.log("=================");
-console.log("=================");
-
-// reprint first 5 partials
-for (let partialButton=1; partialButton < 6; partialButton++) {
-  const partial = f.getPartial(partialButton);
-  console.log(partial.note);
-  console.log(`frequency: ${partial.frequency}`)
-}
-
+export { Partial, Fundamental, Note }; // removed test and added this line (only change except for import keys) //
 
 // to do:
 // add function for enharmonic re-spelling
 // defend for non-partials etc. / general tidying up
 // actual notes on a stave..........
+
