@@ -1,45 +1,77 @@
-// import the different elements
 import { useState, useEffect } from "react";
-import { getPartialFrequency } from "./utils/partials";
 import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
-import CentDeviationControl from "./components/CentDeviationControl";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
 
 function App() {
+  const [fundamental, setFundamental] = useState(null);
+  const [partials, setPartials] = useState([]);
   const [note, setNote] = useState("C4");
-  const [partials, setPartials] = useState([1]);
-  const [centDeviation, setCentDeviation] = useState(0);
   const [results, setResults] = useState([]);
 
-  // Recalculate partial frequencies whenever inputs change --- keep everything updating whenever anything changes?
+  // Debug logging for fundamental
   useEffect(() => {
-    if (!note || partials.length === 0) {
-      setResults([]);
-      return;
+    if (fundamental) {
+      console.log("Current Fundamental:", {
+        frequency: fundamental.frequency,
+        octave: fundamental.octave,
+        name: fundamental.name,
+        degree: fundamental.degree,
+        key: fundamental.key,
+      });
     }
+  }, [fundamental]);
 
-    const res = partials.map((p) => getPartialFrequency(note, p, centDeviation));
-    setResults(res);
-  }, [note, partials, centDeviation]);
+  // Debug logging for partials
+  useEffect(() => {
+    if (partials.length > 0) {
+      console.log(
+        "Selected Partials:",
+        partials.map((p) => ({
+          partialNumber: p.partialNumber,
+          frequency: p.frequency,
+          note: p.note,
+        }))
+      );
+    }
+  }, [partials]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+    <div
+      style={{
+        padding: "20px",
+        fontFamily: "sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        gap: "25px",
+        boxSizing: "border-box",
+        width: "100%",
+        maxWidth: "100vw",
+        overflowX: "hidden",
+      }}
+    >
+      {/* Placeholder Frequency adjustments: to do */}
 
-      {/* Input components */}
-      <Piano note={note} onChange={setNote} />
-      <PartialSelector partials={partials} onChange={setPartials} />
-      <CentDeviationControl
-        centDeviation={centDeviation}
-        onChange={setCentDeviation}
+      {/* Placeholder notation: removed from app as printing everything anyway */}
+
+      {/* Continuous playback: this will now hear the adjusted frequency */}
+      <Playback note={note} partials={partials} />
+
+      {/* Partial selector */}
+      <PartialSelector
+        fundamental={fundamental}
+        maxPartials={6}
+        onChange={setPartials}
       />
 
-      {/* Display results */}
-      {results.length > 0 && <Notation results={results} />}
-
-      {/* Continuous playback */}
-      <Playback note={note} partials={partials} centDeviation={centDeviation} />
+      {/* Piano selects a new Fundamental */}
+      <Piano
+        onChange={(f) => {
+          setFundamental(f);
+          setNote(`${f.name}${f.octave}`);
+        }}
+      />
     </div>
   );
 }
