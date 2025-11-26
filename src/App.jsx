@@ -3,11 +3,12 @@ import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
+import FrequencyControl from "./components/FrequencyControl";
 
 function App() {
   const [fundamental, setFundamental] = useState(null);
   const [partials, setPartials] = useState([]);
-  const [note, setNote] = useState("C4");
+  const [note, setNote] = useState(null);   // was "C4" — now correct for no selection
   const [results, setResults] = useState([]);
 
   // Debug logging for fundamental
@@ -20,6 +21,8 @@ function App() {
         degree: fundamental.degree,
         key: fundamental.key,
       });
+    } else {
+      console.log("Fundamental cleared");
     }
   }, [fundamental]);
 
@@ -34,6 +37,8 @@ function App() {
           note: p.note,
         }))
       );
+    } else {
+      console.log("No partials selected");
     }
   }, [partials]);
 
@@ -51,11 +56,13 @@ function App() {
         overflowX: "hidden",
       }}
     >
-      {/* Placeholder Frequency adjustments: to do */}
-
-      {/* Placeholder notation: removed from app as printing everything anyway */}
-
-      {/* Placeholder playback */}
+      {/* Frequency adjustments */}
+      <FrequencyControl
+        fundamental={fundamental}
+        onChange={setFundamental}
+      />
+	  
+	  {/* Placeholder for notation */}
 
       {/* Partial selector */}
       <PartialSelector
@@ -63,12 +70,19 @@ function App() {
         maxPartials={6}
         onChange={setPartials}
       />
+	  
+	  {/* Audio Playback */}
+	  <Playback partials={partials} />
 
-      {/* Piano selects a new Fundamental */}
+      {/* Piano selects (or clears) the fundamental */}
       <Piano
         onChange={(f) => {
           setFundamental(f);
-          setNote(`${f.name}${f.octave}`);
+          if (f) {
+            setNote(`${f.name}${f.octave}`);
+          } else {
+            setNote(null);
+          }
         }}
       />
     </div>
@@ -76,3 +90,8 @@ function App() {
 }
 
 export default App;
+
+// notes:
+// having no fundamental selected seems a bit more intuitive but happy to change back
+// load all elements, but grey them on startup (and if no fundamental selected)
+// marginally better playback added, but lots to do here
