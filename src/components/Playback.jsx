@@ -1,163 +1,222 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 
-function Playback({ 
-  note, 
-  partials = [], 
-  centDeviation = 0 
-}) {
+const Playback = ({ partials = [] }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [oscType, setOscType] = useState("sine");
-  
-  // NEW: Volume State (0 to 1)
-  const [volume, setVolume] = useState(0.5);
+  const [activePresetIndex, setActivePresetIndex] = useState(0);
+  const [use12EDO, setUse12EDO] = useState(false); // JI vs 12-EDO toggle update from freq control (to keep all that consistent)
 
-  const voicesRef = useRef({}); 
-  const masterGainRef = useRef(null);
+  const synth = useRef(null);
+  const activeFrequencies = useRef(new Set());
 
-  // LOWER GAIN per partial creates "Headroom" to prevent distortion
-  // when stacking loud waves like Squares.
-  const PARTIAL_GAIN = 0.05; 
-  const FADE_TIME = 0.1;
+  const PRESETS = [
+    {
+      name: "Sine",
+      volume: -20,
+      options: {
+        oscillator: { type: "sine" },
+        envelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 1.0 },
+      },
+    },
+    {
+      name: "Pluck",
+      volume: -15,
+      options: {
+        oscillator: { type: "sine" },
+        envelope: {
+          attack: 0.05,
+          attackCurve: "exponential",
+          decay: 4.0,
+          decayCurve: "exponential",
+          sustain: 0.07,
+          release: 1.0,
+        },
+      },
+    },
+    {
+      name: "Triangle",
+      volume: -20,
+      options: {
+        oscillator: { type: "triangle" },
+        envelope: { attack: 0.1, decay: 0.2, sustain: 1.0, release: 1.0 },
+      },
+    },
+  ];
 
-  // 1. Initialize Master Gain
+  // Initialize synth
   useEffect(() => {
-    masterGainRef.current = new Tone.Gain(0).toDestination();
-    return () => masterGainRef.current?.dispose();
+    const initialPreset = PRESETS[0];
+
+    synth.current = new Tone.PolySynth(Tone.Synth, {
+      ...initialPreset.options,
+      maxPolyphony: 32,
+    }).toDestination();
+
+    synth.current.volume.value = initialPreset.volume;
+
+    return () => {
+      if (synth.current) synth.current.dispose();
+    };
   }, []);
 
-  // 2. NEW: Handle Volume Slider Changes
-  useEffect(() => {
-    if (masterGainRef.current) {
-      // We ramp to the new volume to prevent zipper noise when sliding fast
-      // If not playing, we keep it at 0 to ensure silence
-      const targetVol = isPlaying ? volume : 0;
-      masterGainRef.current.gain.rampTo(targetVol, 0.1);
-    }
-  }, [volume, isPlaying]);
-
-  const getFreq = (p) => {
-    if (!note) return 0;
-    const base = Tone.Frequency(note).toFrequency();
-    return base * p * Math.pow(2, centDeviation / 1200);
-  };
-
-  // 3. Main Audio Loop
-  useEffect(() => {
-    if (!note || !masterGainRef.current) return;
-
-    const now = Tone.now();
-    const activePartials = new Set(partials);
-
-    // --- CLEANUP ---
-    Object.keys(voicesRef.current).forEach((pKey) => {
-      const pNum = Number(pKey);
-      if (!activePartials.has(pNum)) {
-        const voice = voicesRef.current[pNum];
-        
-        voice.gain.gain.cancelScheduledValues(now);
-        voice.gain.gain.setValueAtTime(voice.gain.gain.value, now);
-        voice.gain.gain.linearRampToValueAtTime(0, now + FADE_TIME);
-        
-        voice.osc.stop(now + FADE_TIME + 0.1);
-        voice.osc.onstop = () => {
-          voice.osc.dispose();
-          voice.gain.dispose();
-        };
-        delete voicesRef.current[pNum];
+  // map partials to playback frequencies with adjustment
+  const mapFrequencies = () =>
+    partials.map((p) => {
+      if (use12EDO) {
+        const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
+        return p.nearest12edoFrequency() * ratio; // scale 12-EDO by fundamental adjustment HERE not in Partials class (?)
+      } else {
+        return p.frequency; // JI / partial frequency
       }
     });
 
-    // --- UPDATE / CREATE ---
-    if (isPlaying) {
-      partials.forEach((p) => {
-        const targetFreq = getFreq(p);
-        
-        if (voicesRef.current[p]) {
-          // Update existing
-          const voice = voicesRef.current[p];
-          voice.osc.frequency.rampTo(targetFreq, 0.1, now);
-          if (voice.osc.type !== oscType) voice.osc.type = oscType;
-        } else {
-          // Create new
-          const gainNode = new Tone.Gain(0).connect(masterGainRef.current);
-          const osc = new Tone.Oscillator(targetFreq, oscType).connect(gainNode);
-          
-          osc.start(now);
-          
-          // Ramp to PARTIAL_GAIN (0.05) instead of Master Volume
-          gainNode.gain.setValueAtTime(0, now);
-          gainNode.gain.linearRampToValueAtTime(PARTIAL_GAIN, now + FADE_TIME);
+  // Handle preset changes
+  useEffect(() => {
+    if (!synth.current) return;
 
-          voicesRef.current[p] = { osc, gain: gainNode };
-        }
-      });
+    const selected = PRESETS[activePresetIndex];
+
+    synth.current.releaseAll();
+    activeFrequencies.current.clear();
+
+    synth.current.set({
+      oscillator: selected.options.oscillator,
+      envelope: selected.options.envelope,
+    });
+    synth.current.volume.rampTo(selected.volume, 0.1);
+
+    if (isPlaying && partials.length > 0) {
+      const freqs = mapFrequencies();
+      synth.current.triggerAttack(freqs);
+      freqs.forEach((f) => activeFrequencies.current.add(f));
     }
-  }, [note, partials, centDeviation, isPlaying, oscType]); // Remove 'volume' from here, handled in separate effect
+  }, [activePresetIndex, use12EDO, partials]);
 
-  const handleTogglePlay = async () => {
+  // Fix stuttering and update frequencies
+  useEffect(() => {
+    if (!isPlaying || !synth.current) return;
+
+    const targetFreqs = mapFrequencies();
+    const targetSet = new Set(targetFreqs);
+
+    // Remove notes that are no longer active
+    activeFrequencies.current.forEach((freq) => {
+      if (!targetSet.has(freq)) {
+        synth.current.triggerRelease(freq);
+        activeFrequencies.current.delete(freq);
+      }
+    });
+
+    // Add new notes
+    targetFreqs.forEach((freq) => {
+      if (!activeFrequencies.current.has(freq)) {
+        synth.current.triggerAttack(freq);
+        activeFrequencies.current.add(freq);
+      }
+    });
+  }, [partials, isPlaying, use12EDO]);
+
+  // Toggle play/stop
+  const togglePlay = async () => {
     await Tone.start();
-    const now = Tone.now();
-    
+
     if (isPlaying) {
-      // Fade out
-      masterGainRef.current.gain.cancelScheduledValues(now);
-      masterGainRef.current.gain.linearRampToValueAtTime(0, now + FADE_TIME);
+      synth.current.releaseAll();
+      activeFrequencies.current.clear();
       setIsPlaying(false);
     } else {
-      // Fade in to current VOLUME setting
-      masterGainRef.current.gain.cancelScheduledValues(now);
-      masterGainRef.current.gain.linearRampToValueAtTime(volume, now + FADE_TIME);
+      const freqs = mapFrequencies();
+      if (freqs.length > 0) {
+        synth.current.triggerAttack(freqs);
+        freqs.forEach((f) => activeFrequencies.current.add(f));
+      }
       setIsPlaying(true);
     }
   };
 
-  return (
-    <div style={{ 
-      marginTop: "10px", 
-      display: "flex", 
-      gap: "15px", 
-      alignItems: "center",
-      background: "#f5f5f5",
-      padding: "10px",
-      borderRadius: "8px"
-    }}>
-      <button 
-        onClick={handleTogglePlay} 
-        style={{ padding: "8px 16px", cursor: "pointer" }}
-      >
-        {isPlaying ? "Stop" : "Play"}
-      </button>
+  const hasPartials = partials.length > 0;
 
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <label style={{ fontSize: "10px", fontWeight: "bold" }}>Waveform</label>
-        <select 
-          value={oscType} 
-          onChange={(e) => setOscType(e.target.value)}
-          style={{ padding: "4px" }}
-        >
-          <option value="sine">Sine (Pure)</option>
-          <option value="square">Square (Buzzy)</option>
-          <option value="triangle">Triangle (Soft)</option>
-          <option value="sawtooth">Sawtooth (Sharp)</option>
-        </select>
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "15px",
+      }}
+    >
+      {/* Preset buttons */}
+      <div style={{ display: "flex", gap: "10px" }}>
+        {PRESETS.map((preset, index) => {
+          const isActive = activePresetIndex === index;
+          return (
+            <button
+              key={preset.name}
+              onClick={() => setActivePresetIndex(index)}
+              style={{
+                padding: "6px 12px",
+                fontSize: "14px",
+                cursor: "pointer",
+                backgroundColor: isActive ? "#555" : "#eee",
+                color: isActive ? "white" : "black",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                transition: "all 0.2s",
+              }}
+            >
+              {preset.name}
+            </button>
+          );
+        })}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", width: "100px" }}>
-        <label style={{ fontSize: "10px", fontWeight: "bold" }}>
-          Volume: {Math.round(volume * 100)}%
-        </label>
-        <input 
-          type="range" 
-          min="0" 
-          max="1" 
-          step="0.01" 
-          value={volume}
-          onChange={(e) => setVolume(parseFloat(e.target.value))}
-        />
+      {/* Play + JI/12-EDO toggle */}
+      <div style={{ display: "flex", gap: "10px" }}>
+        <button
+          onClick={togglePlay}
+          disabled={!hasPartials}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: hasPartials ? "pointer" : "not-allowed",
+            backgroundColor: isPlaying ? "#f44336" : "#2196F3",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            opacity: hasPartials ? 1 : 0.6,
+            transition: "background-color 0.2s",
+            minWidth: "150px",
+          }}
+        >
+          {isPlaying ? "Stop" : "Play Partials"}
+        </button>
+
+        {/* JI / 12-EDO toggle */}
+        <button
+          onClick={() => setUse12EDO((prev) => !prev)}
+          disabled={!hasPartials}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: hasPartials ? "pointer" : "not-allowed",
+            backgroundColor: "#eee",
+            color: "black",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            transition: "all 0.2s",
+            minWidth: "120px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "5px",
+          }}
+        >
+          <span style={{ fontWeight: use12EDO ? "normal" : "bold" }}>JI</span>
+          <span>/</span>
+          <span style={{ fontWeight: use12EDO ? "bold" : "normal" }}>12-EDO</span>
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default Playback;

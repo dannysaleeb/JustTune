@@ -6,20 +6,28 @@ export default function Piano({ onChange }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_OFFSETS = [1, 3, null, 6, 8, 10];
 
-  const [fundamentalMidi, setFundamentalMidi] = useState(60); // C4 default
+  const [fundamentalMidi, setFundamentalMidi] = useState(null); // no default
   const [viewOctave, setViewOctave] = useState(4);
 
   function selectFundamentalMidi(midi) {
-    setFundamentalMidi(midi);
-    onChange?.(new Fundamental(midi));
+    if (midi === fundamentalMidi) {
+      // deselect
+      setFundamentalMidi(null);
+      onChange?.(null);
+    } else {
+      setFundamentalMidi(midi);
+      onChange?.(new Fundamental(midi));
+    }
   }
 
   const handleOctaveChange = (delta) => {
     const nextOct = Math.min(8, Math.max(0, viewOctave + delta));
     setViewOctave(nextOct);
 
-    const shifted = fundamentalMidi + delta * 12;
-    if (shifted >= 0 && shifted <= 127) selectFundamentalMidi(shifted);
+    if (fundamentalMidi !== null) {
+      const shifted = fundamentalMidi + delta * 12;
+      if (shifted >= 0 && shifted <= 127) selectFundamentalMidi(shifted);
+    }
   };
 
   const arrowButtonStyle = {
@@ -55,12 +63,14 @@ export default function Piano({ onChange }) {
           <div style={{ display: "flex", width: "100%", height: "100%" }}>
             {WHITE_OFFSETS.map((offset, i) => {
               const thisKeyOct = i === 7 ? viewOctave + 1 : viewOctave;
-              const midi = (viewOctave + 1) * 12 + offset; // absolute shitshow with the top C octave but it works now
+              const midi = (viewOctave + 1) * 12 + offset;
               const isSelected = midi === fundamentalMidi;
 
               return (
                 <div
                   key={i}
+                  tabIndex={-1}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => selectFundamentalMidi(midi)}
                   style={{
                     flex: 1,
@@ -77,9 +87,14 @@ export default function Piano({ onChange }) {
                     borderBottomLeftRadius: 5,
                     borderBottomRightRadius: 5,
                     transition: "background 0.15s ease",
+
+                    userSelect: "none",
+                    WebkitUserDrag: "none",
+                    outline: "none",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                 >
-                  {(i === 0 || i === 7) ? `C${thisKeyOct}` : null} {/* display the key name for both C's, could change to one / remove*/}
+                  {(i === 0 || i === 7) ? `C${thisKeyOct}` : null}
                 </div>
               );
             })}
@@ -94,6 +109,8 @@ export default function Piano({ onChange }) {
             return (
               <div
                 key={i}
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => {
                   e.stopPropagation();
                   selectFundamentalMidi(midi);
@@ -113,6 +130,11 @@ export default function Piano({ onChange }) {
                   borderBottomRightRadius: 4,
                   boxShadow: "1px 1px 3px rgba(0,0,0,0.3)",
                   transition: "background 0.15s ease",
+
+                  userSelect: "none",
+                  WebkitUserDrag: "none",
+                  outline: "none",
+                  WebkitTapHighlightColor: "transparent",
                 }}
               />
             );
