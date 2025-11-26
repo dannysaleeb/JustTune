@@ -148,7 +148,36 @@ class Note {
     }
 }
 
-export { Partial, Fundamental, Note }; // removed test and added this line (only change except for import keys) //
+
+//-----------------//
+// USAGE / TESTING //
+//-----------------//
+
+// KEYBOARD SELECTION
+const midikey = 37;
+
+// print first 5 partial note information and frequency values from related midikey selection
+const f = new Fundamental(midikey);
+
+for (let partialButton=1; partialButton < 6; partialButton++) {
+  const partial = f.getPartial(partialButton);
+  console.log(partial.note);
+  console.log(`frequency: ${partial.frequency}`)
+}
+
+// adjust fundamental frequency by cents amount
+f.adjustFreqByCents(50);
+
+console.log("=================");
+console.log("=================");
+
+// reprint first 5 partials
+for (let partialButton=1; partialButton < 6; partialButton++) {
+  const partial = f.getPartial(partialButton);
+  console.log(partial.note);
+  console.log(`frequency: ${partial.frequency}`)
+}
+
 
 // to do:
 // add function for enharmonic re-spelling

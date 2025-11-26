@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>test notation</title>
+        <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+    </head>
+    <body>
+        <div id="output"></div>
+        
+        <script>
+            const { Renderer, Stave, StaveNote, Voice, Formatter, Modifier, Accidental, StaveConnector } = Vex.Flow;
+
+            Vex.Flow.setMusicFont("Petaluma");
+            const font = Vex.Flow.Tables;
+            console.log(font);
+            // console.log(Object.keys(font.fontData.glyphs).filter(g => g.includes('accidental')));
+
+
+            // Glyph.renderGlyph(context, x, y, 40, "accidentalFlatOneArrowUp");
+
+            // Create an SVG renderer and attach it to the DIV element named "output".
+            const div = document.getElementById("output");
+            const renderer = new Renderer(div, Renderer.Backends.SVG);
+
+            // Configure the rendering context.
+            renderer.resize(10000, 500);
+            const context = renderer.getContext();
+
+            // Vex.Flow.Glyph.renderGlyph(context, 500, 500, 40, 'U+E27B', { category: "accidentalArrowDown"})
+
+            // Create a stave of width 400 at position 10, 40 on the canvas.
+            const stave1 = new Stave(40, 40, 400);
+            const stave2 = new Stave(40, 140, 400);
+
+            const connector1 = new StaveConnector(stave1, stave2);
+            connector1.setType(StaveConnector.type.SINGLE_LEFT);
+            connector1.setContext(context);
+
+            // const connector2 = new StaveConnector(stave1, stave2);
+            // connector2.setType(StaveConnector.type.BRACE);
+            // connector2.setContext(context);
+
+            // Add a clef and time signature.
+            stave1.addClef("treble");
+            stave2.addClef("bass");
+
+            // Connect it to the rendering context and draw!
+            stave1.setContext(context).draw();
+            stave2.setContext(context).draw();
+
+            connector1.draw();
+            // connector2.draw();
+
+            // Create the notes
+            const notes = [
+                // A quarter-note C.
+                new StaveNote({ keys: ["c##/5"], duration: "q" }).addModifier(new Accidental("##")),
+
+                // A quarter-note D.
+                new StaveNote({ keys: ["d/4"], duration: "q" }),
+
+                // A quarter-note rest. Note that the key (b/4) specifies the vertical
+                // position of the rest.
+                new StaveNote({ keys: ["b/4"], duration: "qr" }),
+
+                // A C-Major chord.
+                new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+            ];
+
+            // Create a voice in 4/4 and add above notes
+            const voices = [
+                new Voice({
+                    numBeats: 6,
+                    beatValue: 4,
+                }).addTickables(notes)
+            ];
+
+            // Format and justify the notes to 400 pixels.
+            new Formatter().joinVoices(voices).format(voices, 350);
+
+            // Render voices.
+            voices.forEach(function (v) {
+                v.draw(context, stave1);
+            });
+        
+        </script>
+    </body>
+</html>
+
+
+<!-- so will need to add notes to a list like that -- will need to set up slots that are filled in order -->
+<!-- Just call draw on both staves for every partial buttons update ... redraw -->
+
+<!--  -->
