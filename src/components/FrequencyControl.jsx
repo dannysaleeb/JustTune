@@ -1,101 +1,99 @@
 import { useState } from "react";
 import { Fundamental } from "../classes/Partials.js";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
 export default function FrequencyControl({ fundamental, onChange }) {
-  const [hzAdjust, setHzAdjust] = useState(0);
-  const [centsAdjust, setCentsAdjust] = useState(0);
-
   const baseA4 = 440;
+  const [customHz, setCustomHz] = useState(baseA4);
   const disabled = !fundamental;
-  
-  // adjusting Hz is proportional, relative to A 440 + - whatever   
-  const applyHz = () => {
+
+  const applyHz = (value = customHz) => {
     if (!fundamental) return;
+    const numericValue = parseFloat(value);
+    if (isNaN(numericValue)) return;
+
     const newFundamental = new Fundamental(fundamental.midikey);
-    // calculate proportional factor relative to baseA4
-    const factor = (baseA4 + hzAdjust) / baseA4;
-    // convert factor to equivalent Hz delta to pass to adjustFreqByHertz
+    const factor = numericValue / baseA4;
     const newFreq = newFundamental.frequency * factor;
     const actualHzAdjustment = newFreq - newFundamental.frequency;
     newFundamental.adjustFreqByHertz(actualHzAdjustment);
     onChange(newFundamental);
+    setCustomHz(numericValue);
   };
 
-  const applyCents = () => {
-    if (!fundamental) return;
-    const newFundamental = new Fundamental(fundamental.midikey);
-    newFundamental.adjustFreqByCents(centsAdjust);
-    onChange(newFundamental);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") applyHz();
   };
 
-  const reset = () => {
-    if (!fundamental) return;
-    const newFundamental = new Fundamental(fundamental.midikey);
-    newFundamental.resetFrequency();
-    onChange(newFundamental);
-    setHzAdjust(0);
-    setCentsAdjust(0);
-  };
+  const handleBlur = () => applyHz(); // if you click anywhere else it'll apply the new freq
 
-  const displayA4 = baseA4 + hzAdjust;
+  const increment = () => applyHz(customHz + 1);
+  const decrement = () => applyHz(customHz - 1);
+
+  // Shared button style
+  const buttonStyle = {
+    background: "transparent",
+    border: "none",
+    cursor: disabled ? "not-allowed" : "pointer",
+    padding: 0,
+    outline: "none",
+    boxShadow: "none",
+    WebkitTapHighlightColor: "transparent", // remove blue square highlight
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
       
-      {/* Frequency slider */}
-      <div>
-        <label>A {displayA4} Hz</label>
-		<Slider
-		  min={-20}
-		  max={20}
-		  step={1}
-		  value={hzAdjust}
-		  onChange={setHzAdjust}
-          disabled={disabled}
-          trackStyle={{ backgroundColor: "transparent", height: 2 }}
-          railStyle={{ backgroundColor: "#ccc", height: 2 }}
-          handleStyle={{ borderColor: "#000", height: 20, width: 20, marginTop: -9 }}
-          dotStyle={{ display: "none" }}
-          activeDotStyle={{ display: "none" }}
-		/>
-        <button onClick={applyHz} disabled={disabled} style={{ marginTop: 5 }}>
-          Apply Hz
-        </button>
-      </div>
+      {/* Up arrow */}
+      <button
+        onClick={increment}
+        disabled={disabled}
+        style={buttonStyle}
+        tabIndex={-1} // prevents focus
+        onMouseDown={(e) => e.preventDefault()} // stops blue focus highlight
+      >
+        <FaChevronUp size={16} color={disabled ? "#888" : "#000"} />
+      </button>
 
-      {/* Cents slider */}
-      <div>
-        <label>Cents: {centsAdjust >= 0 ? "+" : ""}{centsAdjust}</label>
-        <Slider
-          min={-25}
-          max={25}
-          step={1}
-          value={centsAdjust}
-          onChange={setCentsAdjust}
+      {/* Frequency input */}
+      <div style={{ display: "flex", alignItems: "center", gap: "2px", fontWeight: 500 }}>
+        <span style={{ fontSize: "18px" }}>A</span>
+        <input
+          type="number"
+          value={customHz}
+          onChange={(e) => setCustomHz(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
           disabled={disabled}
-          trackStyle={{ backgroundColor: "transparent", height: 2 }}
-          railStyle={{ backgroundColor: "#ccc", height: 2 }}
-          handleStyle={{ borderColor: "#000", height: 20, width: 20, marginTop: -9 }}
-          dotStyle={{ display: "none" }}
-          activeDotStyle={{ display: "none" }}
+          style={{
+            fontSize: "18px",
+            border: "none",
+            outline: "none",
+            textAlign: "center",
+            background: "transparent",
+            padding: 0,
+            fontWeight: 500,
+            minWidth: "3ch",
+            width: `${String(customHz).length + 1}ch`,
+          }}
         />
-        <button onClick={applyCents} disabled={disabled} style={{ marginTop: 5 }}>
-          Apply Cents
-        </button>
       </div>
 
-      <button onClick={reset} disabled={disabled}>Reset Tuning</button>
-
-      <div>
-        <strong>Current Fundamental Frequency:</strong>{" "}
-        {fundamental ? fundamental.frequency.toFixed(2) : "---"} Hz
-      </div>
+      {/* Down arrow */}
+      <button
+        onClick={decrement}
+        disabled={disabled}
+        style={buttonStyle}
+        tabIndex={-1} // prevents focus
+        onMouseDown={(e) => e.preventDefault()} // stops blue focus highlight
+      >
+        <FaChevronDown size={16} color={disabled ? "#888" : "#000"} />
+      </button>
     </div>
   );
 }
 
 // to do
-// make it look nice (ticks on slider?)
-// add preset tunings instead of the slider? 440, 442, etc or preset slide points + custom option?
+// add react-icons to dependencies
+// add reset button? 
+// enforce bounds
