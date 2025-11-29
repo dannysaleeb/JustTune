@@ -4,11 +4,13 @@ import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
+import { Fundamental } from "./classes/Partials.js"; 
 
 function App() {
-  const [fundamental, setFundamental] = useState(null);
+  // Initialize default fundamental to C4
+  const [fundamental, setFundamental] = useState(new Fundamental(60)); // MIDI 60 = C4
   const [partials, setPartials] = useState([]);
-  const [note, setNote] = useState(null);   // was "C4" — now correct for no selection
+  const [note, setNote] = useState("C4"); 
   const [results, setResults] = useState([]);
 
   // Debug logging for fundamental
@@ -21,8 +23,7 @@ function App() {
         degree: fundamental.degree,
         key: fundamental.key,
       });
-    } else {
-      console.log("Fundamental cleared");
+      setNote(`${fundamental.name}${fundamental.octave}`);
     }
   }, [fundamental]);
 
@@ -56,32 +57,24 @@ function App() {
         overflowX: "hidden",
       }}
     >
-      {/* Frequency adjustments */}
       <FrequencyControl
         fundamental={fundamental}
         onChange={setFundamental}
       />
-	  
-	  {/* Placeholder for notation */}
 
-      {/* Partial selector */}
       <PartialSelector
         fundamental={fundamental}
         maxPartials={6}
         onChange={setPartials}
       />
-	  
-	  {/* Audio Playback */}
-	  <Playback partials={partials} />
 
-      {/* Piano selects (or clears) the fundamental */}
+      <Playback partials={partials} />
+
       <Piano
         onChange={(f) => {
           setFundamental(f);
           if (f) {
             setNote(`${f.name}${f.octave}`);
-          } else {
-            setNote(null);
           }
         }}
       />
@@ -90,8 +83,3 @@ function App() {
 }
 
 export default App;
-
-// notes:
-// having no fundamental selected seems a bit more intuitive but happy to change back
-// load all elements, but grey them on startup (and if no fundamental selected)
-// marginally better playback added, but lots to do here
