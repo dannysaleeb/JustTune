@@ -3,21 +3,29 @@ import React, { useState, useEffect } from "react";
 function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
   const [selectedPartials, setSelectedPartials] = useState([]);
 
-  // update partials if the fundamental changes
+  // Update partials when fundamental changes
   useEffect(() => {
     if (!fundamental) {
-      setSelectedPartials([]); // clear when no fundamental selected
+      setSelectedPartials([]);
       return;
     }
 
-    setSelectedPartials((prev) =>
-      prev
-        .map((p) => fundamental.getPartial(p.partialNumber))
-        .sort((a, b) => a.partialNumber - b.partialNumber)
-    );
-  }, [fundamental]);
+    setSelectedPartials((prev) => {
+      if (prev.length === 0) {
+        // Only auto-select 1 if nothing is selected
+        const firstPartial = fundamental.getPartial(1);
+        return firstPartial ? [firstPartial] : [];
+      } else {
+        // Preserve existing selections, mapping to new fundamental
+        return prev
+          .map((p) => fundamental.getPartial(p.partialNumber))
+          .filter(Boolean)
+          .slice(0, maxPartials);
+      }
+    });
+  }, [fundamental, maxPartials]);
 
-  // Notify parent when selectedPartials changes
+  // Notify parent of selection changes
   useEffect(() => {
     onChange?.(
       [...selectedPartials].sort((a, b) => a.partialNumber - b.partialNumber)
@@ -25,7 +33,7 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
   }, [selectedPartials, onChange]);
 
   const toggle = (partialNumber) => {
-    if (!fundamental) return; // grey out the boxes
+    if (!fundamental) return;
 
     setSelectedPartials((prev) => {
       const existsIndex = prev.findIndex((p) => p.partialNumber === partialNumber);
@@ -34,7 +42,8 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
       if (existsIndex !== -1) {
         newSelected.splice(existsIndex, 1);
       } else if (prev.length < maxPartials) {
-        newSelected.push(fundamental.getPartial(partialNumber));
+        const partial = fundamental.getPartial(partialNumber);
+        if (partial) newSelected.push(partial);
       }
 
       return newSelected.sort((a, b) => a.partialNumber - b.partialNumber);
@@ -58,10 +67,7 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
     >
       {Array.from({ length: 24 }, (_, i) => i + 1).map((num) => {
         const isSelected = selectedSet.has(num);
-
-        const disabled =
-          noFundamental ||
-          (!isSelected && maxReached);
+        const disabled = noFundamental || (!isSelected && maxReached);
 
         return (
           <div

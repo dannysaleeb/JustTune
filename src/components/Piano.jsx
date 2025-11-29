@@ -1,23 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Fundamental } from "../classes/Partials.js";
 
 export default function Piano({ onChange }) {
-  // White keys: offsets within an octave
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_OFFSETS = [1, 3, null, 6, 8, 10];
 
-  const [fundamentalMidi, setFundamentalMidi] = useState(null); // no default
+  // Initialize fundamentalMidi to C4 (MIDI 60) so it's highlighted on load
+  const [fundamentalMidi, setFundamentalMidi] = useState(60);
   const [viewOctave, setViewOctave] = useState(4);
 
+  // Notify parent on mount about default fundamental
+  useEffect(() => {
+    onChange?.(new Fundamental(fundamentalMidi));
+  }, []);
+
   function selectFundamentalMidi(midi) {
-    if (midi === fundamentalMidi) {
-      // deselect
-      setFundamentalMidi(null);
-      onChange?.(null);
-    } else {
-      setFundamentalMidi(midi);
-      onChange?.(new Fundamental(midi));
-    }
+    // Always set the fundamental, never deselect
+    setFundamentalMidi(midi);
+    onChange?.(new Fundamental(midi));
   }
 
   const handleOctaveChange = (delta) => {
@@ -48,7 +48,6 @@ export default function Piano({ onChange }) {
   return (
     <div style={{ width: "100%", marginBottom: 20, userSelect: "none" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-        {/* Left arrow */}
         <button
           onClick={() => handleOctaveChange(-1)}
           disabled={viewOctave <= 0}
@@ -57,9 +56,7 @@ export default function Piano({ onChange }) {
           ‹
         </button>
 
-        {/* Piano keys */}
         <div style={{ position: "relative", flex: 1, height: 100 }}>
-          {/* White keys */}
           <div style={{ display: "flex", width: "100%", height: "100%" }}>
             {WHITE_OFFSETS.map((offset, i) => {
               const thisKeyOct = i === 7 ? viewOctave + 1 : viewOctave;
@@ -100,7 +97,6 @@ export default function Piano({ onChange }) {
             })}
           </div>
 
-          {/* Black keys */}
           {BLACK_OFFSETS.map((offset, i) => {
             if (offset === null) return null;
             const midi = (viewOctave + 1) * 12 + offset;
@@ -141,7 +137,6 @@ export default function Piano({ onChange }) {
           })}
         </div>
 
-        {/* Right arrow */}
         <button
           onClick={() => handleOctaveChange(1)}
           disabled={viewOctave >= 8}
