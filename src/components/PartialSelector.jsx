@@ -1,23 +1,31 @@
-// this seems to work
-
 import React, { useState, useEffect } from "react";
 
-// max partials 6 at the minute
 function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
   const [selectedPartials, setSelectedPartials] = useState([]);
 
-  // update partials if the fundamental changes
+  // Update partials when fundamental changes
   useEffect(() => {
-    if (!fundamental) return;
+    if (!fundamental) {
+      setSelectedPartials([]);
+      return;
+    }
 
-    setSelectedPartials((prev) =>
-      prev
-        .map((p) => fundamental.getPartial(p.partialNumber))
-        .sort((a, b) => a.partialNumber - b.partialNumber) // sorting by partial number
-    );
-  }, [fundamental]);
+    setSelectedPartials((prev) => {
+      if (prev.length === 0) {
+        // Only auto-select 1 if nothing is selected
+        const firstPartial = fundamental.getPartial(1);
+        return firstPartial ? [firstPartial] : [];
+      } else {
+        // Preserve existing selections, mapping to new fundamental
+        return prev
+          .map((p) => fundamental.getPartial(p.partialNumber))
+          .filter(Boolean)
+          .slice(0, maxPartials);
+      }
+    });
+  }, [fundamental, maxPartials]);
 
-  // Notify parent when selectedPartials changes
+  // Notify parent of selection changes
   useEffect(() => {
     onChange?.(
       [...selectedPartials].sort((a, b) => a.partialNumber - b.partialNumber)
@@ -32,20 +40,19 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
       let newSelected = [...prev];
 
       if (existsIndex !== -1) {
-        // Deselect
         newSelected.splice(existsIndex, 1);
       } else if (prev.length < maxPartials) {
-        // Select only if under max 6
-        newSelected.push(fundamental.getPartial(partialNumber));
+        const partial = fundamental.getPartial(partialNumber);
+        if (partial) newSelected.push(partial);
       }
 
-      // sort results by partialNumber, I suppose this is how we'll notate?
       return newSelected.sort((a, b) => a.partialNumber - b.partialNumber);
     });
   };
 
   const selectedSet = new Set(selectedPartials.map((p) => p.partialNumber));
   const maxReached = selectedPartials.length >= maxPartials;
+  const noFundamental = !fundamental;
 
   return (
     <div
@@ -60,7 +67,7 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
     >
       {Array.from({ length: 24 }, (_, i) => i + 1).map((num) => {
         const isSelected = selectedSet.has(num);
-        const disabled = !isSelected && maxReached; // disabling clicking on the grid if max selected (better?)
+        const disabled = noFundamental || (!isSelected && maxReached);
 
         return (
           <div
@@ -77,8 +84,16 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
               borderRadius: "4px",
               userSelect: "none",
               WebkitTapHighlightColor: "transparent",
-              backgroundColor: isSelected ? "#4CAF50" : disabled ? "#ccc" : "#eee",
-              color: isSelected ? "white" : disabled ? "rgb(160,160,160)" : "black",
+              backgroundColor: isSelected
+                ? "#4CAF50"
+                : disabled
+                ? "#ccc"
+                : "#eee",
+              color: isSelected
+                ? "white"
+                : disabled
+                ? "rgb(160,160,160)"
+                : "black",
               border: "1px solid #ccc",
               fontSize: "14px",
               boxSizing: "border-box",
@@ -94,4 +109,3 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
 }
 
 export default PartialSelector;
-

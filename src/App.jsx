@@ -3,9 +3,12 @@ import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
+import FrequencyControl from "./components/FrequencyControl";
+import { Fundamental } from "./classes/Partials.js"; 
 
 function App() {
-  const [fundamental, setFundamental] = useState(null);
+  // Initialize default fundamental to C4
+  const [fundamental, setFundamental] = useState(new Fundamental(60)); // MIDI 60 = C4
   const [partials, setPartials] = useState([]);
   const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings
   const [note, setNote] = useState("C4");
@@ -20,6 +23,7 @@ function App() {
         degree: fundamental.degree,
         key: fundamental.key,
       });
+      setNote(`${fundamental.name}${fundamental.octave}`);
     }
   }, [fundamental]);
 
@@ -34,6 +38,8 @@ function App() {
           note: p.note,
         }))
       );
+    } else {
+      console.log("No partials selected");
     }
   }, [partials]);
 
@@ -51,28 +57,30 @@ function App() {
         overflowX: "hidden",
       }}
     >
-      {/* Placeholder Frequency adjustments: to do */}
+      <FrequencyControl
+        fundamental={fundamental}
+        onChange={setFundamental}
+      />
 
-      {/* Placeholder notation: removed from app as printing everything anyway */}
       <Notation 
         partials={partials}
         maxPartials={maxPartials}
       />
 
-      {/* Placeholder playback */}
-
-      {/* Partial selector */}
       <PartialSelector
         fundamental={fundamental}
         maxPartials={maxPartials}
         onChange={setPartials}
       />
 
-      {/* Piano selects a new Fundamental */}
+      <Playback partials={partials} />
+
       <Piano
         onChange={(f) => {
           setFundamental(f);
-          setNote(`${f.name}${f.octave}`);
+          if (f) {
+            setNote(`${f.name}${f.octave}`);
+          }
         }}
       />
     </div>
