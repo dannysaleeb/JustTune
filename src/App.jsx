@@ -7,8 +7,8 @@ import Playback from "./components/Playback";
 function App() {
   const [fundamental, setFundamental] = useState(null);
   const [partials, setPartials] = useState([]);
+  const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings
   const [note, setNote] = useState("C4");
-  const [results, setResults] = useState([]);
 
   // Debug logging for fundamental
   useEffect(() => {
@@ -54,13 +54,17 @@ function App() {
       {/* Placeholder Frequency adjustments: to do */}
 
       {/* Placeholder notation: removed from app as printing everything anyway */}
+      <Notation 
+        partials={partials}
+        maxPartials={maxPartials}
+      />
 
       {/* Placeholder playback */}
 
       {/* Partial selector */}
       <PartialSelector
         fundamental={fundamental}
-        maxPartials={6}
+        maxPartials={maxPartials}
         onChange={setPartials}
       />
 
