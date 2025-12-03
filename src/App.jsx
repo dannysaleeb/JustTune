@@ -65,6 +65,7 @@ function App() {
       <Notation 
         partials={partials}
         maxPartials={maxPartials}
+        setPartials={setPartials}
       />
 
       <PartialSelector

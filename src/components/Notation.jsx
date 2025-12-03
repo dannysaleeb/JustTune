@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveConnector, Voice, Formatter, Flow, TextBracket, Annotation } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
-export default function Notation({partials, maxPartials}) {
+export default function Notation({partials, maxPartials, setPartials}) {
 
   const containerRef = useRef(null);
   // Flow.setMusicFont("Petaluma");
@@ -249,13 +249,21 @@ export default function Notation({partials, maxPartials}) {
       bracket_bottom_two.setContext(context).draw();
     }
 
+    // make click-able for enharmonic re-spelling
     notes.forEach((note, index) => {
-      const ele = note.getSVGElement(); // VexFlow SVG <g> group for the note
-
+      const ele = note.getSVGElement();
       if (ele) {
         ele.style.cursor = "pointer";
         ele.addEventListener("click", () => {
-          partials[index].enharmonicSwitch();
+          setPartials(
+            partials.map(partial => {
+              if (partials.indexOf(partial) === index) {
+                return partial.enharmonicSwitch();
+              } else {
+                return partial
+              }
+            })
+          );
         });
       }
     });
@@ -269,10 +277,9 @@ export default function Notation({partials, maxPartials}) {
 
 // FIRST PULL CHANGES AND COMMIT ... 
 
-// Still got octave bug
 // introduce arrowed accidentals;
 // make centDeviation text move out of way of very low notes, maybe make it appear above bass clef stave; 
 // maybe make centDeviation text all black ... (these are ideals for end ... )
-// add enharmonic switch ... ALMOST!! make it persist for life of a fundamental? Or immediately change at least ... add switches to Fundamental?? (to indicate if a partial has been switched)
-// need to make auto-enharmonic switch work ... 
-// pull Fin's changes -- merge with mine
+// enharmonic switch for all notes of fundamental??
+
+// bugfix for fundamental auto-select

@@ -292,6 +292,8 @@ class Partial {
       
       this.setNote(winner.degree, winner.difference, this.note.arrow, this.note.centDeviation, winner.octave, name, this.note.colour, this.note.clef, this.note.octava);
 
+      return this;
+
     }
 }
 
