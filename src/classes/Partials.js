@@ -97,7 +97,7 @@ class Partial {
       }
 
       // Shift notated octave if too high/low
-      let octave = Math.floor(this.midikey / 12) - 1;
+      let octave = Math.floor((this.midikey - accidental) / 12) - 1;
       let octava = 0;
 
       // ! Fine -- this will work, but need to restrict fundamental octave choice in UI Piano, it doesn't need to go so high.
@@ -108,18 +108,17 @@ class Partial {
       } else if (this.midikey >= 102) {
         octave -= 2;
         octava = 2;
-      } else if (this.midikey <= 32 && this.midikey > 20) {
+      } else if (this.midikey <= 31) {
         octave += 1;
         octava = -1;
-      } else if (this.midikey <= 20) {
-        octave += 2;
-        octava = -2
-      };
+      } 
 
-      // ! different behaviour at the bottom but hard to figure out ... STILL TO DO
+
 
       // construct name
       const degreeName = NOTES[((degree + this.fundamental.degree) - 1) % 7];
+
+      // if it's anything but Dbb and B# will go to wrong octave? Also Cb
 
       let symbol = "";
       if (NATURALS_FLAG) {

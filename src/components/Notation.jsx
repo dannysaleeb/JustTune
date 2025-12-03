@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveConnector, Voice, Formatter, Flow, TextBracket, Annotation } from "vexflow";
-import TextBracketNoLine from "../classes/VexPatches";
+import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
 export default function Notation({partials, maxPartials}) {
 
@@ -17,20 +17,20 @@ export default function Notation({partials, maxPartials}) {
 
     // draw stave
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(450, 300);
+    renderer.resize(450, 400);
 
     const context = renderer.getContext();
 
     // Create the staves
-    var top = new Stave(25, 50, staveWidth);
-    var bottom = new Stave(25, 150, staveWidth);
+    const top = new Stave(25, 50, staveWidth);
+    const bottom = new Stave(25, 150, staveWidth);
 
     top.addClef('treble');
     bottom.addClef('bass');
 
-    var brace = new StaveConnector(top, bottom).setType(3);
-    var lineLeft = new StaveConnector(top, bottom).setType(1);
-    var lineRight = new StaveConnector(top, bottom).setType(7);
+    const brace = new StaveConnector(top, bottom).setType(3);
+    const lineLeft = new StaveConnector(top, bottom).setType(1);
+    const lineRight = new StaveConnector(top, bottom).setType(7);
 
     top.setContext(context).draw();
     bottom.setContext(context).draw();
@@ -92,6 +92,8 @@ export default function Notation({partials, maxPartials}) {
 
     let bracket_top_one = null;
     let bracket_top_two = null;
+    let bracket_bottom_one = null;
+    let bracket_bottom_two = null;
 
     // HANDLE 8VA SYMBOL/BRACKET
     if (octava["8va"].length > 0) {
@@ -100,7 +102,7 @@ export default function Notation({partials, maxPartials}) {
 
       // use Annotation if start and stop are the same
       if (start === stop) {
-        bracket_top_one = new TextBracketNoLine({
+        bracket_top_one = new TextBracketNoLineTop({
           start: start,
           stop: stop,
           text: "8va",
@@ -139,7 +141,7 @@ export default function Notation({partials, maxPartials}) {
 
       // use Annotation if start and stop are the same
       if (start === stop) {
-        bracket_top_two = new TextBracketNoLine({
+        bracket_top_two = new TextBracketNoLineTop({
           start: start,
           stop: stop,
           text: "15ma",
@@ -156,6 +158,67 @@ export default function Notation({partials, maxPartials}) {
         bracket_top_two.setLine(line);
       }      
     };
+
+    // HANDLE 8VB SYMBOL/BRACKET
+    if (octava["8vb"].length > 0) {
+      const start = notes[octava["8vb"][0]];
+      const stop = notes[octava["8vb"][octava["8vb"].length - 1]];
+
+      // HANDLE vertically shifting bracket relative to highest pitch
+      const partials_midi = partials.map(partial => partial.midikey);
+      const lowest_midi = Math.min(...partials_midi);
+
+      let noBracketLine, bracketLine;
+
+      if (lowest_midi < 20) {noBracketLine = 7; bracketLine = 6} else {
+        noBracketLine = 4; bracketLine = 3;
+      };
+
+      // use Annotation if start and stop are the same
+      if (start === stop) {
+        bracket_bottom_one = new TextBracketNoLineBottom({
+          start: start,
+          stop: stop,
+          text: "8vb",
+          position: TextBracket.Position.BOTTOM
+        });
+        bracket_bottom_one.setLine(noBracketLine);
+      } else {
+        bracket_bottom_one = new TextBracket({
+          start: start,
+          stop: stop,
+          text: "8vb",
+          position: TextBracket.Position.BOTTOM
+        });
+        bracket_bottom_one.setLine(bracketLine);
+      }      
+    };
+
+    // HANDLE 15MB SYMBOL/BRACKET
+    if (octava["15mb"].length > 0) {
+      const start = notes[octava["15mb"][0]];
+      const stop = notes[octava["15mb"][octava["15mb"].length - 1]];
+
+      // use Annotation if start and stop are the same
+      if (start === stop) {
+        bracket_bottom_two = new TextBracketNoLineBottom({
+          start: start,
+          stop: stop,
+          text: "15mb",
+          position: TextBracket.Position.BOTTOM
+        });
+        bracket_bottom_two.setLine(3.5);
+      } else {
+        bracket_bottom_two = new TextBracket({
+          start: start,
+          stop: stop,
+          text: "15mb",
+          position: TextBracket.Position.BOTTOM
+        });
+        bracket_bottom_two.setLine(3.5);
+      }      
+    };
+
 
     new Formatter().joinVoices([voice]).format([voice], 350);
 
@@ -178,6 +241,14 @@ export default function Notation({partials, maxPartials}) {
       bracket_top_two.setContext(context).draw();
     }
 
+    if (bracket_bottom_one instanceof TextBracket) {
+      bracket_bottom_one.setContext(context).draw();
+    }
+
+    if (bracket_bottom_two instanceof TextBracket) {
+      bracket_bottom_two.setContext(context).draw();
+    }
+
     notes.forEach((note, index) => {
       const ele = note.getSVGElement(); // VexFlow SVG <g> group for the note
 
@@ -198,8 +269,7 @@ export default function Notation({partials, maxPartials}) {
 
 // FIRST PULL CHANGES AND COMMIT ... 
 
-// to do: add 8vb / 15mb indicators ... 
-// Still got octave bug 
+// Still got octave bug
 // introduce arrowed accidentals;
 // make centDeviation text move out of way of very low notes, maybe make it appear above bass clef stave; 
 // maybe make centDeviation text all black ... (these are ideals for end ... )

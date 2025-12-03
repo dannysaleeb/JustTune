@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
+function PartialSelector({ maxPartials, fundamental, onChange }) {
   const [selectedPartials, setSelectedPartials] = useState([]);
 
   // Update partials when fundamental changes
@@ -10,19 +10,27 @@ function PartialSelector({ maxPartials = 6, fundamental, onChange }) {
       return;
     }
 
-    setSelectedPartials((prev) => {
-      if (prev.length === 0) {
-        // Only auto-select 1 if nothing is selected
-        const firstPartial = fundamental.getPartial(1);
-        return firstPartial ? [firstPartial] : [];
-      } else {
-        // Preserve existing selections, mapping to new fundamental
-        return prev
-          .map((p) => fundamental.getPartial(p.partialNumber))
-          .filter(Boolean)
-          .slice(0, maxPartials);
-      }
-    });
+    setSelectedPartials(prev => {
+      return prev
+        .map(p => fundamental.getPartial(p.partialNumber))
+        .filter(Boolean)
+        .slice(0, maxPartials);
+    })
+
+    // ! removed the auto-select for now, preferring blank canvas start?
+    // setSelectedPartials((prev) => {
+    //   if (prev.length === 0) {
+    //     // Only auto-select 1 if nothing is selected
+    //     const firstPartial = fundamental.getPartial(1);
+    //     return firstPartial ? [firstPartial] : [];
+    //   } else {
+    //     // Preserve existing selections, mapping to new fundamental
+    //     return prev
+    //       .map((p) => fundamental.getPartial(p.partialNumber))
+    //       .filter(Boolean)
+    //       .slice(0, maxPartials);
+    //   }
+    // });
   }, [fundamental, maxPartials]);
 
   // Notify parent of selection changes

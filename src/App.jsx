@@ -4,44 +4,44 @@ import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
-import { Fundamental } from "./classes/Partials.js"; 
+// import { Fundamental } from "./classes/Partials.js"; // ! starting with null fundamental
+
+// ! somewhere a fundamental is being auto-generated when the app loads -- I can't find it!
 
 function App() {
   // Initialize default fundamental to C4
-  const [fundamental, setFundamental] = useState(new Fundamental(60)); // MIDI 60 = C4
+  const [fundamental, setFundamental] = useState(null);
   const [partials, setPartials] = useState([]);
-  const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings
-  const [note, setNote] = useState("C4");
+  const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings component
 
   // Debug logging for fundamental
-  useEffect(() => {
-    if (fundamental) {
-      console.log("Current Fundamental:", {
-        frequency: fundamental.frequency,
-        octave: fundamental.octave,
-        name: fundamental.name,
-        degree: fundamental.degree,
-        key: fundamental.key,
-      });
-      setNote(`${fundamental.name}${fundamental.octave}`);
-    }
-  }, [fundamental]);
+  // useEffect(() => {
+  //   if (fundamental) {
+  //     console.log("Current Fundamental:", {
+  //       frequency: fundamental.frequency,
+  //       octave: fundamental.octave,
+  //       name: fundamental.name,
+  //       degree: fundamental.degree,
+  //       key: fundamental.key,
+  //     });
+  //   }
+  // }, [fundamental]);
 
   // Debug logging for partials
-  useEffect(() => {
-    if (partials.length > 0) {
-      console.log(
-        "Selected Partials:",
-        partials.map((p) => ({
-          partialNumber: p.partialNumber,
-          frequency: p.frequency,
-          note: p.note,
-        }))
-      );
-    } else {
-      console.log("No partials selected");
-    }
-  }, [partials]);
+  // useEffect(() => {
+  //   if (partials.length > 0) {
+  //     console.log(
+  //       "Selected Partials:",
+  //       partials.map((p) => ({
+  //         partialNumber: p.partialNumber,
+  //         frequency: p.frequency,
+  //         note: p.note,
+  //       }))
+  //     );
+  //   } else {
+  //     console.log("No partials selected");
+  //   }
+  // }, [partials]);
 
   return (
     <div
@@ -73,14 +73,14 @@ function App() {
         onChange={setPartials}
       />
 
-      <Playback partials={partials} />
+      <Playback 
+        partials={partials}
+        maxPartials={maxPartials}
+      />
 
       <Piano
         onChange={(f) => {
           setFundamental(f);
-          if (f) {
-            setNote(`${f.name}${f.octave}`);
-          }
         }}
       />
     </div>
