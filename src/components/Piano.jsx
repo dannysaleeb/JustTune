@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Fundamental } from "../classes/Partials.js";
+import { useState } from "react";
 
 export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];

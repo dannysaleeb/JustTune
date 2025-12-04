@@ -11,10 +11,14 @@ function App() {
   const [midiKey, setMidiKey] = useState(null);
   const [partialNumbers, setPartialNumbers] = useState([]);
   const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
+  const [tuningFactor, setTuningFactor] = useState(1);
 
-  const fundamental = useMemo(
-    () => midiKey != null ? new Fundamental(midiKey) : null, [midiKey]
-  );
+  const fundamental = useMemo(() => {
+    if (midiKey == null) return null;
+    const f = new Fundamental(midiKey);
+    f.setFrequency(f.frequency * tuningFactor);
+    return f;
+  }, [midiKey, tuningFactor]);
 
   const partials = useMemo(() => {
     return partialNumbers
@@ -38,10 +42,11 @@ function App() {
         overflowX: "hidden",
       }}
     >
-      {/* <FrequencyControl
-        fundamental={fundamental}
-        onChange={setFundamental}
-      /> */}
+      <FrequencyControl
+        tuningFactor={tuningFactor}
+        setTuningFactor={setTuningFactor}
+        disabled={!fundamental}
+      />
 
       <Notation 
         partials={partials}

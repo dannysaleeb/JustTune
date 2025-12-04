@@ -1,23 +1,19 @@
 import { useState } from "react";
-import { Fundamental } from "../classes/Partials.js";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
-export default function FrequencyControl({ fundamental, onChange }) {
+export default function FrequencyControl({ tuningFactor, setTuningFactor, disabled }) {
   const baseA4 = 440;
-  const [customHz, setCustomHz] = useState(baseA4);
-  const disabled = !fundamental;
+  const [customHz, setCustomHz] = useState(tuningFactor * baseA4);
 
   const applyHz = (value = customHz) => {
-    if (!fundamental) return;
+    
+    if (disabled) return;
+
     const numericValue = parseFloat(value);
+
     if (isNaN(numericValue)) return;
 
-    const newFundamental = new Fundamental(fundamental.midikey);
-    const factor = numericValue / baseA4;
-    const newFreq = newFundamental.frequency * factor;
-    const actualHzAdjustment = newFreq - newFundamental.frequency;
-    newFundamental.adjustFreqByHertz(actualHzAdjustment);
-    onChange(newFundamental);
+    setTuningFactor(numericValue / baseA4);
     setCustomHz(numericValue);
   };
 

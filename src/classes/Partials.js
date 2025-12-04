@@ -70,6 +70,7 @@ class Partial {
         this.frequency = partialNumber * fundamental.frequency;
 
         // midikey for clef
+        // ! I think this needs a bugfix
         this.midikey = Tone.ftom(this.frequency);
 
         this.note = this.getNote();

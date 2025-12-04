@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 
-function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers, flippedNotes }) {
+function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers }) {
 
   // Update partialNumbers when fundamental changes
   useEffect(() => {
