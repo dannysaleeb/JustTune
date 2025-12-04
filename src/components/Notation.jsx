@@ -1,8 +1,9 @@
 import { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveConnector, Voice, Formatter, Flow, TextBracket, Annotation } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
+import { Fundamental, Partial } from "../classes/Partials";
 
-export default function Notation({partials, maxPartials, setPartials}) {
+export default function Notation({partials, maxPartials, flippedNotes, setPartials, setFlippedNotes }) {
 
   const containerRef = useRef(null);
   // Flow.setMusicFont("Petaluma");
@@ -247,7 +248,7 @@ export default function Notation({partials, maxPartials, setPartials}) {
 
     if (bracket_bottom_two instanceof TextBracket) {
       bracket_bottom_two.setContext(context).draw();
-    }
+    };
 
     // make click-able for enharmonic re-spelling
     notes.forEach((note, index) => {
@@ -255,15 +256,20 @@ export default function Notation({partials, maxPartials, setPartials}) {
       if (ele) {
         ele.style.cursor = "pointer";
         ele.addEventListener("click", () => {
-          setPartials(
-            partials.map(partial => {
-              if (partials.indexOf(partial) === index) {
-                return partial.enharmonicSwitch();
-              } else {
-                return partial
-              }
-            })
-          );
+          // on click, flip bit at flippedNotes[partialNumber - 1], otherwise return existing fn
+          setFlippedNotes(prev => {
+            const updated = prev.map((fn, j) => j === partials[index].partialNumber - 1 ? !fn : fn
+            );
+
+            setPartials(prevPartials => 
+              prevPartials.map(p =>
+                new Partial(p.partialNumber, p.fundamental, updated[p.partialNumber - 1])
+              )
+            );
+
+            return updated;
+
+          });
         });
       }
     });
@@ -286,4 +292,5 @@ export default function Notation({partials, maxPartials, setPartials}) {
 
 // FIN
 // bugfix for fundamental auto-select
+// constrain Piano to C4 upper limit
 // drag select for partials grid

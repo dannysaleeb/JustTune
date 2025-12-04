@@ -4,7 +4,7 @@ import { Fundamental } from "../classes/Partials.js";
 // ! Let's set an octave limit here as global var, so we can easily change it 
 // ! tbh max C3 - C4 for the keyboard is ok, otherwise partials are impractically high
 
-export default function Piano({ onChange }) {
+export default function Piano({ onChange, setFlippedNotes }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_OFFSETS = [1, 3, null, 6, 8, 10];
 
@@ -13,14 +13,16 @@ export default function Piano({ onChange }) {
   const [viewOctave, setViewOctave] = useState(2);
 
   // Notify parent on mount about default fundamental
-  useEffect(() => {
-    onChange?.(new Fundamental(fundamentalMidi));
-  }, []);
+  // ! here's the fundamental auto-select -- come back to keep if necessary
+  // useEffect(() => {
+  //   onChange?.(new Fundamental(fundamentalMidi));
+  // }, []);
 
   function selectFundamentalMidi(midi) {
     // Always set the fundamental, never deselect
     setFundamentalMidi(midi);
     onChange?.(new Fundamental(midi));
+    setFlippedNotes(new Array(24).fill(false));
   }
 
   const handleOctaveChange = (delta) => {

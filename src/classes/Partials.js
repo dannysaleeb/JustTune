@@ -4,8 +4,8 @@ import { Accidental, StaveNote, Annotation } from "vexflow";
 
 // GLOBALS (DO NOT CHANGE)
 const NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const DEGREES = [1, 1, 5, 1, 3, 5, 7, 1, 2, 3, 5, 5, 6, 7, 7, 1, 2, 2, 3, 3, 4, 5, 4, 5]; // 1-based indexing into NOTES (DO NOT CHANGE)
-const ADJUSTMENTS = [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1, 0, -1, -1, 0, 0, -1, 0, -1, 0, 0, -1, 1, 0]; // (DO NOT CHANGE)
+const DEGREES = [1, 1, 5, 1, 3, 5, 7, 1, 2, 3, 5, 5, 6, 7, 7, 1, 2, 2, 3, 3, 4, 5, 4, 5]; // 1-based indexing into NOTES
+const ADJUSTMENTS = [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1, 0, -1, -1, 0, 0, -1, 0, -1, 0, 0, -1, 1, 0];
 const PITCH_CLASS_DEGREES = [0, 2, 4, 5, 7, 9, 11];
 const ACCIDENTAL_SYMBOLS = ["bb", "b", "n", "#", "##"];
 const CENT_DEVIATION_THRESHOLD = 25;
@@ -36,8 +36,8 @@ class Fundamental {
   
   }
 
-  getPartial(n) {
-    return new Partial(n, this)
+  getPartial(n, flipped=false) {
+    return new Partial(n, this, flipped)
   }
 
   setFrequency(hz) {
@@ -63,7 +63,7 @@ class Fundamental {
 }
 
 class Partial {
-    constructor(partialNumber, fundamental) {
+    constructor(partialNumber, fundamental, flip=false) {
 
         this.partialNumber = partialNumber;
         this.fundamental = fundamental;
@@ -73,15 +73,14 @@ class Partial {
         this.midikey = Tone.ftom(this.frequency);
 
         this.note = this.getNote();
+        if (flip) {this.note = this.getEnharmonicEquivalent()}
 
-    }
-
-    getOctave(n) {
-      return Math.floor(Math.log2(n));
+        // ! so for the app, I can map partials, and create a new one in place with partial.partialNumber, partial.fundamental, flip = true
     }
 
     getNote() {
 
+      // ! gets the expected degree of the scale
       const degree = DEGREES[this.partialNumber - 1];
 
       // expected + adjustment
@@ -99,12 +98,11 @@ class Partial {
         arrow = "down"
       }
 
-      // Shift notated octave if too high/low
+      // ! get correct octave according to midikey
       let octave = Math.floor((this.midikey - accidental) / 12) - 1;
       let octava = 0;
 
-      // ! Fine -- this will work, but need to restrict fundamental octave choice in UI Piano, it doesn't need to go so high.
-      // ! only as high as C4 upper limit, I would say ...
+      // ! shift octave up/down as needed
       if (this.midikey >= 90 && this.midikey < 102) {
         octave -= 1;
         octava = 1;
@@ -119,18 +117,16 @@ class Partial {
       // construct name
       const degreeName = NOTES[((degree + this.fundamental.degree) - 1) % 7];
 
-      // if it's anything but Dbb and B# will go to wrong octave? Also Cb
-
       let symbol = "";
       if (NATURALS_FLAG) {
-        symbol = ACCIDENTAL_SYMBOLS[accidental + 2]; // offset to get correct sign
+        symbol = ACCIDENTAL_SYMBOLS[accidental + 2]; // +2 offset to get correct sign
       } else {
         if (accidental != 0) {
-          symbol= ACCIDENTAL_SYMBOLS[accidental + 2]; // offset to get correct sign
+          symbol= ACCIDENTAL_SYMBOLS[accidental + 2]; // +2 offset to get correct sign
         }
       }
 
-      let name = degreeName + symbol + "/" + octave;
+      let name = degreeName + symbol + "/" + octave; // vexflow format
       
       let colour = "rgba(0,0,0,1)";
       if (COLOURS_FLAG) {colour = COLOURS[this.getColourIndex()]}
@@ -138,7 +134,7 @@ class Partial {
       let clef = "";
       if (this.midikey > 59) { clef = "treble" } else { clef = "bass" };
 
-      return new Note(degree, accidental, arrow, centDeviation, octave, name, colour ? colour : "rgba(0, 0, 0, 1)", clef, octava);
+      return new Note(degree, accidental, arrow, centDeviation, octave, name, colour, clef, octava);
       
     }
 
@@ -224,7 +220,7 @@ class Partial {
       this.note = new Note(degree, accidental, arrow, centDeviation, octave, name, colour, clef, octava);
     }
 
-    enharmonicSwitch() {
+    getEnharmonicEquivalent() {
       // actual pitch class of this note
       const pc = this.midikey % 12;
 
@@ -302,11 +298,8 @@ class Partial {
       let name = degreeName + symbol + "/" + winner.octave;
 
       // ! check for octava ... might have SHIFTED
-      
-      this.setNote(winner.degree, winner.difference, this.note.arrow, this.note.centDeviation, winner.octave, name, this.note.colour, this.note.clef, this.note.octava);
 
-      return this;
-
+      return new Note(winner.pc_degree, winner.difference, this.note.arrow, this.note.centDeviation, winner.octave, name, this.note.colour, this.note.clef, this.note.octava);
     }
 }
 

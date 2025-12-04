@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function PartialSelector({ maxPartials, fundamental, onChange }) {
+function PartialSelector({ maxPartials, fundamental, flippedNotes, onChange, setFlippedNotes }) {
   const [selectedPartials, setSelectedPartials] = useState([]);
 
   // Update partials when fundamental changes
@@ -12,7 +12,7 @@ function PartialSelector({ maxPartials, fundamental, onChange }) {
 
     setSelectedPartials(prev => {
       return prev
-        .map(p => fundamental.getPartial(p.partialNumber))
+        .map(p => fundamental.getPartial(p.partialNumber, flippedNotes[p.partialNumber-1]))
         .filter(Boolean)
         .slice(0, maxPartials);
     })
@@ -31,7 +31,7 @@ function PartialSelector({ maxPartials, fundamental, onChange }) {
     //       .slice(0, maxPartials);
     //   }
     // });
-  }, [fundamental, maxPartials]);
+  }, [fundamental, maxPartials, flippedNotes]);
 
   // Notify parent of selection changes
   useEffect(() => {
@@ -50,7 +50,7 @@ function PartialSelector({ maxPartials, fundamental, onChange }) {
       if (existsIndex !== -1) {
         newSelected.splice(existsIndex, 1);
       } else if (prev.length < maxPartials) {
-        const partial = fundamental.getPartial(partialNumber);
+        const partial = fundamental.getPartial(partialNumber, flippedNotes[partialNumber-1]);
         if (partial) newSelected.push(partial);
       }
 

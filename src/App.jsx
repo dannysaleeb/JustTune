@@ -14,6 +14,7 @@ function App() {
   const [fundamental, setFundamental] = useState(null);
   const [partials, setPartials] = useState([]);
   const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings component
+  const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
 
   // Debug logging for fundamental
   // useEffect(() => {
@@ -66,13 +67,17 @@ function App() {
       <Notation 
         partials={partials}
         maxPartials={maxPartials}
+        flippedNotes={flippedNotes}
         setPartials={setPartials}
+        setFlippedNotes={setFlippedNotes}
       />
 
       <PartialSelector
         fundamental={fundamental}
         maxPartials={maxPartials}
+        flippedNotes={flippedNotes}
         onChange={setPartials}
+        setFlippedNotes={setFlippedNotes}
       />
 
       <Playback 
@@ -84,6 +89,7 @@ function App() {
         onChange={(f) => {
           setFundamental(f);
         }}
+        setFlippedNotes={setFlippedNotes}
       />
     </div>
   );
