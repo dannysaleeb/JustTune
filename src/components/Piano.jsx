@@ -4,24 +4,16 @@ import { Fundamental } from "../classes/Partials.js";
 // ! Let's set an octave limit here as global var, so we can easily change it 
 // ! tbh max C3 - C4 for the keyboard is ok, otherwise partials are impractically high
 
-export default function Piano({ onChange, setFlippedNotes }) {
+export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_OFFSETS = [1, 3, null, 6, 8, 10];
 
-  const [fundamentalMidi, setFundamentalMidi] = useState(null); // ! is null better here, otherwise key is highlighted but fundamental not actually selected
   // ! Also, I find it weirdly disconcerting not being able to fully deselect the keyboard fundamental, even though it's pointless.
   const [viewOctave, setViewOctave] = useState(2);
 
-  // Notify parent on mount about default fundamental
-  // ! here's the fundamental auto-select -- come back to keep if necessary
-  // useEffect(() => {
-  //   onChange?.(new Fundamental(fundamentalMidi));
-  // }, []);
-
   function selectFundamentalMidi(midi) {
     // Always set the fundamental, never deselect
-    setFundamentalMidi(midi);
-    onChange?.(new Fundamental(midi));
+    setMidiKey(midi);
     setFlippedNotes(new Array(24).fill(false));
   }
 
@@ -29,8 +21,8 @@ export default function Piano({ onChange, setFlippedNotes }) {
     const nextOct = Math.min(8, Math.max(0, viewOctave + delta));
     setViewOctave(nextOct);
 
-    if (fundamentalMidi !== null) {
-      const shifted = fundamentalMidi + delta * 12;
+    if (midiKey !== null) {
+      const shifted = midiKey + delta * 12;
       if (shifted >= 0 && shifted <= 127) selectFundamentalMidi(shifted);
     }
   };
@@ -66,7 +58,7 @@ export default function Piano({ onChange, setFlippedNotes }) {
             {WHITE_OFFSETS.map((offset, i) => {
               const thisKeyOct = i === 7 ? viewOctave + 1 : viewOctave;
               const midi = (viewOctave + 1) * 12 + offset;
-              const isSelected = midi === fundamentalMidi;
+              const isSelected = midi === midiKey;
 
               return (
                 <div
@@ -105,7 +97,7 @@ export default function Piano({ onChange, setFlippedNotes }) {
           {BLACK_OFFSETS.map((offset, i) => {
             if (offset === null) return null;
             const midi = (viewOctave + 1) * 12 + offset;
-            const isSelected = midi === fundamentalMidi;
+            const isSelected = midi === midiKey;
 
             return (
               <div

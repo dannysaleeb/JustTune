@@ -1,9 +1,8 @@
 import { useRef, useEffect } from "react";
-import { Renderer, Stave, StaveConnector, Voice, Formatter, Flow, TextBracket, Annotation } from "vexflow";
+import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
-import { Fundamental, Partial } from "../classes/Partials";
 
-export default function Notation({partials, maxPartials, flippedNotes, setPartials, setFlippedNotes }) {
+export default function Notation({partials, maxPartials, setFlippedNotes }) {
 
   const containerRef = useRef(null);
   // Flow.setMusicFont("Petaluma");
@@ -41,7 +40,7 @@ export default function Notation({partials, maxPartials, flippedNotes, setPartia
     lineRight.setContext(context).draw();
 
     // return if no partials
-    if (partials.length < 1) return;
+    if (!partials || partials.length < 1) return;
 
     // get vexflow StaveNotes
     const notes = partials.map(partial => (
@@ -52,10 +51,11 @@ export default function Notation({partials, maxPartials, flippedNotes, setPartia
     for (let i = 0; i < notes.length; i++) {
       if (partials[i].note.clef === "treble") {
         notes[i].setStave(top)
-      } else { notes[i].setStave(bottom) }
-    }
+      } else { 
+        notes[i].setStave(bottom) 
+      }
+    };
 
-    // create vexflow voice
     const voice = new Voice({
       num_beats: notes.length,
       beat_value: 4
@@ -195,32 +195,6 @@ export default function Notation({partials, maxPartials, flippedNotes, setPartia
       }      
     };
 
-    // HANDLE 15MB SYMBOL/BRACKET
-    if (octava["15mb"].length > 0) {
-      const start = notes[octava["15mb"][0]];
-      const stop = notes[octava["15mb"][octava["15mb"].length - 1]];
-
-      // use Annotation if start and stop are the same
-      if (start === stop) {
-        bracket_bottom_two = new TextBracketNoLineBottom({
-          start: start,
-          stop: stop,
-          text: "15mb",
-          position: TextBracket.Position.BOTTOM
-        });
-        bracket_bottom_two.setLine(3.5);
-      } else {
-        bracket_bottom_two = new TextBracket({
-          start: start,
-          stop: stop,
-          text: "15mb",
-          position: TextBracket.Position.BOTTOM
-        });
-        bracket_bottom_two.setLine(3.5);
-      }      
-    };
-
-
     new Formatter().joinVoices([voice]).format([voice], 350);
 
     // constrain notes to set x positions
@@ -231,7 +205,6 @@ export default function Notation({partials, maxPartials, flippedNotes, setPartia
       notes[i].getTickContext().setX((offset * i) + (margins * 0.4))
     };
 
-    // render voice
     voice.draw(context);
    
     if (bracket_top_one instanceof TextBracket) { 
@@ -257,24 +230,16 @@ export default function Notation({partials, maxPartials, flippedNotes, setPartia
         ele.style.cursor = "pointer";
         ele.addEventListener("click", () => {
           // on click, flip bit at flippedNotes[partialNumber - 1], otherwise return existing fn
-          setFlippedNotes(prev => {
-            const updated = prev.map((fn, j) => j === partials[index].partialNumber - 1 ? !fn : fn
-            );
-
-            setPartials(prevPartials => 
-              prevPartials.map(p =>
-                new Partial(p.partialNumber, p.fundamental, updated[p.partialNumber - 1])
-              )
-            );
-
-            return updated;
-
-          });
+          setFlippedNotes(prev => 
+            prev.map((fn, j) => 
+              j === partials[index].partialNumber - 1 ? !fn : fn
+            )
+          )
         });
       }
     });
 
-  }, [partials]);
+  }, [partials, maxPartials, setFlippedNotes]);
 
   return (
     <div ref={containerRef}></div>

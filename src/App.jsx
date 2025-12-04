@@ -1,49 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
-// import { Fundamental } from "./classes/Partials.js"; // ! starting with null fundamental
-
-
-// ! somewhere a fundamental is being auto-generated when the app loads -- I can't find it!
+import { Fundamental } from "./classes/Partials.js";
 
 function App() {
-  // Initialize default fundamental to C4
-  const [fundamental, setFundamental] = useState(null);
-  const [partials, setPartials] = useState([]);
-  const [maxPartials, setMaxPartials] = useState(8); // ! could up this to 8, and/or allow control in settings component
+  
+  const [midiKey, setMidiKey] = useState(null);
+  const [partialNumbers, setPartialNumbers] = useState([]);
   const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
 
-  // Debug logging for fundamental
-  // useEffect(() => {
-  //   if (fundamental) {
-  //     console.log("Current Fundamental:", {
-  //       frequency: fundamental.frequency,
-  //       octave: fundamental.octave,
-  //       name: fundamental.name,
-  //       degree: fundamental.degree,
-  //       key: fundamental.key,
-  //     });
-  //   }
-  // }, [fundamental]);
+  const fundamental = useMemo(
+    () => midiKey != null ? new Fundamental(midiKey) : null, [midiKey]
+  );
 
-  // Debug logging for partials
-  // useEffect(() => {
-  //   if (partials.length > 0) {
-  //     console.log(
-  //       "Selected Partials:",
-  //       partials.map((p) => ({
-  //         partialNumber: p.partialNumber,
-  //         frequency: p.frequency,
-  //         note: p.note,
-  //       }))
-  //     );
-  //   } else {
-  //     console.log("No partials selected");
-  //   }
-  // }, [partials]);
+  const partials = useMemo(() => {
+    return partialNumbers
+      .map(n => fundamental?.getPartial(n, flippedNotes[n - 1]))
+      .filter(Boolean)
+  }, [partialNumbers, fundamental, flippedNotes]);
+
+  const [maxPartials, setMaxPartials] = useState(8);
 
   return (
     <div
@@ -59,25 +38,23 @@ function App() {
         overflowX: "hidden",
       }}
     >
-      <FrequencyControl
+      {/* <FrequencyControl
         fundamental={fundamental}
         onChange={setFundamental}
-      />
+      /> */}
 
       <Notation 
         partials={partials}
         maxPartials={maxPartials}
-        flippedNotes={flippedNotes}
-        setPartials={setPartials}
         setFlippedNotes={setFlippedNotes}
       />
 
       <PartialSelector
         fundamental={fundamental}
         maxPartials={maxPartials}
+        partialNumbers={partialNumbers}
+        setPartialNumbers={setPartialNumbers}
         flippedNotes={flippedNotes}
-        onChange={setPartials}
-        setFlippedNotes={setFlippedNotes}
       />
 
       <Playback 
@@ -86,9 +63,8 @@ function App() {
       />
 
       <Piano
-        onChange={(f) => {
-          setFundamental(f);
-        }}
+        midiKey={midiKey}
+        setMidiKey={setMidiKey}
         setFlippedNotes={setFlippedNotes}
       />
     </div>

@@ -1,66 +1,38 @@
 import React, { useState, useEffect } from "react";
 
-function PartialSelector({ maxPartials, fundamental, flippedNotes, onChange, setFlippedNotes }) {
-  const [selectedPartials, setSelectedPartials] = useState([]);
+function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers, flippedNotes }) {
 
-  // Update partials when fundamental changes
+  // Update partialNumbers when fundamental changes
   useEffect(() => {
     if (!fundamental) {
-      setSelectedPartials([]);
+      setPartialNumbers([]);
       return;
+    } else {
+      setPartialNumbers(
+        prev => prev.filter(n => n > 0 && n <= 24).slice(0, maxPartials)
+      )
     }
-
-    setSelectedPartials(prev => {
-      return prev
-        .map(p => fundamental.getPartial(p.partialNumber, flippedNotes[p.partialNumber-1]))
-        .filter(Boolean)
-        .slice(0, maxPartials);
-    })
-
-    // ! removed the auto-select for now, preferring blank canvas start?
-    // setSelectedPartials((prev) => {
-    //   if (prev.length === 0) {
-    //     // Only auto-select 1 if nothing is selected
-    //     const firstPartial = fundamental.getPartial(1);
-    //     return firstPartial ? [firstPartial] : [];
-    //   } else {
-    //     // Preserve existing selections, mapping to new fundamental
-    //     return prev
-    //       .map((p) => fundamental.getPartial(p.partialNumber))
-    //       .filter(Boolean)
-    //       .slice(0, maxPartials);
-    //   }
-    // });
-  }, [fundamental, maxPartials, flippedNotes]);
-
-  // Notify parent of selection changes
-  useEffect(() => {
-    onChange?.(
-      [...selectedPartials].sort((a, b) => a.partialNumber - b.partialNumber)
-    );
-  }, [selectedPartials, onChange]);
+  }, [fundamental, maxPartials, setPartialNumbers]);
 
   const toggle = (partialNumber) => {
     if (!fundamental) return;
 
-    setSelectedPartials((prev) => {
-      const existsIndex = prev.findIndex((p) => p.partialNumber === partialNumber);
-      let newSelected = [...prev];
+    setPartialNumbers(prev => {
+      
+      const exists = prev.includes(partialNumber);
 
-      if (existsIndex !== -1) {
-        newSelected.splice(existsIndex, 1);
-      } else if (prev.length < maxPartials) {
-        const partial = fundamental.getPartial(partialNumber, flippedNotes[partialNumber-1]);
-        if (partial) newSelected.push(partial);
+      if (exists) { return prev.filter(n => n !== partialNumber );}
+
+      if (prev.length >= maxPartials) {
+        return prev;
       }
 
-      return newSelected.sort((a, b) => a.partialNumber - b.partialNumber);
+      return [...prev, partialNumber].sort((a, b) => a - b)
     });
   };
 
-  const selectedSet = new Set(selectedPartials.map((p) => p.partialNumber));
-  const maxReached = selectedPartials.length >= maxPartials;
-  const noFundamental = !fundamental;
+  const selectedSet = new Set(partialNumbers);
+  const maxReached = partialNumbers.length >= maxPartials;
 
   return (
     <div
@@ -75,7 +47,7 @@ function PartialSelector({ maxPartials, fundamental, flippedNotes, onChange, set
     >
       {Array.from({ length: 24 }, (_, i) => i + 1).map((num) => {
         const isSelected = selectedSet.has(num);
-        const disabled = noFundamental || (!isSelected && maxReached);
+        const disabled = !fundamental || (!isSelected && maxReached);
 
         return (
           <div
