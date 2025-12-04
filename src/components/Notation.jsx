@@ -276,11 +276,14 @@ export default function Notation({partials, maxPartials, setPartials}) {
 }
 
 // to do:
-// colours toggle
 // double flats/sharps toggle
 // enharmonic flip persist for life of fundamental
 // enharmonic flip button for whole series
 // centDeviation text all black
 // some collisions which are slightly annoying
-// bugfix for fundamental auto-select
+// 12-edo version no arrows, no centDeviation text
 // tidy code ... 
+
+// FIN
+// bugfix for fundamental auto-select
+// drag select for partials grid

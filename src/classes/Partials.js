@@ -15,8 +15,9 @@ const COLOURS = ["rgba(255, 0, 0, 1)", "rgba(255, 112, 0, 1)", "rgba(200, 187, 0
 
 
 // FLAGS (to go in relevant component/s, or top of App.jsx as controllable in settings)
-const DOUBLE_SHARPS_AND_FLATS = false; // so far un-used .. enharmonic re-spelling to be implemented
+const DOUBLE_SHARPS_AND_FLATS = false; // so far un-used
 const NATURALS_FLAG = false;
+const COLOURS_FLAG = true;
 
 class Fundamental {
   constructor(midikey) {
@@ -86,6 +87,8 @@ class Partial {
       // expected + adjustment
       const accidental = this.fundamental.key[((degree + this.fundamental.degree) - 1) % 7] + ADJUSTMENTS[this.partialNumber - 1];
 
+      // getEnharmonicRespelling should return a note? So here I can just return a switched note ... this is badly organised!! 
+
       const centDeviation = Math.round(this.getCentDeviation());
 
       let arrow = null;
@@ -111,9 +114,7 @@ class Partial {
       } else if (this.midikey <= 31) {
         octave += 1;
         octava = -1;
-      } 
-
-
+      };
 
       // construct name
       const degreeName = NOTES[((degree + this.fundamental.degree) - 1) % 7];
@@ -130,8 +131,9 @@ class Partial {
       }
 
       let name = degreeName + symbol + "/" + octave;
-
-      const colour = COLOURS[this.getColourIndex()];
+      
+      let colour = "rgba(0,0,0,1)";
+      if (COLOURS_FLAG) {colour = COLOURS[this.getColourIndex()]}
 
       let clef = "";
       if (this.midikey > 59) { clef = "treble" } else { clef = "bass" };
@@ -166,24 +168,11 @@ class Partial {
           }
         };
 
-        console.log(accidental);
-
         const octave = String(this.note.octave);
 
         let colour = this.note.colour;
 
         let note = new StaveNote({ clef: this.note.clef, keys: [this.note.name], duration: "q"});
-
-        // accidentalSharpArrowUp
-        // accidentalSharpArrowDown
-        // accidentalFlatArrowUp
-        // accidentalFlatArrowDown
-        // accidentalNaturalArrowUp
-        // accidentalNaturalArrowDown
-        // accidentalDoubleSharpArrowUp
-        // accidentalDoubleSharpArrowDown
-        // accidentalDoubleFlatArrowUp
-        // accidentalDoubleFlatArrowDown
 
         // this toggles NATURALS (but need to make sure they show with arrows if needed)
         if (NATURALS_FLAG) {
@@ -191,8 +180,6 @@ class Partial {
           note.addModifier(new Accidental(accidental));
         } else {
           if (this.note.accidental !== 0 || this.note.arrow) {
-            // console.log(this.note.accidental);
-            // note.addModifier(new Accidental(accidental));
             note.addModifier(new Accidental(accidental));
           }
         };
