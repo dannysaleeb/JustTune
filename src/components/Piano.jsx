@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Fundamental } from "../classes/Partials.js";
 
-// ! Let's set an octave limit here as global var, so we can easily change it 
-// ! tbh max C3 - C4 for the keyboard is ok, otherwise partials are impractically high
-
 export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_OFFSETS = [1, 3, null, 6, 8, 10];
 
-  // ! Also, I find it weirdly disconcerting not being able to fully deselect the keyboard fundamental, even though it's pointless.
   const [viewOctave, setViewOctave] = useState(2);
 
   function selectFundamentalMidi(midi) {
@@ -18,7 +14,7 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
   }
 
   const handleOctaveChange = (delta) => {
-    const nextOct = Math.min(8, Math.max(0, viewOctave + delta));
+    const nextOct = Math.min(3, Math.max(0, viewOctave + delta));
     setViewOctave(nextOct);
 
     if (midiKey !== null) {
@@ -136,8 +132,8 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
 
         <button
           onClick={() => handleOctaveChange(1)}
-          disabled={viewOctave >= 8}
-          style={{ ...arrowButtonStyle, opacity: viewOctave >= 8 ? 0.2 : 1 }}
+          disabled={viewOctave >= 3}
+          style={{ ...arrowButtonStyle, opacity: viewOctave >= 3 ? 0.2 : 1 }}
         >
           ›
         </button>
