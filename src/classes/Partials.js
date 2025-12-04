@@ -71,7 +71,7 @@ class Partial {
 
         // midikey for clef
         // ! I think this needs a bugfix
-        this.midikey = Tone.ftom(this.frequency);
+        this.midikey = Math.round(fundamental.midikey + 12 * Math.log2(this.partialNumber));
 
         this.note = this.getNote();
         if (flip) {this.note = this.getEnharmonicEquivalent()}
@@ -318,4 +318,4 @@ class Note {
     }
 }
 
-export { Partial, Fundamental, Note }; // removed test and added this line (only change except for import keys) //
+export { Partial, Fundamental, Note };

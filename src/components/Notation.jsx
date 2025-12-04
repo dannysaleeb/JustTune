@@ -248,14 +248,12 @@ export default function Notation({partials, maxPartials, setFlippedNotes }) {
 
 // to do:
 // double flats/sharps toggle
-// enharmonic flip persist for life of fundamental
 // enharmonic flip button for whole series
 // centDeviation text all black
-// some collisions which are slightly annoying
 // 12-edo version no arrows, no centDeviation text
+// make partialSelector buttons match colours
 // tidy code ... 
 
-// FIN
+// FIN?
 // bugfix for fundamental auto-select
-// constrain Piano to C4 upper limit
 // drag select for partials grid
