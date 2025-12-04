@@ -91,9 +91,9 @@ class Partial {
       let arrow = null;
 
       if (centDeviation >= CENT_DEVIATION_THRESHOLD) { 
-        arrow = "-UP"
+        arrow = "up"
       } else if (centDeviation <= (CENT_DEVIATION_THRESHOLD * -1)) {
-        arrow = "-DOWN"
+        arrow = "down"
       }
 
       // Shift notated octave if too high/low
@@ -153,7 +153,20 @@ class Partial {
     }
 
     getRenderable() {
+
         let accidental = ACCIDENTAL_SYMBOLS[this.note.accidental + 2];
+
+        const accidentalMap = ['DoubleFlat', 'Flat', 'Natural', 'Sharp', 'DoubleSharp'];
+
+        if (this.note.arrow) {
+          if (this.note.arrow === "up") {
+            accidental = `accidental${accidentalMap[this.note.accidental + 2]}ArrowUp`
+          } else if (this.note.arrow === "down") {
+            accidental = `accidental${accidentalMap[this.note.accidental + 2]}ArrowDown`
+          }
+        };
+
+        console.log(accidental);
 
         const octave = String(this.note.octave);
 
@@ -161,12 +174,25 @@ class Partial {
 
         let note = new StaveNote({ clef: this.note.clef, keys: [this.note.name], duration: "q"});
 
+        // accidentalSharpArrowUp
+        // accidentalSharpArrowDown
+        // accidentalFlatArrowUp
+        // accidentalFlatArrowDown
+        // accidentalNaturalArrowUp
+        // accidentalNaturalArrowDown
+        // accidentalDoubleSharpArrowUp
+        // accidentalDoubleSharpArrowDown
+        // accidentalDoubleFlatArrowUp
+        // accidentalDoubleFlatArrowDown
+
         // this toggles NATURALS (but need to make sure they show with arrows if needed)
         if (NATURALS_FLAG) {
+          // note.addModifier(new Accidental(accidental));
           note.addModifier(new Accidental(accidental));
         } else {
-          if (this.note.accidental !== 0) {
+          if (this.note.accidental !== 0 || this.note.arrow) {
             // console.log(this.note.accidental);
+            // note.addModifier(new Accidental(accidental));
             note.addModifier(new Accidental(accidental));
           }
         };
@@ -312,6 +338,3 @@ class Note {
 }
 
 export { Partial, Fundamental, Note }; // removed test and added this line (only change except for import keys) //
-
-// to do:
-// add function for enharmonic re-spelling

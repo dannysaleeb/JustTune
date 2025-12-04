@@ -6,6 +6,7 @@ import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
 // import { Fundamental } from "./classes/Partials.js"; // ! starting with null fundamental
 
+
 // ! somewhere a fundamental is being auto-generated when the app loads -- I can't find it!
 
 function App() {

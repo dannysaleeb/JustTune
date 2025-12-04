@@ -275,11 +275,12 @@ export default function Notation({partials, maxPartials, setPartials}) {
   )
 }
 
-// FIRST PULL CHANGES AND COMMIT ... 
-
-// introduce arrowed accidentals;
-// make centDeviation text move out of way of very low notes, maybe make it appear above bass clef stave; 
-// maybe make centDeviation text all black ... (these are ideals for end ... )
-// enharmonic switch for all notes of fundamental??
-
+// to do:
+// colours toggle
+// double flats/sharps toggle
+// enharmonic flip persist for life of fundamental
+// enharmonic flip button for whole series
+// centDeviation text all black
+// some collisions which are slightly annoying
 // bugfix for fundamental auto-select
+// tidy code ... 
