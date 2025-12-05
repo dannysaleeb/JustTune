@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers }) {
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragModeIsRemoving, setDragModeIsRemoving] = useState(false);
 
   // Update partialNumbers when fundamental changes
   useEffect(() => {
@@ -13,6 +16,12 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
       )
     }
   }, [fundamental, maxPartials, setPartialNumbers]);
+
+  useEffect(() => {
+    const stopDrag = () => setIsDragging(false);
+    window.addEventListener("mouseup", stopDrag);
+    return () => window.removeEventListener("mouseup", stopDrag);
+  }, []);
 
   const toggle = (partialNumber) => {
     if (!fundamental) return;
@@ -52,7 +61,43 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
         return (
           <div
             key={num}
-            onClick={() => !disabled && toggle(num)}
+            onMouseDown={(e) => {
+              if (disabled) return;
+              if (e.button !== 0) return;
+              e.preventDefault();
+
+              setIsDragging(true);
+              setDragModeIsRemoving(partialNumbers.includes(num));
+
+              setPartialNumbers(prev => {
+                const exists = prev.includes(num);
+
+                if (exists) {
+                  return prev.filter(n => n !== num);
+                } else if (prev.length < maxPartials) {
+                  return [...prev, num].sort((a, b) => a - b);
+                }
+                return prev;
+              });
+            }}
+            onMouseEnter={() => {
+              if (!isDragging || disabled) return;
+
+              setPartialNumbers(prev => {
+                const exists = prev.includes(num);
+
+                if (dragModeIsRemoving) {
+                  return exists ? prev.filter(n => n !== num) : prev;
+                } else {
+                  return exists || prev.length >= maxPartials
+                    ? prev
+                    : [...prev, num].sort((a, b) => a - b);
+                }
+              });
+            }}
+            onMouseUp={() => {
+              setIsDragging(false);
+            }}
             style={{
               aspectRatio: "1",
               minWidth: "30px",
