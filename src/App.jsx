@@ -6,6 +6,8 @@ import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
 import { Fundamental } from "./classes/Partials.js";
 
+import styles from "./App.module.css";
+
 function App() {
   
   const [midiKey, setMidiKey] = useState(null);
@@ -29,49 +31,57 @@ function App() {
   const [maxPartials, setMaxPartials] = useState(8);
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        fontFamily: "sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        gap: "25px",
-        boxSizing: "border-box",
-        width: "100%",
-        maxWidth: "100vw",
-        overflowX: "hidden",
-      }}
-    >
-      <FrequencyControl
-        tuningFactor={tuningFactor}
-        setTuningFactor={setTuningFactor}
-        disabled={!fundamental}
-      />
+    <div className={styles.appContainer}>
 
-      <Notation 
-        partials={partials}
-        maxPartials={maxPartials}
-        setFlippedNotes={setFlippedNotes}
-      />
+      {/* LEFT PANEL // CONTROLS & SETTINGS */}
+      <div className={styles.leftPanel}>
+        
+        <div className={styles.controls}>
+          <Playback 
+            partials={partials}
+            maxPartials={maxPartials}
+          />
+        </div>
 
-      <PartialSelector
-        fundamental={fundamental}
-        maxPartials={maxPartials}
-        partialNumbers={partialNumbers}
-        setPartialNumbers={setPartialNumbers}
-        flippedNotes={flippedNotes}
-      />
+        <div className={styles.settings}>
+          <FrequencyControl
+            tuningFactor={tuningFactor}
+            setTuningFactor={setTuningFactor}
+            disabled={!fundamental}
+          />
+        </div>
 
-      <Playback 
-        partials={partials}
-        maxPartials={maxPartials}
-      />
+      </div>
 
-      <Piano
-        midiKey={midiKey}
-        setMidiKey={setMidiKey}
-        setFlippedNotes={setFlippedNotes}
-      />
+      {/* NOTATION PANEL */}
+      <div className={styles.notationPanel}>
+        <Notation 
+          partials={partials}
+          maxPartials={maxPartials}
+          setFlippedNotes={setFlippedNotes}
+        />
+      </div>
+
+      {/* PARTIAL SELECTOR GRID PANEL */}
+      <div className={styles.partialsPanel}>
+        <PartialSelector
+          fundamental={fundamental}
+          maxPartials={maxPartials}
+          partialNumbers={partialNumbers}
+          setPartialNumbers={setPartialNumbers}
+          flippedNotes={flippedNotes}
+        />
+      </div>
+
+      {/* PIANO FUNDAMENTAL SELECTOR PANEL */}
+      <div className={styles.pianoPanel}>
+        <Piano
+          midiKey={midiKey}
+          setMidiKey={setMidiKey}
+          setFlippedNotes={setFlippedNotes}
+        />
+      </div>   
+         
     </div>
   );
 }

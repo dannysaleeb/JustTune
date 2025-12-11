@@ -5,25 +5,31 @@ import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatc
 export default function Notation({partials, maxPartials, setFlippedNotes }) {
 
   const containerRef = useRef(null);
-  // Flow.setMusicFont("Petaluma");
 
   useEffect(() => {
 
     if (!containerRef.current) return;
 
     containerRef.current.innerHTML = "";
+    const {width, height} = containerRef.current.getBoundingClientRect();
 
     const staveWidth = 400; // this will be derived from layout later
 
     // draw stave
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(450, 400);
+
+
+    // size of renderer from parent div
+
+    renderer.resize(width, 250);
 
     const context = renderer.getContext();
 
+    context.scale(0.85, 0.85)
+
     // Create the staves
-    const top = new Stave(25, 50, staveWidth);
-    const bottom = new Stave(25, 150, staveWidth);
+    const top = new Stave(80, 30, staveWidth);
+    const bottom = new Stave(80, 105, staveWidth);
 
     top.addClef('treble');
     bottom.addClef('bass');

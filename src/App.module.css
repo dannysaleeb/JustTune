@@ -1,0 +1,47 @@
+.appContainer {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 260px 195px 135px;
+    gap: 15px;
+
+    width: 1080px;
+    height: 720px;
+    padding: 45px 85px;
+    box-sizing: border-box;
+}
+
+.leftPanel {
+  grid-row: 2 / -1;
+  background: #f2f2f2;
+  border-radius: 16px;
+  box-shadow: 
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset 1px 1px 2px rgba(0,0,0,1);
+  padding: 20px;
+}
+
+/* Right side panels */
+.notationPanel,
+.partialsPanel,
+.pianoPanel {
+  grid-column: 2 / 3;
+  background: #f2f2f2;
+  border-radius: 16px;
+  box-shadow: 
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset 1px 1px 2px rgba(0,0,0,1);
+  padding: 20px;
+}
+
+.notationPanel {
+  grid-row: 1 / 2;
+  overflow: hidden;
+}
+
+.partialsPanel {
+  grid-row: 2 / 3;
+}
+
+.pianoPanel {
+  grid-row: 3 / 4;
+}
