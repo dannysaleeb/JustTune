@@ -1,0 +1,62 @@
+.button {
+  aspect-ratio: 1;
+  min-width: 30px;
+  max-width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 400;
+  user-select: none;
+  cursor: pointer;
+  transition: 
+      box-shadow 0.15s ease,
+      background 0.15s ease,
+      color 0.15s ease,
+      transform 0.1s ease;
+  
+  /* base background */
+  background: #bfbfbf;
+}
+
+/* -------------------- */
+/* UNSELECTED            */
+/* (Raised, soft shadow) */
+/* -------------------- */
+.unselected {
+  color: white;
+
+  box-shadow:
+     -6px -6px 12px rgba(255,255,255,0.6),
+      6px  6px 12px rgba(0,0,0,0.25);
+}
+
+/* -------------------- */
+/* SELECTED (PRESSED)    */
+/* -------------------- */
+.selected {
+  color: #dca431; /* gold text */
+
+  /* Pressed/inset look */
+  box-shadow:
+      inset 4px 4px 8px rgba(0,0,0,0.35),
+      inset -4px -4px 8px rgba(255,255,255,0.4),
+      0 0 12px 2px rgba(240,180,40,0.5); /* glow */
+  
+  transform: translateY(1px);
+}
+
+/* -------------------- */
+/* DISABLED              */
+/* -------------------- */
+.disabled {
+  cursor: not-allowed;
+  color: rgb(150,150,150);
+
+  box-shadow:
+     -3px -3px 6px rgba(255,255,255,0.3),
+      3px  3px 6px rgba(0,0,0,0.15);
+
+  opacity: 0.6;
+}

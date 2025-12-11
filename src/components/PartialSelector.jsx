@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PartialButton from "./PartialButton";
 
 function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers }) {
 
@@ -23,23 +24,6 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
     return () => window.removeEventListener("mouseup", stopDrag);
   }, []);
 
-  const toggle = (partialNumber) => {
-    if (!fundamental) return;
-
-    setPartialNumbers(prev => {
-      
-      const exists = prev.includes(partialNumber);
-
-      if (exists) { return prev.filter(n => n !== partialNumber );}
-
-      if (prev.length >= maxPartials) {
-        return prev;
-      }
-
-      return [...prev, partialNumber].sort((a, b) => a - b)
-    });
-  };
-
   const selectedSet = new Set(partialNumbers);
   const maxReached = partialNumbers.length >= maxPartials;
 
@@ -59,8 +43,15 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
         const disabled = !fundamental || (!isSelected && maxReached);
 
         return (
-          <div
+
+
+
+          <PartialButton
             key={num}
+            number={num}
+            selected={isSelected}
+            disabled={disabled}
+
             onMouseDown={(e) => {
               if (disabled) return;
               if (e.button !== 0) return;
@@ -80,6 +71,7 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
                 return prev;
               });
             }}
+
             onMouseEnter={() => {
               if (!isDragging || disabled) return;
 
@@ -95,38 +87,11 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
                 }
               });
             }}
+            
             onMouseUp={() => {
               setIsDragging(false);
             }}
-            style={{
-              aspectRatio: "1",
-              minWidth: "30px",
-              maxWidth: "50px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: disabled ? "not-allowed" : "pointer",
-              borderRadius: "4px",
-              userSelect: "none",
-              WebkitTapHighlightColor: "transparent",
-              backgroundColor: isSelected
-                ? "#4CAF50"
-                : disabled
-                ? "#ccc"
-                : "#eee",
-              color: isSelected
-                ? "white"
-                : disabled
-                ? "rgb(160,160,160)"
-                : "black",
-              border: "1px solid #ccc",
-              fontSize: "14px",
-              boxSizing: "border-box",
-              transition: "background-color 0.15s ease",
-            }}
-          >
-            {num}
-          </div>
+          />
         );
       })}
     </div>
