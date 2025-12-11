@@ -39,3 +39,10 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "Adamina-Regular";
+  src: url("./assets/fonts/Adamina-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}

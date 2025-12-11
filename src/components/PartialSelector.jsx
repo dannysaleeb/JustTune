@@ -31,9 +31,11 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(8, 1fr)",
+        gridTemplateColumns: "repeat(8, 47px)",
+        gridTemplateRows: "repeat(3, 47px)",
+        margin: "0 auto",
         gap: "6px",
-        width: "100%",
+        width: "fit-content",
         maxWidth: "100%",
         boxSizing: "border-box",
       }}
