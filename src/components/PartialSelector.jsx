@@ -1,10 +1,27 @@
 import { useEffect, useState } from "react";
 import PartialButton from "./PartialButton";
 
-function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers }) {
+function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers, colours }) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragModeIsRemoving, setDragModeIsRemoving] = useState(false);
+
+  function getColour(partialNumber) {
+    let colourIndex = 0;
+    
+    // if not prime, divide by 2 until prime
+    if (partialNumber % 2 === 0) {
+        while (Number.isInteger(partialNumber / 2)) {
+            partialNumber /= 2
+        }
+    };
+
+    for (let i = 0; i < partialNumber; i++) {
+        if (!(i % 2 === 0)) { colourIndex++ } 
+    }
+
+    return colours[colourIndex]
+  };
 
   // Update partialNumbers when fundamental changes
   useEffect(() => {
@@ -53,7 +70,9 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
             number={num}
             selected={isSelected}
             disabled={disabled}
-
+            style={{
+              "--partial-color": getColour(num)
+            }}
             onMouseDown={(e) => {
               if (disabled) return;
               if (e.button !== 0) return;

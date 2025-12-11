@@ -8,6 +8,8 @@ import { Fundamental } from "./classes/Partials.js";
 
 import styles from "./App.module.css";
 
+import { COLOURS } from "./classes/Partials.js";
+
 function App() {
   
   const [midiKey, setMidiKey] = useState(null);
@@ -75,6 +77,7 @@ function App() {
           partialNumbers={partialNumbers}
           setPartialNumbers={setPartialNumbers}
           flippedNotes={flippedNotes}
+          colours={COLOURS}
         />
       </div>
 
