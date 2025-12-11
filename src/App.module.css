@@ -45,3 +45,22 @@
 .pianoPanel {
   grid-row: 3 / 4;
 }
+
+.title > h1 {
+    font-family: "Amatica SC";
+    font-weight: 10;
+    font-size: 50px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+
+.title > p {
+    font-family: "Amatica SC";
+    font-weight: 10;
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 10px;
+
+}

@@ -32,6 +32,11 @@ function App() {
 
   return (
     <div className={styles.appContainer}>
+      <div className={styles.title}>
+        <h1>JUST TUNE</h1>
+        <p>by Fintan O'Hare & Danny Saleeb</p>
+        <p>after an original app by Martin Suckling</p>
+      </div>
 
       {/* LEFT PANEL // CONTROLS & SETTINGS */}
       <div className={styles.leftPanel}>
