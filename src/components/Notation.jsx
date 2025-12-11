@@ -253,7 +253,4 @@ export default function Notation({partials, maxPartials, setFlippedNotes }) {
 // 12-edo version no arrows, no centDeviation text
 // make partialSelector buttons match colours
 // tidy code ... 
-
-// FIN?
-// bugfix for fundamental auto-select
-// drag select for partials grid
+// layout
