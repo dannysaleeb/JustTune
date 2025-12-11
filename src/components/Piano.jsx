@@ -63,7 +63,8 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
                   onClick={() => selectFundamentalMidi(midi)}
                   style={{
                     flex: 1,
-                    border: "1px solid #333",
+                    boxShadow: "inset -1px -1px 2px rgba(0,0,0,0.5)",
+                    // border: "1px solid #333",
                     borderRight: i === 7 ? "1px solid #333" : "none",
                     background: isSelected ? "#cce0ff" : "white",
                     cursor: "pointer",
@@ -105,7 +106,7 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
                 }}
                 style={{
                   position: "absolute",
-                  left: `calc(${(i + 1) * 12.5}% - 3%)`,
+                  left: `calc(${(i + 1) * 12.5}% - 2.3%)`,
                   top: 0,
                   width: "6%",
                   height: "60%",
@@ -114,9 +115,10 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
                   background: isSelected ? "#003f8a" : "black",
                   zIndex: 10,
                   cursor: "pointer",
-                  borderBottomLeftRadius: 4,
-                  borderBottomRightRadius: 4,
-                  boxShadow: "1px 1px 3px rgba(0,0,0,0.3)",
+                  // borderRadius: 4,
+                  // borderBottomLeftRadius: 4,
+                  // borderBottomRightRadius: 4,
+                  boxShadow: "1px 1px 3px rgba(0,0,0,1)",
                   transition: "background 0.15s ease",
 
                   userSelect: "none",
