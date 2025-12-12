@@ -35,8 +35,6 @@ import Ds7 from "../Audio/Ds7.mp3";
 import Fs7 from "../Audio/Fs7.mp3";
 import C8 from "../Audio/C8.mp3";
 
-// ! taking maxPartials from App.jsx, so we can set globally in settings (currently 8)
-
 const NOTE_LIST = [
   "A0", "C1", "Ds1", "Fs1",
   "A1", "C2", "Ds2", "Fs2",
@@ -54,7 +52,7 @@ const SAMPLE_MAP = {
   A6, C7, Ds7, Fs7, C8
 };
 
-export default function Playback({ partials = [], maxPartials }) {
+export default function Playback({ partials = [], settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [mode, setMode] = useState("piano"); // "piano" | "sine"
   const [use12EDO, setUse12EDO] = useState(false);
@@ -105,7 +103,7 @@ export default function Playback({ partials = [], maxPartials }) {
   const playPiano = () => {
     if (!buffers.current) return;
 
-    const targets = partials.slice(0, maxPartials).map((p) => {
+    const targets = partials.slice(0, settings.maxPartials).map((p) => {
       if (use12EDO) {
         const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
         return p.nearest12edoFrequency() * ratio;
@@ -140,7 +138,7 @@ export default function Playback({ partials = [], maxPartials }) {
 
   // --- Play sine waves -------------------------------------------------------------
   const playSine = () => {
-    const targets = partials.slice(0, maxPartials).map((p) => {
+    const targets = partials.slice(0, settings.maxPartials).map((p) => {
       if (use12EDO) {
         const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
         return p.nearest12edoFrequency() * ratio;

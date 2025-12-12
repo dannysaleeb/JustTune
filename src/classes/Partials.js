@@ -147,9 +147,16 @@ class Partial {
 
         let accidental = ACCIDENTAL_SYMBOLS[this.note.accidental + 2];
 
+        if (!this.settings.doubles) {
+          if (this.note.accidental < -1 || this.note.accidental > 1) {
+            this.note = this.getEnharmonicEquivalent();
+            accidental = ACCIDENTAL_SYMBOLS[this.note.accidental + 2];
+          }
+        };
+
         const accidentalMap = ['DoubleFlat', 'Flat', 'Natural', 'Sharp', 'DoubleSharp'];
 
-        if (this.note.arrow) {
+        if (this.note.arrow && !this.settings.use12EDO) {
           if (this.note.arrow === "up") {
             accidental = `accidental${accidentalMap[this.note.accidental + 2]}ArrowUp`
           } else if (this.note.arrow === "down") {
@@ -182,7 +189,7 @@ class Partial {
           fillStyle:   "rgba(0,0,0,0)"    // transparent interior
         });
 
-        if (this.note.centDeviation !== 0) {
+        if (this.note.centDeviation !== 0 && !this.settings.use12EDO) {
           let text = String(this.note.centDeviation);
           note.addModifier(new Annotation(this.note.centDeviation > 0 ? "+" + text : text).setVerticalJustification('bottom'))
         }

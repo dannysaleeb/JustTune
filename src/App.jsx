@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
 import FrequencyControl from "./components/FrequencyControl";
+import Settings from "./components/Settings.jsx";
 import { Fundamental } from "./classes/Partials.js";
 
 import styles from "./App.module.css";
@@ -30,7 +31,7 @@ function App() {
     return partialNumbers
       .map(n => fundamental?.getPartial(n, flippedNotes[n - 1], settings))
       .filter(Boolean)
-  }, [partialNumbers, fundamental, flippedNotes]);
+  }, [partialNumbers, fundamental, flippedNotes, settings]);
 
   const [maxPartials, setMaxPartials] = useState(8);
 
@@ -48,6 +49,7 @@ function App() {
         <div className={styles.controls}>
           <Playback 
             partials={partials}
+            settings={settings}
             maxPartials={maxPartials}
           />
         </div>
@@ -60,13 +62,22 @@ function App() {
           />
         </div>
 
+        <div className={styles.settings}>
+          <Settings
+            settings={settings}
+            setSettings={setSettings}
+            flippedNotes={flippedNotes}
+            setFlippedNotes={setFlippedNotes}
+          />
+        </div>
+
       </div>
 
       {/* NOTATION PANEL */}
       <div className={styles.notationPanel}>
         <Notation 
           partials={partials}
-          maxPartials={maxPartials}
+          settings={settings}
           setFlippedNotes={setFlippedNotes}
         />
       </div>
@@ -75,10 +86,10 @@ function App() {
       <div className={styles.partialsPanel}>
         <PartialSelector
           fundamental={fundamental}
-          maxPartials={maxPartials}
           partialNumbers={partialNumbers}
           setPartialNumbers={setPartialNumbers}
           flippedNotes={flippedNotes}
+          settings={settings}
           colours={COLOURS}
         />
       </div>

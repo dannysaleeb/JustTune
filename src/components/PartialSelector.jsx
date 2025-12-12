@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PartialButton from "./PartialButton";
 
-function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialNumbers, colours }) {
+function PartialSelector({ fundamental, partialNumbers, setPartialNumbers, settings, colours }) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragModeIsRemoving, setDragModeIsRemoving] = useState(false);
@@ -30,10 +30,10 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
       return;
     } else {
       setPartialNumbers(
-        prev => prev.filter(n => n > 0 && n <= 24).slice(0, maxPartials)
+        prev => prev.filter(n => n > 0 && n <= 24).slice(0, settings.maxPartials)
       )
     }
-  }, [fundamental, maxPartials, setPartialNumbers]);
+  }, [fundamental, settings.maxPartials, setPartialNumbers]);
 
   useEffect(() => {
     const stopDrag = () => setIsDragging(false);
@@ -42,7 +42,7 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
   }, []);
 
   const selectedSet = new Set(partialNumbers);
-  const maxReached = partialNumbers.length >= maxPartials;
+  const maxReached = partialNumbers.length >= settings.maxPartials;
 
   return (
     <div
@@ -86,7 +86,7 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
 
                 if (exists) {
                   return prev.filter(n => n !== num);
-                } else if (prev.length < maxPartials) {
+                } else if (prev.length < settings.maxPartials) {
                   return [...prev, num].sort((a, b) => a - b);
                 }
                 return prev;
@@ -102,7 +102,7 @@ function PartialSelector({ fundamental, maxPartials, partialNumbers, setPartialN
                 if (dragModeIsRemoving) {
                   return exists ? prev.filter(n => n !== num) : prev;
                 } else {
-                  return exists || prev.length >= maxPartials
+                  return exists || prev.length >= settings.maxPartials
                     ? prev
                     : [...prev, num].sort((a, b) => a - b);
                 }

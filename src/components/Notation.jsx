@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
-export default function Notation({partials, maxPartials, setFlippedNotes }) {
+export default function Notation({partials, settings, setFlippedNotes }) {
 
   const containerRef = useRef(null);
 
@@ -205,7 +205,7 @@ export default function Notation({partials, maxPartials, setFlippedNotes }) {
 
     // constrain notes to set x positions
     const margins = staveWidth * 0.2;
-    const offset = (staveWidth - margins) / maxPartials;
+    const offset = (staveWidth - margins) / settings.maxPartials;
 
     for (let i = 0; i < notes.length; i++) {
       notes[i].getTickContext().setX((offset * i) + (margins * 0.4))
@@ -245,18 +245,9 @@ export default function Notation({partials, maxPartials, setFlippedNotes }) {
       }
     });
 
-  }, [partials, maxPartials, setFlippedNotes]);
+  }, [partials, settings.maxPartials, setFlippedNotes]);
 
   return (
     <div ref={containerRef}></div>
   )
 }
-
-// to do:
-// double flats/sharps toggle
-// enharmonic flip button for whole series
-// centDeviation text all black
-// 12-edo version no arrows, no centDeviation text
-// make partialSelector buttons match colours
-// tidy code ... 
-// layout
