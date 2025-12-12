@@ -22,18 +22,16 @@ function App() {
 
   const fundamental = useMemo(() => {
     if (midiKey == null) return null;
-    const f = new Fundamental(midiKey);
+    const f = new Fundamental(midiKey, settings.enharmonicToggle);
     f.setFrequency(f.frequency * tuningFactor);
     return f;
-  }, [midiKey, tuningFactor]);
+  }, [midiKey, tuningFactor, settings.enharmonicToggle]);
 
   const partials = useMemo(() => {
     return partialNumbers
       .map(n => fundamental?.getPartial(n, flippedNotes[n - 1], settings))
       .filter(Boolean)
   }, [partialNumbers, fundamental, flippedNotes, settings]);
-
-  const [maxPartials, setMaxPartials] = useState(8);
 
   return (
     <div className={styles.appContainer}>

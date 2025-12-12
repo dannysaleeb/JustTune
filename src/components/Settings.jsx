@@ -1,6 +1,4 @@
-export default function Settings({ settings, setSettings, flippedNotes, setFlippedNotes }) {
-
-    const flippedAllTrue = flippedNotes.every(v => v === true);
+export default function Settings({ settings, setSettings }) {
 
     return (
         <div>
@@ -47,19 +45,17 @@ export default function Settings({ settings, setSettings, flippedNotes, setFlipp
                 <label>
                     <input
                     type="checkbox"
-                    checked={flippedAllTrue} // what should this be?
+                    checked={settings.enharmonicToggle}
                     onChange={() =>
-                        setFlippedNotes(prev => {
-                            const allTrue = prev.every(v => v === true);
-                            return prev.map(() => !allTrue)
-                        })
+                        setSettings(prev => ({ 
+                            ...prev, 
+                            enharmonicToggle: prev.enharmonicToggle === 1 ? 0 : 1
+                        }))
                     }
                     />
-                    Enharmonic FLIP!
+                    Enharmonic flip
                 </label>
             </div>
-
-            {/* It would be useful for enharmonic flip to choose double flat or double sharp intelligently where necessary */}
 
             <div>
                 <label>
