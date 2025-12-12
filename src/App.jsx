@@ -50,7 +50,7 @@ function App() {
           <Playback 
             partials={partials}
             settings={settings}
-            maxPartials={maxPartials}
+            setSettings={setSettings}
           />
         </div>
 

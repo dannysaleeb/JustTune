@@ -52,10 +52,9 @@ const SAMPLE_MAP = {
   A6, C7, Ds7, Fs7, C8
 };
 
-export default function Playback({ partials = [], settings }) {
+export default function Playback({ partials = [], settings, setSettings }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [mode, setMode] = useState("piano"); // "piano" | "sine"
-  const [use12EDO, setUse12EDO] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const buffers = useRef(null);
@@ -63,6 +62,13 @@ export default function Playback({ partials = [], settings }) {
   const activeSources = useRef([]);
 
   const FADE_TIME = 0.12;
+
+  const setUse12EDO = (value) => {
+    setSettings(prev => ({
+      ...prev,
+      use12EDO: value,
+    }));
+  }
 
   // --- Load local piano samples ---
   useEffect(() => {
@@ -104,7 +110,7 @@ export default function Playback({ partials = [], settings }) {
     if (!buffers.current) return;
 
     const targets = partials.slice(0, settings.maxPartials).map((p) => {
-      if (use12EDO) {
+      if (settings.use12EDO) {
         const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
         return p.nearest12edoFrequency() * ratio;
       }
@@ -139,7 +145,7 @@ export default function Playback({ partials = [], settings }) {
   // --- Play sine waves -------------------------------------------------------------
   const playSine = () => {
     const targets = partials.slice(0, settings.maxPartials).map((p) => {
-      if (use12EDO) {
+      if (settings.use12EDO) {
         const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
         return p.nearest12edoFrequency() * ratio;
       }
@@ -201,7 +207,7 @@ export default function Playback({ partials = [], settings }) {
         startCurrentMode();
       })();
     }
-  }, [partials, use12EDO, mode]);
+  }, [partials, settings.use12EDO, mode]);
 
   const hasPartials = partials.length > 0;
 
@@ -272,7 +278,7 @@ export default function Playback({ partials = [], settings }) {
         onClick={() => hasPartials && setUse12EDO(false)}
         style={{
           cursor: hasPartials ? "pointer" : "not-allowed",
-          color: !use12EDO ? "#000" : "#888",
+          color: !settings.use12EDO ? "#000" : "#888",
 		  WebkitTapHighlightColor: "transparent",
         }}
       >
@@ -283,7 +289,7 @@ export default function Playback({ partials = [], settings }) {
         onClick={() => hasPartials && setUse12EDO(true)}
         style={{
           cursor: hasPartials ? "pointer" : "not-allowed",
-          color: use12EDO ? "#000" : "#888",
+          color: settings.use12EDO ? "#000" : "#888",
 		  WebkitTapHighlightColor: "transparent",
         }}
       >
