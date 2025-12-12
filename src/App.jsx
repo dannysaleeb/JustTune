@@ -8,7 +8,7 @@ import { Fundamental } from "./classes/Partials.js";
 
 import styles from "./App.module.css";
 
-import { COLOURS } from "./classes/Partials.js";
+import { DEFAULT_SETTINGS, COLOURS } from "./config.js";
 
 function App() {
   
@@ -16,6 +16,8 @@ function App() {
   const [partialNumbers, setPartialNumbers] = useState([]);
   const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
   const [tuningFactor, setTuningFactor] = useState(1);
+
+  const [settings, setSettings] = useState({ ...DEFAULT_SETTINGS });
 
   const fundamental = useMemo(() => {
     if (midiKey == null) return null;
@@ -26,7 +28,7 @@ function App() {
 
   const partials = useMemo(() => {
     return partialNumbers
-      .map(n => fundamental?.getPartial(n, flippedNotes[n - 1]))
+      .map(n => fundamental?.getPartial(n, flippedNotes[n - 1], settings))
       .filter(Boolean)
   }, [partialNumbers, fundamental, flippedNotes]);
 

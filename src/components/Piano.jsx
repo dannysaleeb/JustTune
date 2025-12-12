@@ -116,8 +116,8 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
                   zIndex: 10,
                   cursor: "pointer",
                   // borderRadius: 4,
-                  // borderBottomLeftRadius: 4,
-                  // borderBottomRightRadius: 4,
+                  borderBottomLeftRadius: 4,
+                  borderBottomRightRadius: 4,
                   boxShadow: "1px 1px 3px rgba(0,0,0,1)",
                   transition: "background 0.15s ease",
 

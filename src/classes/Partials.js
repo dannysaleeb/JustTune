@@ -1,22 +1,17 @@
 import * as Tone from "tone";
-import keys from "../assets/keys.json";
+
+import keys from "../theory/keys.json";
+import { 
+  NOTES, 
+  DEGREES, 
+  ADJUSTMENTS, 
+  PITCH_CLASS_DEGREES, 
+  ACCIDENTAL_SYMBOLS,
+  CENT_DEVIATION_THRESHOLD
+} from "../theory/theory.js";
+
 import { Accidental, StaveNote, Annotation } from "vexflow";
-
-// GLOBALS (DO NOT CHANGE)
-const NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const DEGREES = [1, 1, 5, 1, 3, 5, 7, 1, 2, 3, 5, 5, 6, 7, 7, 1, 2, 2, 3, 3, 4, 5, 4, 5]; // 1-based indexing into NOTES
-const ADJUSTMENTS = [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1, 0, -1, -1, 0, 0, -1, 0, -1, 0, 0, -1, 1, 0];
-const PITCH_CLASS_DEGREES = [0, 2, 4, 5, 7, 9, 11];
-const ACCIDENTAL_SYMBOLS = ["bb", "b", "n", "#", "##"];
-const CENT_DEVIATION_THRESHOLD = 25;
-
-// CHANGE-ABLE
-const COLOURS = ["rgba(230, 159, 0, 1)", "rgba(86, 180, 233, 1)", "rgba(0, 158, 115, 1)", "rgba(204, 121, 167, 1)", "rgba(0, 114, 178, 1)", "rgba(213, 94, 0, 1)"];
-
-// FLAGS (to go in relevant component/s, or top of App.jsx as controllable in settings)
-const DOUBLE_SHARPS_AND_FLATS = false; // so far un-used
-const NATURALS_FLAG = false;
-const COLOURS_FLAG = true;
+import { COLOURS, DEFAULT_SETTINGS } from "../config";
 
 class Fundamental {
   constructor(midikey) {
@@ -35,8 +30,8 @@ class Fundamental {
   
   }
 
-  getPartial(n, flipped=false) {
-    return new Partial(n, this, flipped)
+  getPartial(n, flipped=false, settings=DEFAULT_SETTINGS) {
+    return new Partial(n, this, flipped, settings)
   }
 
   setFrequency(hz) {
@@ -62,25 +57,23 @@ class Fundamental {
 }
 
 class Partial {
-    constructor(partialNumber, fundamental, flip=false) {
+    constructor(partialNumber, fundamental, flip=false, settings=DEFAULT_SETTINGS) {
 
         this.partialNumber = partialNumber;
         this.fundamental = fundamental;
         this.frequency = partialNumber * fundamental.frequency;
+        this.settings = settings;
 
         // midikey for clef
-        // ! I think this needs a bugfix
         this.midikey = Math.round(fundamental.midikey + 12 * Math.log2(this.partialNumber));
 
         this.note = this.getNote();
         if (flip) {this.note = this.getEnharmonicEquivalent()}
-
-        // ! so for the app, I can map partials, and create a new one in place with partial.partialNumber, partial.fundamental, flip = true
     }
 
     getNote() {
 
-      // ! gets the expected degree of the scale
+      // gets the expected degree of the scale
       const degree = DEGREES[this.partialNumber - 1];
 
       // expected + adjustment
@@ -118,7 +111,7 @@ class Partial {
       const degreeName = NOTES[((degree + this.fundamental.degree) - 1) % 7];
 
       let symbol = "";
-      if (NATURALS_FLAG) {
+      if (this.settings.naturals) {
         symbol = ACCIDENTAL_SYMBOLS[accidental + 2]; // +2 offset to get correct sign
       } else {
         if (accidental != 0) {
@@ -129,7 +122,7 @@ class Partial {
       let name = degreeName + symbol + "/" + octave; // vexflow format
       
       let colour = "rgba(0,0,0,1)";
-      if (COLOURS_FLAG) {colour = COLOURS[this.getColourIndex()]}
+      if (this.settings.colours) {colour = COLOURS[this.getColourIndex()]}
 
       let clef = "";
       if (this.midikey > 59) { clef = "treble" } else { clef = "bass" };
@@ -171,7 +164,7 @@ class Partial {
         let note = new StaveNote({ clef: this.note.clef, keys: [this.note.name], duration: "q"});
 
         // this toggles NATURALS (but need to make sure they show with arrows if needed)
-        if (NATURALS_FLAG) {
+        if (this.settings.naturals) {
           // note.addModifier(new Accidental(accidental));
           note.addModifier(new Accidental(accidental));
         } else {
@@ -287,7 +280,7 @@ class Partial {
       const degreeName = NOTES[PITCH_CLASS_DEGREES.indexOf(winner.pc_degree)];
 
       let symbol = "";
-      if (NATURALS_FLAG) {
+      if (this.settings.naturals) {
         symbol = ACCIDENTAL_SYMBOLS[winner.difference + 2]; // offset to get correct sign
       } else {
         if (winner.difference !== 0) {
@@ -317,4 +310,4 @@ class Note {
     }
 }
 
-export { Partial, Fundamental, Note, COLOURS };
+export { Partial, Fundamental, Note };
