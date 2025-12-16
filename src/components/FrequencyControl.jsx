@@ -1,7 +1,25 @@
 import { useState } from "react";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
-export default function FrequencyControl({ tuningFactor, setTuningFactor, disabled }) {
+const frequencyBoxStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  width: "100%",
+  height: "100%",
+  minHeight: "80px",
+  borderRadius: "8px",
+
+  background: "white",
+  border: "2px solid black",
+  boxShadow: `
+    inset 2px 2px 4px rgba(0,0,0,0.35),
+    inset -2px -2px 4px rgba(255,255,255,0.3)
+  `,
+};
+
+export default function FrequencyControl({ tuningFactor, setTuningFactor, disabled, style }) {
   const baseA4 = 440;
   const MIN_HZ = 415;
   const MAX_HZ = 450;
@@ -55,54 +73,74 @@ export default function FrequencyControl({ tuningFactor, setTuningFactor, disabl
     fontWeight: 500,
     minWidth: "5ch",
     width: "5ch",
-    // Hide spin buttons
     MozAppearance: "textfield", // Firefox
     WebkitAppearance: "none",   // Chrome, Safari, Edge
     margin: 0,
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
-      
-      {/* Up arrow */}
-      <button
-        onClick={increment}
-        disabled={isUpDisabled || disabled} 
-        style={buttonStyle}
-        tabIndex={-1} 
-        onMouseDown={(e) => e.preventDefault()} 
+    <div style={{ ...frequencyBoxStyle, ...style }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "2px",
+          pointerEvents: disabled ? "none" : "auto",
+        }}
       >
-        <FaChevronUp size={16} color={isUpDisabled ? "#888" : "#000"} />
-      </button>
+        {/* Up arrow */}
+        <button
+          onClick={increment}
+          disabled={isUpDisabled || disabled}
+          style={buttonStyle}
+          tabIndex={-1}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <FaChevronUp size={20} color={isUpDisabled ? "#888" : "#000"} />
+        </button>
 
-      {/* Frequency input */}
-      <div style={{ display: "flex", alignItems: "center", gap: "2px", fontWeight: 500 }}>
-        <span style={{ fontSize: "18px", fontFamily: "Arial, Helvetica, sans-serif" }}>A</span>
-        <input
-          type="number"
-          value={customHz}
-          onChange={(e) => setCustomHz(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
-          min={MIN_HZ} 
-          max={MAX_HZ}
-          style={inputStyle}
-          disabled={disabled}
-        />
+        {/* A + frequency */}
+        <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+          <span
+            style={{
+              fontSize: "20px",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontWeight: 600,
+            }}
+          >
+            A
+          </span>
+          <input
+            type="number"
+            value={customHz}
+            onChange={(e) => setCustomHz(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            min={MIN_HZ}
+            max={MAX_HZ}
+            style={{
+              ...inputStyle,
+              fontSize: "20px",
+              width: "4ch",
+            }}
+            disabled={disabled}
+          />
+        </div>
+
+        {/* Down arrow */}
+        <button
+          onClick={decrement}
+          disabled={isDownDisabled || disabled}
+          style={buttonStyle}
+          tabIndex={-1}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <FaChevronDown size={20} color={isDownDisabled ? "#888" : "#000"} />
+        </button>
       </div>
 
-      {/* Down arrow */}
-      <button
-        onClick={decrement}
-        disabled={isDownDisabled || disabled} 
-        style={buttonStyle}
-        tabIndex={-1} 
-        onMouseDown={(e) => e.preventDefault()} 
-      >
-        <FaChevronDown size={16} color={isDownDisabled ? "#888" : "#000"} />
-      </button>
-
-      {/* Extra CSS to hide arrows in Chrome/Safari */}
+      {/* Hide number input spinners */}
       <style>
         {`
           input[type=number]::-webkit-inner-spin-button,
