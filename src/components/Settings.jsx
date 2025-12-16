@@ -1,4 +1,3 @@
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 import { MdOutlinePiano } from "react-icons/md";
 import { PiWaveSineBold, PiWaveTriangleBold } from "react-icons/pi";
@@ -30,7 +29,7 @@ export default function Settings({
     display: "flex",
     width: "100%",
     gap: "10px",
-    marginBottom: "10px",
+    marginBottom: "20px",
     justifyContent: "space-between"
   };
 
