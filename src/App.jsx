@@ -53,7 +53,8 @@ function App() {
         />
 
         {/* Combined Settings Panel (Includes Freq Control & Playback UI) */}
-        <div>
+        <div className={styles.settingsPanel}>
+		  <div className={styles.panelHeader}>Settings</div>
           <Settings
             settings={settings}
             setSettings={setSettings}
@@ -72,6 +73,7 @@ function App() {
         </div>
       </div>
 
+      {/* NOTATION PANEL */}
       <div className={styles.notationPanel}>
         <Notation 
           partials={partials}
@@ -80,7 +82,10 @@ function App() {
         />
       </div>
 
+      {/* PARTIAL SELECTOR GRID PANEL */}
       <div className={styles.partialsPanel}>
+        {/* ADDED HEADER */}
+        <div className={styles.panelHeader}>Partials</div>
         <PartialSelector
           fundamental={fundamental}
           partialNumbers={partialNumbers}
@@ -91,7 +96,10 @@ function App() {
         />
       </div>
 
+      {/* PIANO FUNDAMENTAL SELECTOR PANEL */}
       <div className={styles.pianoPanel}>
+        {/* ADDED HEADER */}
+        <div className={styles.panelHeader}>Fundamental</div>
         <Piano
           midiKey={midiKey}
           setMidiKey={setMidiKey}
