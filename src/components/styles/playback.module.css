@@ -15,8 +15,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 47px;
-  height: 47px;
+  --size: 47px;
+  width: var(--size);
+  height: var(--size);  
   border-radius: 4px;
   border: 2px solid black;
   cursor: pointer;
