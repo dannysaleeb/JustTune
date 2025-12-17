@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import * as Tone from "tone";
 
 // --- Import samples ---
-import A0 from "../Audio/A0.mp3"; import C1 from "../Audio/C1.mp3"; import Ds1 from "../Audio/Ds1.mp3"; import Fs1 from "../Audio/Fs1.mp3"; import A1 from "../Audio/A1.mp3"; import C2 from "../Audio/C2.mp3"; import Ds2 from "../Audio/Ds2.mp3"; import Fs2 from "../Audio/Fs2.mp3"; import A2 from "../Audio/A2.mp3"; import C3 from "../Audio/C3.mp3"; import Ds3 from "../Audio/Ds3.mp3"; import Fs3 from "../Audio/Fs3.mp3"; import A3 from "../Audio/A3.mp3"; import C4 from "../Audio/C4.mp3"; import Ds4 from "../Audio/Ds4.mp3"; import Fs4 from "../Audio/Fs4.mp3"; import A4 from "../Audio/A4.mp3"; import C5 from "../Audio/C5.mp3"; import Ds5 from "../Audio/Ds5.mp3"; import Fs5 from "../Audio/Fs5.mp3"; import A5 from "../Audio/A5.mp3"; import C6 from "../Audio/C6.mp3"; import Ds6 from "../Audio/Ds6.mp3"; import Fs6 from "../Audio/Fs6.mp3"; import A6 from "../Audio/A6.mp3"; import C7 from "../Audio/C7.mp3"; import Ds7 from "../Audio/Ds7.mp3"; import Fs7 from "../Audio/Fs7.mp3"; import C8 from "../Audio/C8.mp3";
+import A0 from "../audio/A0.mp3"; import C1 from "../audio/C1.mp3"; import Ds1 from "../audio/Ds1.mp3"; import Fs1 from "../audio/Fs1.mp3"; import A1 from "../audio/A1.mp3"; import C2 from "../audio/C2.mp3"; import Ds2 from "../audio/Ds2.mp3"; import Fs2 from "../audio/Fs2.mp3"; import A2 from "../audio/A2.mp3"; import C3 from "../audio/C3.mp3"; import Ds3 from "../audio/Ds3.mp3"; import Fs3 from "../audio/Fs3.mp3"; import A3 from "../audio/A3.mp3"; import C4 from "../audio/C4.mp3"; import Ds4 from "../audio/Ds4.mp3"; import Fs4 from "../audio/Fs4.mp3"; import A4 from "../audio/A4.mp3"; import C5 from "../audio/C5.mp3"; import Ds5 from "../audio/Ds5.mp3"; import Fs5 from "../audio/Fs5.mp3"; import A5 from "../audio/A5.mp3"; import C6 from "../audio/C6.mp3"; import Ds6 from "../audio/Ds6.mp3"; import Fs6 from "../audio/Fs6.mp3"; import A6 from "../audio/A6.mp3"; import C7 from "../audio/C7.mp3"; import Ds7 from "../audio/Ds7.mp3"; import Fs7 from "../audio/Fs7.mp3"; import C8 from "../audio/C8.mp3";
 
 const NOTE_LIST = [ "A0", "C1", "Ds1", "Fs1", "A1", "C2", "Ds2", "Fs2", "A2", "C3", "Ds3", "Fs3", "A3", "C4", "Ds4", "Fs4", "A4", "C5", "Ds5", "Fs5", "A5", "C6", "Ds6", "Fs6", "A6", "C7", "Ds7", "Fs7", "C8" ];
 const SAMPLE_MAP = { A0, C1, Ds1, Fs1, A1, C2, Ds2, Fs2, A2, C3, Ds3, Fs3, A3, C4, Ds4, Fs4, A4, C5, Ds5, Fs5, A5, C6, Ds6, Fs6, A6, C7, Ds7, Fs7, C8 };
@@ -123,4 +123,5 @@ export default function Playback({ partials = [], settings, playTrigger, isPlayi
   }, [playbackSignature, isPlaying]); // Added isPlaying dependency so it triggers on start
 
   return null; // Headless component
+
 }
