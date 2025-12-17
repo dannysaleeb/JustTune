@@ -47,13 +47,14 @@
   box-shadow:
     inset -2px -2px 4px rgba(255,255,255,0.4),
     inset 2px 2px 4px rgba(0,0,0,0.2);
-  transform: translate(1px, 1px);
+  /* transform: translate(1px, 1px); */
 }
 
 .inactive {
   background: lightgrey;
-  border: lightgrey;
+  border: 2px solid lightgrey;
   box-shadow:
     inset 2px 2px 4px rgba(0,0,0,0.35),
     inset -2px -2px 4px rgba(255,255,255,0.3);
+
 }
