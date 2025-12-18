@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  flex-direction: column; /* stack rows vertically */
+  align-items: flex-start; /* left-align contents */
+  gap: 18px; /* optional spacing between rows */
+}
+
+.row {
+  display: flex;
+  gap: 8px; /* spacing between buttons */
+  justify-content: flex-start; /* left-align buttons */
+}
+
+.playbackButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --size: 47px;
+  width: var(--size);
+  height: var(--size);  
+  border-radius: 4px;
+  border: 2px solid black;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 35px;
+  border-radius: 4px;
+  border: 2px solid black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.active {
+  background: white;
+  box-shadow:
+    inset -2px -2px 4px rgba(255,255,255,0.4),
+    inset 2px 2px 4px rgba(0,0,0,0.2);
+  transform: translate(1px, 1px);
+}
+
+.inactive {
+  background: lightgrey;
+  border: lightgrey;
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.35),
+    inset -2px -2px 4px rgba(255,255,255,0.3);
+}
