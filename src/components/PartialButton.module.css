@@ -14,7 +14,6 @@
   transition: 
       background 0.15s ease,
       color 0.15s ease,
-      transform 0.1s ease,
       box-shadow 0.15s ease,
       border 0.15s ease;
 
@@ -51,8 +50,6 @@
   box-shadow:
     inset 2px 2px 4px rgba(0, 0, 0, 0.35),
     inset -2px -2px 4px rgba(255, 255, 255, 0.3);
-
-  transform: translateY(1px) translateX(1px);
 }
 
 /* -------------------- */
