@@ -10,12 +10,16 @@
         {
             "degree": 0,
             "key": [1, 1, 1, 1, 1, 1, 1],
-            "name": "C#" 
+            "name": "C#",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         },
         {
             "degree": 1,
             "key": [0, -1, -1, 0, -1, -1, -1],
-            "name": "Db"
+            "name": "Db",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         }
     ],
     [
@@ -50,12 +54,16 @@
         {   
             "degree": 3,
             "key": [1, 1, 1, 1, 1, 1, 0],
-            "name": "F#"
+            "name": "F#",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         },
         {   
             "degree": 4,
             "key": [-1, -1, -1, 0, -1, -1, -1],
-            "name": "Gb"
+            "name": "Gb",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         }
     ],
     [
@@ -90,12 +98,16 @@
         {   
             "degree": 6,
             "key": [1, 1, 0, 1, 1, 1, 0],
-            "name": "B"
+            "name": "B",
+            "enharmonicCurrent": 0,
+            "enharmonicOther": -1
         },
         {
             "degree": 0,
             "key": [-1, -1, -1, -1, -1, -1, -1],
-            "name": "Cb"
+            "name": "Cb",
+            "enharmonicCurrent": 0,
+            "enharmonicOther": -1
         }
     ]
 ]
