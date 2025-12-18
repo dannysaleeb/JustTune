@@ -39,8 +39,8 @@ function App() {
 		
       <div className={styles.title}>
         <h1>JUST TUNE</h1>
-        <p><span className={styles.smallText}>by</span> Fintan O'Hare & Danny Saleeb</p>
-        <p><span className={styles.smallText}>after an original app by</span> Clement Power & Martin Suckling</p>
+        <p><span className={styles.smallTextStyle}>by</span> Fintan O'Hare & Danny Saleeb</p>
+        <p><span className={styles.smallTextStyle}>after an original app by</span> Clement Power & Martin Suckling</p>
       </div>
 
       <div className={styles.leftPanel} title={"SETTINGS"}>
