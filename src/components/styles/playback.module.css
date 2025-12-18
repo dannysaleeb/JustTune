@@ -38,7 +38,7 @@
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
 }
 
@@ -58,3 +58,4 @@
     inset -2px -2px 4px rgba(255,255,255,0.3);
 
 }
+
