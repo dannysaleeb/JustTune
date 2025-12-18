@@ -1,23 +1,27 @@
 .appContainer {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    grid-template-rows: 260px 220px 165px;
+    grid-template-rows: 260px 195px 135px;
     gap: 15px;
 
     width: 1080px;
     height: 720px;
-    padding: 25px 85px;
+    padding: 45px 85px;
     box-sizing: border-box;
 }
 
 .leftPanel {
-    grid-row: 2 / -1;
+    grid-row: 2 / -1; 
     background: #f2f2f2;
     border-radius: 16px;
     box-shadow: 
         inset -1px -1px 4px rgba(0,0,0,0.25),
         inset 1px 1px 2px rgba(0,0,0,1);
     padding: 20px;
+
+    /* REPLACED: Use margin instead of top/height calc */
+    margin-top: -80px; 
+    /* Remove height: calc(...) - let Grid handle the height naturally */
 }
 
 /* Base style for all right side panels */
@@ -31,8 +35,7 @@
         inset -1px -1px 4px rgba(0,0,0,0.25),
         inset 1px 1px 2px rgba(0,0,0,1);
     
-    /* Reduce top padding to make space for the label */
-    padding: 10px 20px 20px 20px; 
+    padding: 20px; 
     
     /* Use flex-column to stack the header and the main component */
     display: flex;

@@ -54,8 +54,8 @@ function App() {
 
         {/* Combined Settings Panel (Includes Freq Control & Playback UI) */}
         <div className={styles.settingsPanel}>
-		  <div className={styles.panelHeader}>Settings</div>
           <Settings
+		    fundamental={fundamental}
             settings={settings}
             setSettings={setSettings}
             hideMaxPartials={true}
@@ -84,8 +84,6 @@ function App() {
 
       {/* PARTIAL SELECTOR GRID PANEL */}
       <div className={styles.partialsPanel}>
-        {/* ADDED HEADER */}
-        <div className={styles.panelHeader}>Partials</div>
         <PartialSelector
           fundamental={fundamental}
           partialNumbers={partialNumbers}
@@ -98,8 +96,6 @@ function App() {
 
       {/* PIANO FUNDAMENTAL SELECTOR PANEL */}
       <div className={styles.pianoPanel}>
-        {/* ADDED HEADER */}
-        <div className={styles.panelHeader}>Fundamental</div>
         <Piano
           midiKey={midiKey}
           setMidiKey={setMidiKey}
