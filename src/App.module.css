@@ -11,16 +11,14 @@
 }
 
 .leftPanel {
-    grid-row: 2 / -1; 
+    grid-row: 2 / -1;
     background: #f2f2f2;
     border-radius: 16px;
-    box-shadow: 
-        inset -1px -1px 4px rgba(0,0,0,0.25),
-        inset 1px 1px 2px rgba(0,0,0,1);
+    box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
     padding: 20px;
 
     /* REPLACED: Use margin instead of top/height calc */
-    margin-top: -80px; 
+    margin-top: -80px;
     /* Remove height: calc(...) - let Grid handle the height naturally */
 }
 
@@ -33,8 +31,8 @@
     border-radius: 16px;
     box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
     
-    padding: 20px; 
-    
+    padding: 20px;
+
     display: flex;
     flex-direction: column;
 }
@@ -49,7 +47,6 @@
     margin-bottom: 8px; /* Space between header and content */
     padding: 0;
 }
-
 
 /* Specific Panel Grid Placement */
 .notationPanel {
