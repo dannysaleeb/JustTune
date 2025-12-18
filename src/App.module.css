@@ -16,10 +16,7 @@
     border-radius: 16px;
     box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
     padding: 20px;
-
-    /* REPLACED: Use margin instead of top/height calc */
     margin-top: -80px;
-    /* Remove height: calc(...) - let Grid handle the height naturally */
 }
 
 /* Base style for all right side panels */
