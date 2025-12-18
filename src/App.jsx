@@ -36,13 +36,14 @@ function App() {
 
   return (
     <div className={styles.appContainer}>
+		
       <div className={styles.title}>
         <h1>JUST TUNE</h1>
-        <p>by Fintan O'Hare & Danny Saleeb</p>
-        <p>after an original app by Martin Suckling</p>
+        <p><span className={styles.smallText}>by</span> Fintan O'Hare & Danny Saleeb</p>
+        <p><span className={styles.smallText}>after an original app by</span> Clement Power & Martin Suckling</p>
       </div>
 
-      <div className={styles.leftPanel}>
+      <div className={styles.leftPanel} title={"SETTINGS"}>
         {/* Logic-only Playback component */}
         <Playback
           partials={partials}
@@ -74,7 +75,7 @@ function App() {
       </div>
 
       {/* NOTATION PANEL */}
-      <div className={styles.notationPanel}>
+      <div className={styles.notationPanel} title={"NOTATION"}>
         <Notation 
           partials={partials}
           settings={settings}
@@ -83,7 +84,7 @@ function App() {
       </div>
 
       {/* PARTIAL SELECTOR GRID PANEL */}
-      <div className={styles.partialsPanel}>
+      <div className={styles.partialsPanel} title={"PARTIALS"}>
         <PartialSelector
           fundamental={fundamental}
           partialNumbers={partialNumbers}
@@ -95,7 +96,7 @@ function App() {
       </div>
 
       {/* PIANO FUNDAMENTAL SELECTOR PANEL */}
-      <div className={styles.pianoPanel}>
+      <div className={styles.pianoPanel} title={"FUNDAMENTAL"}>
         <Piano
           midiKey={midiKey}
           setMidiKey={setMidiKey}
