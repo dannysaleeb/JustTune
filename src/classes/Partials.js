@@ -14,21 +14,24 @@ import { Accidental, StaveNote, Annotation } from "vexflow";
 import { COLOURS, DEFAULT_SETTINGS } from "../config";
 
 class Fundamental {
-  constructor(midikey, keyIndex=DEFAULT_SETTINGS.enharmonicToggle) {
-    
+  constructor(midikey, keyIndex = DEFAULT_SETTINGS.enharmonicToggle) {
     this.midikey = midikey;
     this.frequency = Tone.mtof(midikey);
     this.originalFrequency = this.frequency;
 
     const i = midikey % 12;
-    const keyData = keys[i][keyIndex] ? keys[i][keyIndex] : keys[i][0];
+    const keyData = keys[i][keyIndex] || keys[i][0];
 
     this.name = keyData.name;
     this.degree = keyData.degree;
     this.key = keyData.key;
 
+    // Defensive defaults for enharmonics
+    this.enharmonicOption = keys[i].length > 1;
+    this.enharmonicCurrent = keyData.enharmonicCurrent ?? 0;
+    this.enharmonicOther = keyData.enharmonicOther ?? 0;
+
     this.octave = Math.floor(midikey / 12) - 1;
-  
   }
 
   getPartial(n, flipped=false, settings=DEFAULT_SETTINGS) {
