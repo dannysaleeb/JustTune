@@ -85,3 +85,7 @@
     margin-bottom: 0;
     padding-left: 10px;
 }
+
+.smallText {
+    font-size: 14px;
+}
