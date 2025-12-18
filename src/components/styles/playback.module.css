@@ -22,7 +22,7 @@
   border: 2px solid black;
   cursor: pointer;
   font-family: Arial, Helvetica, sans-serif;
-  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -47,7 +47,6 @@
   box-shadow:
     inset -2px -2px 4px rgba(255,255,255,0.4),
     inset 2px 2px 4px rgba(0,0,0,0.2);
-  /* transform: translate(1px, 1px); */
 }
 
 .inactive {
@@ -58,4 +57,5 @@
     inset -2px -2px 4px rgba(255,255,255,0.3);
 
 }
+
 
