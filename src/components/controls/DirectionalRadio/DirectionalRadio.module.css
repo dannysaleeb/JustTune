@@ -1,0 +1,44 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 9px;
+  border: 2px solid black;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.row.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  
+}
+
+.iconSlot {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* optional but often nice */
+  flex-shrink: 0;
+}
+
+.active {
+    background: white;
+    box-shadow: 
+        inset -2px -2px 4px rgba(255,255,255,0.4),
+        inset 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.inactive {
+    background: lightgrey;
+    border: 2px solid lightgrey;
+    box-shadow:
+        inset 2px 2px 4px rgba(0,0,0,0.35),
+        inset -2px -2px 4px rgba(255,255,255,0.3);
+}
+
+

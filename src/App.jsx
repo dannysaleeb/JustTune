@@ -1,45 +1,153 @@
-// import the different elements
-import { useState, useEffect } from "react";
-import { getPartialFrequency } from "./utils/partials";
+import { useState, useMemo, useEffect } from "react";
+import useSettings from "./hooks/useSettings.jsx";
+
 import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
-import CentDeviationControl from "./components/CentDeviationControl";
 import Notation from "./components/Notation";
 import Playback from "./components/Playback";
+import Settings from "./components/Settings.jsx";
+
+import { Fundamental } from "./classes/Partials.js";
+
+import styles from "./App.module.css";
+import { COLOURS } from "./config.js";
+
+import InfoPopup from "./components/InfoPopup";
+import ResetButton from "./components/ResetButton";
 
 function App() {
-  const [note, setNote] = useState("C4");
-  const [partials, setPartials] = useState([1]);
-  const [centDeviation, setCentDeviation] = useState(0);
-  const [results, setResults] = useState([]);
+  const [playTrigger, setPlayTrigger] = useState(0);
+  const [midiKey, setMidiKey] = useState(null);
+  const [partialNumbers, setPartialNumbers] = useState([]);
+  const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
 
-  // Recalculate partial frequencies whenever inputs change --- keep everything updating whenever anything changes?
+  // ⬇️ TAKE resetSettings FROM THE HOOK
+  const [settings, setSetting, resetSettings] = useSettings();
+
+  const fundamental = useMemo(() => {
+    if (midiKey == null) return null;
+    const f = new Fundamental(midiKey, settings.enharmonicToggle);
+    f.setFrequency(f.frequency * (settings.tuningFrequency / 440));
+    return f;
+  }, [midiKey, settings.tuningFrequency, settings.enharmonicToggle]);
+
+  const partials = useMemo(() => {
+    return partialNumbers
+      .map(n => fundamental?.getPartial(n, flippedNotes[n - 1], settings))
+      .filter(Boolean);
+  }, [partialNumbers, fundamental, flippedNotes, settings]);
+
+  // --- FULL APP RESET (NO PAGE RELOAD) ---
+  const handleReset = () => {
+    // reset persisted + default settings
+    resetSettings();
+
+    // reset local / musical state
+    setPlayTrigger(0);
+    setMidiKey(null);
+    setPartialNumbers([]);
+    setFlippedNotes(Array(24).fill(false));
+  };
+
+  // --- ESC key handling ---
   useEffect(() => {
-    if (!note || partials.length === 0) {
-      setResults([]);
-      return;
-    }
+    const handleKeyDown = (e) => {
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
 
-    const res = partials.map((p) => getPartialFrequency(note, p, centDeviation));
-    setResults(res);
-  }, [note, partials, centDeviation]);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleReset();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+    <div className={styles.appContainer}>
+      
+      {/* NEW WRAPPER: HEADER PANEL 
+        Groups Buttons and Title into the Top-Left Grid Cell 
+      */}
+      <div className={styles.headerPanel}>
+        {/* Buttons */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginBottom: "10px",
+          }}
+        >
+          <InfoPopup />
+          <ResetButton onReset={handleReset} />
+        </div>
 
-      {/* Input components */}
-      <Piano note={note} onChange={setNote} />
-      <PartialSelector partials={partials} onChange={setPartials} />
-      <CentDeviationControl
-        centDeviation={centDeviation}
-        onChange={setCentDeviation}
-      />
+        {/* Title */}
+        <div className={styles.title}>
+          <h1>JUST TUNE</h1>
+          <p>
+            <span className={styles.smallTextStyle}>by</span> Fintan O'Hare & Danny Saleeb
+          </p>
+          <p>
+            <span className={styles.smallTextStyle}>after an original app by</span>{" "}
+            Clement Power & Martin Suckling
+          </p>
+        </div>
+      </div>
 
-      {/* Display results */}
-      {results.length > 0 && <Notation results={results} />}
+      {/* Left panel (Settings) */}
+      <div className={styles.leftPanel} title={"SETTINGS"}>
+        <Playback
+          partials={partials}
+          settings={settings}
+          playTrigger={playTrigger}
+        />
+        <div className={styles.settingsPanel}>
+          <Settings
+            fundamental={fundamental}
+            settings={settings}
+            setSetting={setSetting}
+          />
+        </div>
+      </div>
 
-      {/* Continuous playback */}
-      <Playback note={note} partials={partials} centDeviation={centDeviation} />
+      {/* Notation */}
+      <div className={styles.notationPanel} title={"NOTATION"}>
+        <Notation
+          partials={partials}
+          settings={settings}
+          setFlippedNotes={setFlippedNotes}
+        />
+      </div>
+
+      {/* Partials */}
+      <div className={styles.partialsPanel} title={"PARTIALS"}>
+        <PartialSelector
+          fundamental={fundamental}
+          partialNumbers={partialNumbers}
+          setPartialNumbers={setPartialNumbers}
+          flippedNotes={flippedNotes}
+          settings={settings}
+          colours={COLOURS}
+        />
+      </div>
+
+      {/* Piano */}
+      <div className={styles.pianoPanel} title={"FUNDAMENTAL"}>
+        <Piano
+          midiKey={midiKey}
+          setMidiKey={setMidiKey}
+          setFlippedNotes={setFlippedNotes}
+          setPlayTrigger={setPlayTrigger}
+        />
+      </div>
     </div>
   );
 }

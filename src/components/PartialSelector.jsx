@@ -1,54 +1,155 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import PartialButton from "./PartialButton";
+import { KEY_TO_PARTIAL } from "../config";
 
-// for choosing the partials
+function PartialSelector({ fundamental, partialNumbers, setPartialNumbers, settings, colours }) {
 
-function PartialSelector({ partials, onChange }) {
-  // Store local input as a string
-  const [inputValue, setInputValue] = useState(partials.join(","));
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragModeIsRemoving, setDragModeIsRemoving] = useState(false);
 
-  const handleSetPartials = () => {
-    // Split input by commas, trim spaces, convert to numbers
-    const parsed = inputValue
-      .split(",")
-      .map((p) => parseInt(p.trim(), 10))
-      .filter((p) => !isNaN(p) && p > 0); // keep only positive numbers
+  function getColour(partialNumber) {
+    let colourIndex = 0;
+    
+    // if not odd, divide by 2 until odd
+    if (partialNumber % 2 === 0) {
+        while (Number.isInteger(partialNumber / 2)) {
+            partialNumber /= 2
+        }
+    };
 
-    if (parsed.length > 0) {
-      onChange(parsed);
+    for (let i = 0; i < partialNumber; i++) {
+        if (!(i % 2 === 0)) { colourIndex++ } 
     }
+
+    return colours[colourIndex]
   };
 
+  // Update partialNumbers when fundamental changes
+  useEffect(() => {
+    if (!fundamental) {
+      setPartialNumbers([]);
+      return;
+    } else {
+      setPartialNumbers(
+        prev => prev.filter(n => n > 0 && n <= 24).slice(0, settings.maxPartials)
+      )
+    }
+  }, [fundamental, settings.maxPartials, setPartialNumbers]);
+
+  useEffect(() => {
+    const stopDrag = () => setIsDragging(false);
+    window.addEventListener("mouseup", stopDrag);
+    return () => window.removeEventListener("mouseup", stopDrag);
+  }, []);
+
+  // Keyboard key Handling
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA"
+      ) return;
+
+      const key = e.key.toLowerCase();
+      const num = KEY_TO_PARTIAL[key];
+
+      if (!num) return;
+      if (!fundamental) return;
+
+      const isSelected = partialNumbers.includes(num);
+      const maxReached = partialNumbers.length >= settings.maxPartials;
+
+      if (!isSelected && maxReached) return;
+
+      e.preventDefault();
+
+      setPartialNumbers(prev => {
+        const exists = prev.includes(num);
+
+        if (exists) {
+          return prev.filter(n => n !== num);
+        } else {
+          return [...prev, num].sort((a, b) => a - b);
+        }
+      });
+    }
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [fundamental, partialNumbers, settings.maxPartials, setPartialNumbers]);
+
+  const selectedSet = new Set(partialNumbers);
+  const maxReached = partialNumbers.length >= settings.maxPartials;
+
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <label>
-        Partials: (comma separated)
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="e.g. 1,2,3"
-          style={{
-            marginLeft: "5px",
-            padding: "4px 8px",
-            fontSize: "14px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            width: "120px",
-          }}
-        />
-      </label>
-      <button
-        onClick={handleSetPartials}
-        style={{
-          marginLeft: "10px",
-          padding: "4px 8px",
-          fontSize: "14px",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Set Partials
-      </button>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(8, 47px)",
+        gridTemplateRows: "repeat(3, 47px)",
+        margin: "0 auto",
+        gap: "6px",
+        width: "fit-content",
+        maxWidth: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      {Array.from({ length: 24 }, (_, i) => i + 1).map((num) => {
+        const isSelected = selectedSet.has(num);
+        const disabled = !fundamental || (!isSelected && maxReached);
+
+        return (
+          <PartialButton
+            key={num}
+            number={num}
+            selected={isSelected}
+            disabled={disabled}
+            style={{
+              "--partial-color": getColour(num)
+            }}
+
+            onMouseDown={(e) => {
+              if (disabled) return;
+              if (e.button !== 0) return;
+              e.preventDefault();
+
+              setIsDragging(true);
+              setDragModeIsRemoving(partialNumbers.includes(num));
+
+              setPartialNumbers(prev => {
+                const exists = prev.includes(num);
+
+                if (exists) {
+                  return prev.filter(n => n !== num);
+                } else if (prev.length < settings.maxPartials) {
+                  return [...prev, num].sort((a, b) => a - b);
+                }
+                return prev;
+              });
+            }}
+
+            onMouseEnter={() => {
+              if (!isDragging || disabled) return;
+
+              setPartialNumbers(prev => {
+                const exists = prev.includes(num);
+
+                if (dragModeIsRemoving) {
+                  return exists ? prev.filter(n => n !== num) : prev;
+                } else {
+                  return exists || prev.length >= settings.maxPartials
+                    ? prev
+                    : [...prev, num].sort((a, b) => a - b);
+                }
+              });
+            }}
+            
+            onMouseUp={() => {
+              setIsDragging(false);
+            }}
+          />
+        );
+      })}
     </div>
   );
 }

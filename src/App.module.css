@@ -1,0 +1,96 @@
+.appContainer {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 260px 195px 135px;
+    gap: 15px;
+
+    width: 1080px;
+    height: 720px;
+    padding: 45px 85px;
+    box-sizing: border-box;
+}
+
+/* --- NEW: Wraps the Title and Buttons --- */
+.headerPanel {
+    grid-column: 1 / 2; /* Left Column */
+    grid-row: 1 / 2;    /* Top Row */
+    
+    /* Optional: Aligns content to bottom of the area if you prefer */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+}
+
+.leftPanel {
+    grid-row: 2 / -1; /* Stays in Rows 2 and 3 */
+    background: #f2f2f2;
+    border-radius: 16px;
+    box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
+    padding: 20px;
+}
+
+/* Base style for all right side panels */
+.notationPanel,
+.partialsPanel,
+.pianoPanel {
+    grid-column: 2 / 3;
+    background: #f2f2f2;
+    border-radius: 16px;
+    box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
+    
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HEADING TEXT --- */
+.panelHeader {
+    font-family: "Amatica SC";
+    font-weight: 700;
+    font-size: 26px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 0;
+}
+
+/* Specific Panel Grid Placement */
+.notationPanel {
+    grid-row: 1 / 2;
+    overflow: hidden;
+}
+
+.partialsPanel {
+    grid-row: 2 / 3;
+}
+
+.pianoPanel {
+    grid-row: 3 / 4;
+}
+
+.title > h1 {
+    font-family: "Amatica SC";
+    font-weight: 100;
+    font-size: 50px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+
+.title > p {
+    font-family: "Amatica SC";
+    font-weight: 100;
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+
+.smallTextStyle {
+    font-size: 14px;
+}
+
+.settingsPanel {
+    height: 100%;
+}

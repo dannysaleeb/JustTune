@@ -1,0 +1,11 @@
+.resetButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.resetButton:hover {
+  color: #f00;
+}
