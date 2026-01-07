@@ -37,7 +37,7 @@ function App() {
       .filter(Boolean);
   }, [partialNumbers, fundamental, flippedNotes, settings]);
 
-  // --- FULL APP RESET (NO PAGE RELOAD) ---
+  // --- SOFT RESET ---
   const handleReset = () => {
     // reset persisted + default settings
     resetSettings();
@@ -48,6 +48,18 @@ function App() {
     setPartialNumbers([]);
     setFlippedNotes(Array(24).fill(false));
   };
+  
+	// Hidden flag to auto-deselect ±50¢ buttons
+	const AUTO_DESELECT_50C = true;
+
+	useEffect(() => {
+	  if (!AUTO_DESELECT_50C) return;
+	  if (!fundamental) return;
+
+	  if (settings.centDeviation != 0) {
+		setSetting("centDeviation", 0);
+	  }
+	}, [fundamental]);
 
   // --- ESC key handling ---
   useEffect(() => {
@@ -68,6 +80,8 @@ function App() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+  
+
 
   return (
     <div className={styles.appContainer}>

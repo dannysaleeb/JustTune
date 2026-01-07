@@ -9,7 +9,9 @@ const PERSISTED_KEYS = [
   "colours",
   "maxPartials",
   "tuningFrequency",
-  "tuningFrequencyOption"
+  "tuningFrequencyOption",
+  "enharmonicToggle",
+  "playbackMode"
 ];
 
 export default function useSettings() {
@@ -34,7 +36,6 @@ export default function useSettings() {
     for (const key of PERSISTED_KEYS) {
       persisted[key] = settings[key];
     }
-
     localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted));
   }, [settings]);
 
@@ -45,9 +46,13 @@ export default function useSettings() {
     }));
   }
 
-  function resetSettings() {
-    localStorage.removeItem(STORAGE_KEY);
-    setSettings(DEFAULT_SETTINGS);
+  // --- SOFT RESET ---
+  // optional flag: resetCents
+  function resetSettings({ resetCents = false } = {}) {
+    setSettings(prev => ({
+      ...prev,
+      ...(resetCents && { centDeviation: DEFAULT_SETTINGS.centDeviation })
+    }));
   }
 
   return [settings, setSetting, resetSettings];

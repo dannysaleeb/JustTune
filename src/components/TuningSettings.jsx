@@ -13,7 +13,20 @@ export default function TuningSettings({ settings, setSetting }) {
     // Determine if either toggle is active
     const isPlus50 = settings.centDeviation === 50;
     const isMinus50 = settings.centDeviation === -50;
-    const toggleActive = isPlus50 || isMinus50;
+
+    // Handler for changing cents via dial
+    const handleDialChange = (v) => {
+        // Clamp the value between -50 and 50
+        const clamped = Math.max(-50, Math.min(50, v));
+
+        // Update the setting
+        setSetting("centDeviation", clamped);
+    };
+
+    // Handler for toggles
+    const handleToggle = (value) => {
+        setSetting("centDeviation", value);
+    };
 
     return (
         <div className={settingsStyles.settingsItemContainer}>
@@ -24,21 +37,9 @@ export default function TuningSettings({ settings, setSetting }) {
                 onChange={(option) => setSetting("tuningSystem", option)}
             />
 
-            {/*
-            // ! DISCRETE TUNING SELECTORS, DOUBT WE NEED (keep as comment in case)
-            <RadioButton
-                selected={settings.tuningFrequencyOption}
-                options={[435, 440, 443, 445]}
-                onChange={(option) => (
-                    setSetting("tuningFrequencyOption", option),
-                    setSetting("tuningFrequency", option)
-                )}
-            /> 
-            */}
-
             {/* Tuning frequency dial */}
             <StepperDial
-                value={settings.tuningFrequency ?? 440}
+                value={settings.tuningFrequency}
                 min={415}
                 max={450}
                 step={1}
@@ -48,30 +49,26 @@ export default function TuningSettings({ settings, setSetting }) {
 
             {/* Cents offset dial */}
             <StepperDial
-                value={toggleActive ? 0 : (settings.centDeviation ?? 0)} // reset to 0 if toggle active
+                value={settings.centDeviation}
                 min={-50}
                 max={50}
                 step={1}
-                onChange={(v) => setSetting("centDeviation", v)}
+                onChange={handleDialChange}
                 label={"¢"}
-                disabled={toggleActive} // disable if toggle selected
+                disabled={false} // always editable now
             />
 
             {/* +50c / -50c toggle buttons */}
             <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
                 <ToggleButton
                     value={isMinus50}
-                    onChange={() =>
-                        setSetting("centDeviation", isMinus50 ? 0 : -50)
-                    }
+                    onChange={() => handleToggle(isMinus50 ? 0 : -50)}
                 >
                     -50¢
                 </ToggleButton>                
-				<ToggleButton
+                <ToggleButton
                     value={isPlus50}
-                    onChange={() =>
-                        setSetting("centDeviation", isPlus50 ? 0 : 50)
-                    }
+                    onChange={() => handleToggle(isPlus50 ? 0 : 50)}
                 >
                     +50¢
                 </ToggleButton>
