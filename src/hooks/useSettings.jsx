@@ -48,7 +48,7 @@ export default function useSettings() {
 
   // --- SOFT RESET ---
   // optional flag: resetCents
-  function resetSettings({ resetCents = false } = {}) {
+  function resetSettings({ resetCents = true } = {}) {
     setSettings(prev => ({
       ...prev,
       ...(resetCents && { centDeviation: DEFAULT_SETTINGS.centDeviation })
