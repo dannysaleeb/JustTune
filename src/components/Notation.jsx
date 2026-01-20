@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket } from "vexflow";
+import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket, TextNote } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
 export default function Notation({partials, settings, setFlippedNotes }) {
@@ -33,6 +33,15 @@ export default function Notation({partials, settings, setFlippedNotes }) {
 
     top.addClef('treble');
     bottom.addClef('bass');
+
+    // CENT DEVIATION TEXT
+    if (settings.centDeviation === 50) {
+      context.setFont("Times", 16, "italic");
+      context.fillText("+50c", 40, 40);
+    } else if (settings.centDeviation === -50) {
+      context.setFont("Times", 16, "italic");
+      context.fillText("-50c", 40, 215);
+    }
 
     const brace = new StaveConnector(top, bottom).setType(3);
     const lineLeft = new StaveConnector(top, bottom).setType(1);
@@ -96,7 +105,6 @@ export default function Notation({partials, settings, setFlippedNotes }) {
     });
 
     // draw brackets based on contents of octava ... 
-
     let bracket_top_one = null;
     let bracket_top_two = null;
     let bracket_bottom_one = null;
