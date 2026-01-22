@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket, TextNote } from "vexflow";
+import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket, Glyph } from "vexflow";
 import {TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
 export default function Notation({partials, settings, setFlippedNotes }) {
@@ -36,11 +36,21 @@ export default function Notation({partials, settings, setFlippedNotes }) {
 
     // CENT DEVIATION TEXT
     if (settings.centDeviation === 50) {
-      context.setFont("Times", 16, "italic");
-      context.fillText("+50c", 40, 40);
+      Glyph.renderGlyph(
+        context,
+        59,
+        32,
+        40,
+        "accidentalQuarterToneSharpStein"
+      )
     } else if (settings.centDeviation === -50) {
-      context.setFont("Times", 16, "italic");
-      context.fillText("-50c", 40, 215);
+      Glyph.renderGlyph(
+        context,
+        55,
+        215,
+        40,
+        "accidentalQuarterToneFlatStein"
+      )
     }
 
     const brace = new StaveConnector(top, bottom).setType(3);
