@@ -134,21 +134,24 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
     return () => observer.disconnect();
   }, [render]);
 
-  return (
-    <div 
-      ref={containerRef} 
-      style={{ 
-        width: "110%", 
-        overflow: "hidden", 
-        height: "270px", 
-        marginTop: "-12px", 
-        transform: "translateX(-22px)", 
-        display: "flex",
-        alignItems: "flex-start",
-		userSelect: "none",
-	    WebkitUserSelect: "none", // For Safari
-        msUserSelect: "none"      // For older Edge/IE		
-      }}
-    ></div>
-  );
+	return (
+	  <div
+		ref={containerRef}
+		style={{
+		  width: "110%",
+		  overflow: "hidden",
+		  height: "270px",
+		  marginTop: "-12px",
+		  transform: "translateX(-22px)",
+		  display: "flex",
+		  alignItems: "flex-start",
+
+		  userSelect: "none",
+		  WebkitUserSelect: "none",
+		  msUserSelect: "none",
+
+		  WebkitTapHighlightColor: "transparent",
+		}}
+	  />
+	);
 }
