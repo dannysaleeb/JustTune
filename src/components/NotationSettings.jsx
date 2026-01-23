@@ -1,3 +1,4 @@
+import React from "react";
 import doubleSharpsIcon from "../assets/icons/doublesharps.svg";
 import doubleSharpsInactive from "../assets/icons/doublesharps_inactive.svg";
 import showNaturalsIcon from "../assets/icons/shownaturals.svg";
@@ -11,93 +12,103 @@ import flatIcon from "../assets/icons/flat.svg";
 import naturalIcon from "../assets/icons/natural.svg";
 import sharpIcon from "../assets/icons/sharp.svg";
 
-// controls import
 import DirectionalRadio from "./controls/DirectionalRadio/DirectionalRadio";
 import ToggleButton from "./controls/ToggleButton/ToggleButton";
-
-// settingsStyles for styling common to all components within Settings.jsx
 import settingsStyles from "./styles/Settings.module.css";
-
-// notationStyles for styling specific to NotationSettings.jsx
-import notationStyles from "./styles/NotationSettings.module.css"
 
 const enharmonicSymbols = [flatIcon, naturalIcon, sharpIcon];
 
-export default function NotationSettings({fundamental, settings, setSetting}) {
+export default function NotationSettings({ fundamental, settings, setSetting }) {
+    const iconStyle = { height: "65%", width: "auto", pointerEvents: "none" };
+
+    const labelStyle = { 
+        fontFamily: '"Amatica SC"', 
+        fontWeight: 700, 
+        fontSize: "1rem", 
+        lineHeight: "1",
+        marginBottom: "8px",
+        textAlign: "center",
+        textTransform: "uppercase",
+        color: "#666"
+    };
+
     return (
         <div className={settingsStyles.settingsItemContainer}>
-            {/* Double Sharps / Flats Toggle */}
-            <ToggleButton
-                value={settings.doubles}
-                onChange={() => setSetting("doubles", !settings.doubles)}
-                children={
-                <img
-                    src={
-                        settings.doubles
-                        ? doubleSharpsIcon
-                        : doubleSharpsInactive
-                    }
-                    style={{ width: "24px", height: "24px" }}
-                    alt="##"
-                />
-                }
-                title="Allow double sharps / flats"
-            />
-    
-            {/* Naturals Toggle */}
-            <ToggleButton
-                value={settings.naturals}
-                onChange={() => setSetting("naturals", !settings.naturals)}
-                children={
-                <img
-                    src={
-                        settings.naturals
-                        ? showNaturalsIcon
-                        : hideNaturalsIcon
-                    }
-                    style={{ width: "24px", height: "24px" }}
-                    alt="##"
-                />
-                }
-                title="Show naturals"
-            />
-    
-            {/* Colours Toggle */}
-            <ToggleButton
-                value={settings.colours}
-                onChange={() => setSetting("colours", !settings.colours)}
-                children={
-                <img
-                    src={
-                        settings.colours
-                        ? showColoursIcon
-                        : hideColoursIcon
-                    }
-                    style={{ width: "24px", height: "24px" }}
-                    alt="##"
-                />
-                }
-                title="Colours"
-            />
+            <div style={{ 
+                display: "flex", 
+                flexDirection: "row", 
+                alignItems: "center", 
+                justifyContent: "center", 
+                gap: "24px",
+                width: "100%"
+            }}>
+                
+                {/* LEFT GROUP: Global Display Toggles */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <span style={labelStyle}>Display</span>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", minHeight: "var(--button-size)" }}>
+                        <ToggleButton
+                            value={settings.doubles}
+                            onChange={() => setSetting("doubles", !settings.doubles)}
+                            title="Allow double sharps / flats"
+                        >
+                            <img
+                                src={settings.doubles ? doubleSharpsIcon : doubleSharpsInactive}
+                                style={iconStyle}
+                                alt="##"
+                            />
+                        </ToggleButton>
 
-            {/* Enharmonic flip */}
-            <DirectionalRadio
-                value={settings.enharmonicToggle}
-                enabled={Boolean(fundamental?.enharmonicOption)}
-                onChange={(v) => setSetting("enharmonicToggle", v)}
-                leftSrc={
-                    fundamental
-                    ? enharmonicSymbols[fundamental.enharmonicCurrent + 1]
-                    : null
-                }
-                rightSrc={
-                    fundamental
-                    ? enharmonicSymbols[fundamental.enharmonicOther + 1]
-                    : null
-                }
-                leftArrowSrc={leftRightIcon}
-                rightArrowSrc={rightLeftIcon}
-            />
+                        <ToggleButton
+                            value={settings.naturals}
+                            onChange={() => setSetting("naturals", !settings.naturals)}
+                            title="Show naturals"
+                        >
+                            <img
+                                src={settings.naturals ? showNaturalsIcon : hideNaturalsIcon}
+                                style={iconStyle}
+                                alt="♮"
+                            />
+                        </ToggleButton>
+
+                        <ToggleButton
+                            value={settings.colours}
+                            onChange={() => setSetting("colours", !settings.colours)}
+                            title="Colours"
+                        >
+                            <img
+                                src={settings.colours ? showColoursIcon : hideColoursIcon}
+                                style={iconStyle}
+                                alt="color"
+                            />
+                        </ToggleButton>
+                    </div>
+                </div>
+
+                {/* RIGHT GROUP: Enharmonic Control */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <span style={labelStyle}>Enharmonic</span>
+                    <div style={{ flexShrink: 0, display: "flex", alignItems: "center", minHeight: "var(--button-size)" }}>
+                        <DirectionalRadio
+                            value={settings.enharmonicToggle}
+                            enabled={Boolean(fundamental?.enharmonicOption)}
+                            onChange={(v) => setSetting("enharmonicToggle", v)}
+                            leftSrc={
+                                fundamental
+                                    ? enharmonicSymbols[fundamental.enharmonicCurrent + 1]
+                                    : null
+                            }
+                            rightSrc={
+                                fundamental
+                                    ? enharmonicSymbols[fundamental.enharmonicOther + 1]
+                                    : null
+                            }
+                            leftArrowSrc={leftRightIcon}
+                            rightArrowSrc={rightLeftIcon}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
-    )
+    );
 }

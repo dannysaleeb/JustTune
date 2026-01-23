@@ -1,7 +1,13 @@
+import { HiOutlineArrowPath } from "react-icons/hi2"; // Standard reset/refresh icon
+import ToggleButton from "./controls/ToggleButton/ToggleButton";
+
 export default function ResetButton({ onReset }) {
   return (
-    <button onClick={onReset} title="Reset App">
-      Reset
-    </button>
+    <ToggleButton
+      onChange={onReset} 
+      title="Reset App"
+    >
+      <HiOutlineArrowPath style={{ width: '1.2em', height: '1.2em' }} />
+    </ToggleButton>
   );
 }

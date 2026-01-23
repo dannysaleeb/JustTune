@@ -31,6 +31,7 @@ export default function StepperDial({
       aria-valuenow={value}
     >
       <button
+        type="button" // Always good to specify button type
         className={`${styles.chevron} ${styles.up}`}
         onClick={increment}
         disabled={disabled || value >= max}
@@ -44,6 +45,7 @@ export default function StepperDial({
       </div>
 
       <button
+        type="button"
         className={`${styles.chevron} ${styles.down}`}
         onClick={decrement}
         disabled={disabled || value <= min}

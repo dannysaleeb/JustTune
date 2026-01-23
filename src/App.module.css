@@ -1,96 +1,174 @@
 .appContainer {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-    grid-template-rows: 260px 195px 135px;
-    gap: 15px;
-
-    width: 1080px;
-    height: 720px;
-    padding: 45px 85px;
-    box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  align-content: start; 
+  box-sizing: border-box;
+  min-width: 0;
 }
 
-/* --- NEW: Wraps the Title and Buttons --- */
+.panel {
+  background: #f2f2f2;
+  border-radius: 16px;
+  padding: 1em;
+  min-width: 0;
+  overflow: hidden;
+  box-shadow:
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset  1px  1px 2px rgba(0,0,0,1);
+}
+
+/* ---------- LEFT COLUMN WRAPPER ---------- */
+.leftColumnWrapper {
+  grid-column: 1;
+  grid-row: 1 / span 3; 
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .headerPanel {
-    grid-column: 1 / 2; /* Left Column */
-    grid-row: 1 / 2;    /* Top Row */
-    
-    /* Optional: Aligns content to bottom of the area if you prefer */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; 
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 60px; 
 }
 
-.leftPanel {
-    grid-row: 2 / -1; /* Stays in Rows 2 and 3 */
-    background: #f2f2f2;
-    border-radius: 16px;
-    box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
-    padding: 20px;
+.headerPanel button {
+  --button-size: 46px; 
+  width: var(--button-size) !important;
+  height: var(--button-size) !important;
 }
 
-/* Base style for all right side panels */
-.notationPanel,
-.partialsPanel,
-.pianoPanel {
-    grid-column: 2 / 3;
-    background: #f2f2f2;
-    border-radius: 16px;
-    box-shadow: inset -1px -1px 4px rgba(0,0,0,0.25), inset 1px 1px 2px rgba(0,0,0,1);
-    
-    padding: 20px;
-
-    display: flex;
-    flex-direction: column;
+.headerPanel button img {
+  height: 60% !important; 
+  width: auto;
 }
 
-/* --- HEADING TEXT --- */
-.panelHeader {
-    font-family: "Amatica SC";
-    font-weight: 700;
-    font-size: 26px;
-    color: #444;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    padding: 0;
+.optionalSettings { 
+  flex: 1 1 auto;
+  overflow-y: auto; 
 }
 
-/* Specific Panel Grid Placement */
-.notationPanel {
-    grid-row: 1 / 2;
-    overflow: hidden;
+/* ---------- RIGHT COLUMN ---------- */
+.notationPanel { grid-column: 2; grid-row: 1; }
+.partialsPanel { grid-column: 2; grid-row: 2; }
+.pianoPanel    { grid-column: 2; grid-row: 3; }
+
+/* ---------- TOGGLE & MODALS ---------- */
+.settingsToggle {
+  display: none;
 }
 
-.partialsPanel {
-    grid-row: 2 / 3;
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
 }
 
-.pianoPanel {
-    grid-row: 3 / 4;
+.modalContent {
+  width: 100%; 
+  max-width: 400px;
+  box-shadow:
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset  1px  1px 2px rgba(0,0,0,1),
+    0 10px 30px rgba(0,0,0,0.5); 
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.title > h1 {
-    font-family: "Amatica SC";
-    font-weight: 100;
-    font-size: 50px;
-    margin-top: 5px;
-    margin-bottom: 0;
-    padding-left: 10px;
+/* --- CLEAN MODAL TEXT FIX --- */
+.modalBody {
+  text-align: center;
+  padding: 10px;
 }
 
-.title > p {
-    font-family: "Amatica SC";
-    font-weight: 100;
-    font-size: 20px;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-left: 10px;
+.modalBody h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #222;
 }
 
-.smallTextStyle {
-    font-size: 14px;
+.modalBody p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 12px 0;
+  color: #555;
 }
 
-.settingsPanel {
-    height: 100%;
+.infoList {
+  /* Inherits from .modalBody p */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+  
+  /* List specific layout */
+  text-align: left;
+  list-style-position: outside;
+  margin: 20px 0 0 25px; 
+  padding: 0;
+}
+
+.infoList li {
+  margin-bottom: 8px;
+}
+
+.closeButton {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #e0e0e0;
+  cursor: pointer;
+  
+  /* Font Sync */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600; 
+  color: #444;   
+}
+
+.closeButton:active {
+  background: #ccc;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 768px) {
+  .appContainer { grid-template-columns: 1fr; }
+  
+  .leftColumnWrapper {
+    grid-column: 1;
+    grid-row: 1;
+    display: contents;
+  }
+
+  .headerPanel { 
+    grid-row: 1; 
+    padding: 1em;
+  }
+
+  .settingsToggle { display: flex; }
+  .optionalSettings { display: none; }
+
+  .notationPanel { grid-column: 1; grid-row: 2; }
+  .partialsPanel { grid-column: 1; grid-row: 3; }
+  .pianoPanel    { grid-column: 1; grid-row: 4; }
 }

@@ -16,6 +16,8 @@ export default function RadioButton({
           value={selected === option}
           disabled={disabled}
           onChange={() => onChange(option)}
+          // Pass a prop or ensure ToggleButton CSS allows flex-grow
+          className={styles.flexButton} 
           size={"sub"}
         >
           {renderOption ? renderOption(option) : option}

@@ -9,17 +9,19 @@ export default function DirectionalRadio({
   leftArrowSrc,
   rightArrowSrc,
 }) {
-
   const disabled = !enabled;
 
   const renderIcon = (src) => {
-    return (<div className={styles.iconSlot} aria-hidden>
-      {enabled && src && <img src={src} width={36} height={36} alt=""/>}
-    </div>)
+    return (
+      <div className={styles.iconSlot} aria-hidden>
+        {/* Removed fixed 36px - CSS now handles scaling */}
+        {enabled && src && <img src={src} alt="" />}
+      </div>
+    );
   };
 
   return (
-    <div 
+    <div
       className={[
         styles.row,
         disabled && styles.disabled,
@@ -33,11 +35,9 @@ export default function DirectionalRadio({
         {renderIcon(leftSrc)}
       </button>
 
-      <div className="arrow">
+      <div className={styles.arrow}>
         <img
           src={value === 0 ? leftArrowSrc : rightArrowSrc}
-          width={36}
-          height={36}
           alt=""
         />
       </div>
@@ -49,7 +49,6 @@ export default function DirectionalRadio({
       >
         {renderIcon(rightSrc)}
       </button>
-      
     </div>
   );
 }

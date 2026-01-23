@@ -1,13 +1,19 @@
+/* RadioGroup.module.css */
+
 .radioGroup {
-    padding: 10px;
-    margin: 0;
+    padding: 1vmin; 
     display: flex;
     flex-direction: row;
-    gap: 2px;
+    gap: 1vmin;    
     border: 2px solid black;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: white;
-    /* box-shadow: 
-        inset -1px -1px 4px rgba(0, 0, 0, 0.3),
-        inset 2px 2px 4px rgba(0,0,0,0.5); */
+    width: fit-content; 
+    box-sizing: border-box;
+    margin: 0 auto; 
+}
+
+.radioGroup > * {
+    --size: 8vmin; 
+    flex: none;
 }
