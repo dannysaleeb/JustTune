@@ -35,7 +35,7 @@ function App() {
     const f = new Fundamental(midiKey, settings.enharmonicToggle);
     f.setFrequency(f.frequency * (settings.tuningFrequency / 440));
     return f;
-  }, [midiKey, settings.tuningFrequency, settings.enharmonicToggle]);
+  }, [midiKey, settings.tuningFrequency, settings.enharmonicToggle, settings.use12EDO]);
 
   const partials = useMemo(() => {
     return partialNumbers

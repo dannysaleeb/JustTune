@@ -58,16 +58,17 @@ export default function Playback({ partials = [], settings, playTrigger }) {
     if (!partials.length) return;
     
     // Apply tuningRatio to every target frequency
-    const targets = partials.slice(0, settings.maxPartials).map((p) => {
-      let freq;
-      if (settings.tuningSystem === "12EDO") {
-        const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
-        freq = p.nearest12edoFrequency() * ratio;
-      } else {
-        freq = p.frequency;
-      }
-      return freq * tuningRatio;  // <-- cents offset applied here
-    });
+	const targets = partials.slice(0, settings.maxPartials).map((p) => {
+	  let freq;
+	  // Use the correct property name from your state
+	  if (settings.use12EDO) { 
+		const ratio = p.fundamental.frequency / p.fundamental.originalFrequency;
+		freq = p.nearest12edoFrequency() * ratio;
+	  } else {
+		freq = p.frequency;
+	  }
+	  return freq * tuningRatio;
+	});
 
     targets.forEach((freq) => {
       let source, gain;
@@ -118,8 +119,8 @@ export default function Playback({ partials = [], settings, playTrigger }) {
   // --- EFFECT: Live Updates ---
   const playbackSignature = useMemo(() => {
     const freqs = partials.slice(0, settings.maxPartials).map(p => p.frequency.toFixed(2)).join("_");
-    return `${settings.playbackMode}|${settings.tuningSystem === "12EDO"}|${settings.tuningFrequency}|${settings.centDeviation}|${freqs}|${playTrigger}`;
-  }, [settings.playbackMode, settings.tuningSystem, settings.tuningFrequency, settings.centDeviation, settings.maxPartials, partials, playTrigger]);
+    return `${settings.playbackMode}|${settings.use12EDO}|${settings.tuningFrequency}|${settings.centDeviation}|${freqs}|${playTrigger}`;
+  }, [settings.playbackMode, settings.use12EDO, settings.tuningFrequency, settings.centDeviation, settings.maxPartials, partials, playTrigger]);
 
   useEffect(() => {
     if (!settings.mute) {
