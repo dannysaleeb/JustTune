@@ -1,8 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { CiSettings } from "react-icons/ci";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2"; 
 import * as Tone from "tone";
 import styles from "./App.module.css";
+
+import silentMP3 from "./assets/audio/silence.mp3";
 
 // Hooks, Classes, Config
 import useSettings from "./hooks/useSettings.jsx";
@@ -10,6 +12,7 @@ import { COLOURS } from "./config.js";
 import { Fundamental } from "./classes/Partials.js";
 
 // Components
+import StartOverlay from "./components/StartOverlay";
 import Piano from "./components/Piano";
 import PartialSelector from "./components/PartialSelector";
 import Notation from "./components/Notation";
@@ -26,8 +29,12 @@ function App() {
   const [flippedNotes, setFlippedNotes] = useState(Array(24).fill(false));
   const [showPopup, setShowPopup] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-
+  
+  const [hasStarted, setHasStarted] = useState(false);
   const [settings, setSetting, resetSettings] = useSettings();
+
+  // Reference for the silent audio element
+  const silentAudioRef = useRef(null);
 
   // --- Logic ---
   const fundamental = useMemo(() => {
@@ -35,7 +42,7 @@ function App() {
     const f = new Fundamental(midiKey, settings.enharmonicToggle);
     f.setFrequency(f.frequency * (settings.tuningFrequency / 440));
     return f;
-  }, [midiKey, settings.tuningFrequency, settings.enharmonicToggle, settings.use12EDO]);
+  }, [midiKey, settings.tuningFrequency, settings.enharmonicToggle]);
 
   const partials = useMemo(() => {
     return partialNumbers
@@ -55,11 +62,44 @@ function App() {
     await Tone.start();
     setSetting("mute", !settings.mute);
   };
+  
+  // --- THE UPDATED START HANDLER ---
+  const handleStart = async () => {
+    // 1. Unlock the Web Audio Context
+    await Tone.start();
+
+    // 2. Play the hidden silent audio tag (Nuclear Option for Mute Switches)
+	<audio ref={silentAudioRef} src={silentMP3} loop playsInline />
+
+    // 3. SILENT Oscillator kickstart (Forces hardware activation)
+    // We connect to a gain of 0 so it is perfectly silent.
+    const silentGain = new Tone.Gain(0).toDestination();
+    const kickstart = new Tone.Oscillator().connect(silentGain);
+    
+    kickstart.start().stop("+0.1");
+
+    // Clean up nodes after the burst
+    setTimeout(() => {
+      kickstart.dispose();
+      silentGain.dispose();
+    }, 200);
+
+    setHasStarted(true);
+  };
 
   return (
     <div className={styles.appContainer}>
+      {/* 1. START OVERLAY */}
+      {!hasStarted && <StartOverlay onStart={handleStart} />}
+
+      {/* 2. HIDDEN SILENT AUDIO ELEMENT */}
+      <audio 
+        ref={silentAudioRef}
+        loop 
+        playsInline 
+        src="data:audio/wav;base64,UklGRigAAABXQVZFRm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA=="
+      />
       
-      {/* LEFT COLUMN WRAPPER: Handles the uneven vertical split */}
       <div className={styles.leftColumnWrapper}>
         
         {/* HEADER PANEL */}
@@ -90,7 +130,6 @@ function App() {
               }
             </ToggleButton>
 
-            {/* Settings Toggle: only visible on mobile */}
             <div className={styles.settingsToggle}>
               <ToggleButton
                 onChange={() => setShowPopup(true)}
@@ -102,14 +141,19 @@ function App() {
           </div>
         </div>
 
-        {/* SETTINGS PANEL: Stretches to fill available space */}
+        {/* SETTINGS PANEL */}
         <div className={`${styles.panel} ${styles.optionalSettings}`}>
-          <Playback partials={partials} settings={settings} playTrigger={playTrigger} />
+          {hasStarted && (
+            <Playback 
+              partials={partials} 
+              settings={settings} 
+              playTrigger={playTrigger} 
+            />
+          )}
           <Settings fundamental={fundamental} settings={settings} setSetting={setSetting} />
         </div>
       </div>
 
-      {/* RIGHT COLUMN: Standard Stack */}
       <div className={`${styles.panel} ${styles.notationPanel}`}>
         <Notation partials={partials} settings={settings} setFlippedNotes={setFlippedNotes} />
       </div>
@@ -153,7 +197,6 @@ function App() {
               <h2 className={styles.panelHeader}>About</h2>
               <p>Fintan O'Hare & Danny Saleeb</p>
               <p>Based on an original app by Clement Power & Martin Suckling</p>
-              
               <div style={{ marginTop: '20px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
                 <ul className={styles.infoList}>
                   <li>Select a fundamental with the piano</li>
