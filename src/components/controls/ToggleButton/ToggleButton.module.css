@@ -3,7 +3,7 @@ button {
     align-items: center;
     justify-content: center;
     
-    --size: 6vmin; 
+    --size: var(--button-size); 
     
     height: var(--size);
     width: var(--size);
@@ -27,17 +27,16 @@ button {
 }
 
 .independentToggle {
-    --size: 9vmin;
+    --size: var(--button-size);
     width: var(--size);
     height: var(--size);
     aspect-ratio: 1 / 1;
 }
 
 .subToggle {
-    --size: 6vmin;
+    --size: var(--button-size);
     width: var(--size);
     height: var(--size);
-    aspect-ratio: 1 / 1;
 }
 
 button * {
@@ -62,12 +61,6 @@ button * {
 }
 
 .subToggle {
-    width: var(--size);
-    height: var(--size);
-}
-
-.independentToggle {
-    --size: 9vmin;
     width: var(--size);
     height: var(--size);
 }

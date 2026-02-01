@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import * as Tone from "tone";
 
 import useSettings from "./hooks/useSettings.jsx";
@@ -14,6 +14,17 @@ import silentMP3 from "./assets/audio/silence.mp3";
 function App() {
 
   const layoutMode = useLayoutMode();
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.toggle("jt-desktop", layoutMode === "desktop");
+    root.classList.toggle("jt-mobile", layoutMode === "mobile");
+
+    if (layoutMode === "desktop") root.classList.remove("jt-mobile");
+    if (layoutMode === "mobile") root.classList.remove("jt-desktop");
+    
+  }, [layoutMode])
 
   const [playTrigger, setPlayTrigger] = useState(0);
   const [midiKey, setMidiKey] = useState(null);

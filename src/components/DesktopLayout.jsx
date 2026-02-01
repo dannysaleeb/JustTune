@@ -1,5 +1,7 @@
 import { COLOURS } from "../config.js";
 
+import styles from "./styles/DesktopLayout.module.css";
+
 import Settings from "./Settings.jsx";
 import Notation from "./Notation.jsx";
 import PartialSelector from "./PartialSelector.jsx";
@@ -20,7 +22,7 @@ export default function DesktopLayout({
 }) {
   return (
 
-    <div className="appContainer">
+    <div className={styles.desktop}>
 
       <Settings
         fundamental={fundamental}
@@ -29,6 +31,8 @@ export default function DesktopLayout({
       />
 
       <Notation 
+        width={600}
+        height={280}
         partials={partials} 
         settings={settings} 
         setFlippedNotes={setFlippedNotes}

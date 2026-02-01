@@ -2,24 +2,35 @@ import { useRef, useEffect, useCallback } from "react";
 import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket, Glyph } from "vexflow";
 import { TextBracketNoLineTop, TextBracketNoLineBottom } from "../classes/VexPatches";
 
-export default function Notation({ partials, settings, setFlippedNotes }) {
+export default function Notation({ 
+  partials, 
+  settings, 
+  setFlippedNotes,
+  width,
+  height = 280 
+}) {
   const containerRef = useRef(null);
+
+  const isFixed = typeof width === "number";
 
   const render = useCallback(() => {
     if (!containerRef.current) return;
 
     containerRef.current.innerHTML = "";
-    const { width } = containerRef.current.getBoundingClientRect();
+    
+    const containerWidth = isFixed
+      ? width
+      : containerRef.current.getBoundingClientRect().width;
 
-    const fontSize = Math.max(10, Math.min(16, width / 40));
+    const fontSize = Math.max(10, Math.min(16, containerWidth / 40));
     const fontStyle = { family: "Adamina-Regular, serif", size: fontSize, weight: "italic" };
 
     const musicScale = 0.85;
     
-    const staveWidth = (width / musicScale) - 75; 
+    const staveWidth = (containerWidth / musicScale) - 75; 
 
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(width, 280); 
+    renderer.resize(containerWidth, height); 
 
     const context = renderer.getContext();
     context.scale(musicScale, musicScale);
@@ -126,13 +137,20 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
 
   useEffect(() => {
     if (!containerRef.current) return;
+
     render();
+
+    if (isFixed) return;
+    
     const observer = new ResizeObserver(() => {
       window.requestAnimationFrame(() => render());
     });
+    
     observer.observe(containerRef.current);
+    
     return () => observer.disconnect();
-  }, [render]);
+  
+  }, [render, isFixed]);
 
 	return (
 	  <div
