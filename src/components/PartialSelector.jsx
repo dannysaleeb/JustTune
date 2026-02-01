@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PartialButton from "./PartialButton";
 import { KEY_TO_PARTIAL } from "../config";
-import "./styles/PartialSelector.css";
+import styles from "./styles/PartialSelector.module.css";
 
 function PartialSelector({
   fundamental,
@@ -85,7 +85,7 @@ function PartialSelector({
   const maxReached = partialNumbers.length >= settings.maxPartials;
 
   return (
-    <div className="partialSelectorGrid">
+    <div className={styles.partialSelectorGrid}>
       {Array.from({ length: 24 }, (_, i) => i + 1).map(num => {
         const isSelected = selectedSet.has(num);
         const disabled = !fundamental || (!isSelected && maxReached);

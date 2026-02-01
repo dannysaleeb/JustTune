@@ -1,5 +1,4 @@
 .settingsContainer {
-    --button-size: clamp(40px, 6vmin, 48px);
 	--tuning-font-size: clamp(0.65rem, 1.5vmin, 0.85rem);
     
     display: flex;

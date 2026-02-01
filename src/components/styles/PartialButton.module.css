@@ -1,16 +1,15 @@
 .button {
-  /* 1. Remove fixed dimensions */
-  width: 100%;           /* Fill the width of the grid cell */
-  max-width: 47px;      /* Keep your original size as the 'ceiling' */
-  aspect-ratio: 1;      /* Keeps it perfectly square automatically */
-  height: auto;         /* Allow height to be defined by the aspect-ratio */
+  width: 100%;
+  max-width: 47px;
+  aspect-ratio: 1;     
+  height: auto;         
   
   min-width: 0; 
   min-height: 0;  
 
   /* 2. Responsive Text Size */
   /* This scales the number between 14px and 28px based on screen width */
-  font-size: clamp(14px, 4vw, 28px); 
+  font-size: var(--partial-font-size, 18px);
 
   display: flex;
   justify-content: center;
