@@ -10,8 +10,6 @@ html, body {
 #root {
   width: 100%;
   height: 100%;
-  min-width: 0;
-  min-height: 0; 
 }
 
 #app-frame {
@@ -44,7 +42,7 @@ html.jt-desktop #app-frame {
   width: 1080px;
   height: 720px;
 
-  margin: 0 auto;
+  margin: 0;
   overflow: hidden;
 
   border-radius: 20px;

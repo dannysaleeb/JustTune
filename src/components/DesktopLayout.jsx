@@ -23,36 +23,44 @@ export default function DesktopLayout({
   return (
 
     <div className={styles.desktop}>
+      
+      <div className={`${styles.panel} ${styles.settingsPanel}`}>
+        <Settings
+          fundamental={fundamental}
+          settings={settings}
+          setSetting={setSetting}
+        />
+      </div>
 
-      <Settings
-        fundamental={fundamental}
-        settings={settings}
-        setSetting={setSetting}
-      />
+      <div className={`${styles.panel} ${styles.notationPanel}`}>
+        <Notation 
+          width={600}
+          height={280}
+          partials={partials} 
+          settings={settings} 
+          setFlippedNotes={setFlippedNotes}
+        />
+      </div>
 
-      <Notation 
-        width={600}
-        height={280}
-        partials={partials} 
-        settings={settings} 
-        setFlippedNotes={setFlippedNotes}
-      />
+      <div className={`${styles.panel} ${styles.partialsPanel}`}>
+        <PartialSelector  
+          fundamental={fundamental}
+          partialNumbers={partialNumbers}
+          setPartialNumbers={setPartialNumbers}
+          flippedNotes={flippedNotes}
+          settings={settings}
+          colours={COLOURS}
+        />
+      </div>
 
-      <PartialSelector  
-        fundamental={fundamental}
-        partialNumbers={partialNumbers}
-        setPartialNumbers={setPartialNumbers}
-        flippedNotes={flippedNotes}
-        settings={settings}
-        colours={COLOURS}
-      />
-
-      <Piano 
-        midiKey={midiKey}
-        setMidiKey={setMidiKey}
-        setFlippedNotes={setFlippedNotes}
-        setPlayTrigger={setPlayTrigger} 
-      />
+      <div className={`${styles.panel} ${styles.pianoPanel}`}>
+        <Piano 
+          midiKey={midiKey}
+          setMidiKey={setMidiKey}
+          setFlippedNotes={setFlippedNotes}
+          setPlayTrigger={setPlayTrigger} 
+        />
+      </div>
 
     </div>
   );
