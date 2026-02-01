@@ -24,7 +24,7 @@ export default function DesktopLayout({
 
     <div className={styles.desktop}>
       
-      <div className={`${styles.panel} ${styles.settingsPanel}`}>
+      <div className={styles.leftPanel}>
         <Settings
           fundamental={fundamental}
           settings={settings}
@@ -32,7 +32,7 @@ export default function DesktopLayout({
         />
       </div>
 
-      <div className={`${styles.panel} ${styles.notationPanel}`}>
+      <div className={styles.notationPanel}>
         <Notation 
           width={600}
           height={280}
@@ -42,7 +42,7 @@ export default function DesktopLayout({
         />
       </div>
 
-      <div className={`${styles.panel} ${styles.partialsPanel}`}>
+      <div className={styles.partialsPanel}>
         <PartialSelector  
           fundamental={fundamental}
           partialNumbers={partialNumbers}
@@ -53,7 +53,7 @@ export default function DesktopLayout({
         />
       </div>
 
-      <div className={`${styles.panel} ${styles.pianoPanel}`}>
+      <div className={styles.pianoPanel}>
         <Piano 
           midiKey={midiKey}
           setMidiKey={setMidiKey}
