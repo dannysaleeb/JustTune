@@ -2,7 +2,6 @@ import { useState, useMemo, useRef } from "react";
 import * as Tone from "tone";
 
 import useSettings from "./hooks/useSettings.jsx";
-import { COLOURS } from "./config.js";
 import { Fundamental } from "./classes/Partials.js";
 
 import useLayoutMode from "./hooks/useLayoutMode";
