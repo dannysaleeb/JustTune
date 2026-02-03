@@ -2,19 +2,9 @@
   IMPORTANT:
   This component should not use viewport units.
   All responsive behavior for mobile layout is driven by layout root variables.
+  Responsive mobile layout in MobileLayout.module.css
 */
-
 .desktop {
-  --button-size: 46px;
-  --control-padding: 8px;
-  --control-gap: 10px;
-
-  --font-scale: 1;
-
-  --panel-gap: 15px;
-
-  --partial-font-size: 18px;
-  --partial-gap: 8px;
 
   width: 100%;
   height: 100%;
@@ -22,9 +12,20 @@
   display: grid;
   grid-template-columns: 2fr 3fr;
   grid-template-rows: 260px 195px 135px;
-
+  
+  --panel-gap: 15px;
   gap: var(--panel-gap);
 
+
+  --button-size: 47px;
+  --control-padding: 8px;
+  --control-gap: 10px;
+
+  --font-scale: 1;
+
+  --partial-font-size: 28px;
+  --partial-font-weight: 500;
+  --partial-gap: 6px;
 }
 
 .leftPanel {

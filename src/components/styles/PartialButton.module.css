@@ -1,21 +1,20 @@
 .button {
-  width: 100%;
+  width: var(--button-size);
+  height: var(--button-size);
   max-width: 47px;
   aspect-ratio: 1;     
-  height: auto;         
+  height: auto;
   
-  min-width: 0; 
-  min-height: 0;  
+  min-width: 0;
+  min-height: 0;
 
-  /* 2. Responsive Text Size */
-  /* This scales the number between 14px and 28px based on screen width */
-  font-size: var(--partial-font-size, 18px);
+  font-size: var(--partial-font-size, 28px);
 
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  font-weight: 400; 
+  font-weight: var(--partial-font-weight); 
   font-family: Arial, Helvetica, sans-serif; 
   user-select: none;
   cursor: pointer;

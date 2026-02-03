@@ -1,12 +1,14 @@
 .partialSelectorGrid {
   display: grid;
 
-  /* FIXED STRUCTURE */
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(8, 47px);
+  grid-template-rows: repeat(3, 47px);
 
-  gap: clamp(4px, 1vw, 8px);
+  gap: var(--partial-gap);
   margin: 0 auto;
+
+  width: fit-content;
+  max-width: 100%;
 
   box-sizing: border-box;
 }

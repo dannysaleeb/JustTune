@@ -16,9 +16,8 @@ html, body {
   background-color: rgba(212, 212, 212, 1);
   background-image: url("./assets/justTuneWaves_transparent.svg");
   
-  background-size: cover; 
-  background-position: center; 
-  background-repeat: no-repeat;
+  background-size: 2000px; 
+  background-position: -460px -720px;
 
   border-radius: 20px;
   box-shadow: 
@@ -29,7 +28,6 @@ html, body {
 }
 
 /* DESKTOP LAYOUT */
-
 html.jt-desktop body {
   overflow: hidden;
   display: flex;
@@ -43,8 +41,8 @@ html.jt-desktop #app-frame {
 
   margin: 0;
   overflow: hidden;
-
   padding: 45px 62px;
+  box-sizing: border-box;
 
   border-radius: 20px;
   box-shadow: 
@@ -53,7 +51,6 @@ html.jt-desktop #app-frame {
 }
 
 /* MOBILE LAYOUT */
-
 html.jt-mobile body {
   /* to be updated to match Fin's */
   overflow: auto;
