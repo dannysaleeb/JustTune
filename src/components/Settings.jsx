@@ -1,17 +1,22 @@
+import Controls from "./Controls.jsx";
 import NotationSettings from "./NotationSettings";
 import TuningSettings from "./TuningSettings";
 import PlaybackSettings from "./PlaybackSettings";
 
 import styles from "./styles/Settings.module.css";
 
-export default function Settings({ fundamental, settings, setSetting }) {
+export default function Settings({ fundamental, settings, setSetting, showInfo, setShowInfo, handleReset }) {
   return (
     <div className={styles.settingsContainer}>
 
       {/* SECTION 2: CONTROL */}
-      {/* <Controls
-
-      /> */}
+      <Controls
+        settings={settings}
+        setSetting={setSetting}
+        showInfo={showInfo}
+        setShowInfo={setShowInfo}
+        handleReset={handleReset}
+      />
       
       {/* SECTION 1: AUDIO */}
       <PlaybackSettings

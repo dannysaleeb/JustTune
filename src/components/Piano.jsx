@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./styles/Piano.module.css";
 
-export default function Piano({ midiKey, setMidiKey, setFlippedNotes, setPlayTrigger }) {
+export default function Piano({ midiKey, setMidiKey, setFlippedNotes }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_KEYS = [
     { offset: 1, left: "12.5%" },
@@ -14,12 +14,9 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes, setPlayTri
   const [viewOctave, setViewOctave] = useState(2);
 
   function selectFundamentalMidi(midi) {
-    if (midi === midiKey) {
-      setPlayTrigger(prev => prev + 1);
-    } else {
-      setMidiKey(midi);
-      setFlippedNotes(new Array(24).fill(false));
-    }
+    if (midi === midiKey) return;
+    setFlippedNotes(new Array(24).fill(false));
+    setMidiKey(midi);
   }
 
   const handleOctaveChange = (delta) => {

@@ -74,7 +74,7 @@ export default function TuningSettings({ settings, setSetting }) {
             <img src={quarterSharp} alt="#" style={{ height: "65%", width: "auto" }} />
           </ToggleButton>
         </div>
-        <div>+/- 50c</div>
+        <div style={{ fontSize: "var(--control-label-font-size" }}>+/- 50c</div>
       </div>
     </div>
   );

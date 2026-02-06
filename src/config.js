@@ -1,5 +1,5 @@
 const DEFAULT_SETTINGS = Object.freeze({
-    "mute": true,
+    "mute": false,
     "doubles": false,
     "naturals": false,
     "colours": true,

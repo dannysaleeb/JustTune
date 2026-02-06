@@ -26,7 +26,7 @@ export default function RadioButton({
           </ToggleButton>
         ))}
       </div>
-      <div>
+      <div style={{ fontSize: "var(--control-label-font-size" }}>
         {label}
       </div>
     </div>

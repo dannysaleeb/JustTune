@@ -61,7 +61,7 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                             />
                         </ToggleButton>
                     </div>
-                    <div>notation</div>
+                    <div style={{ fontSize: "var(--control-label-font-size" }}>notation</div>
                 </div>
 
                 {/* RIGHT GROUP: Enharmonic Control */}
@@ -85,7 +85,7 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                             rightArrowSrc={rightLeftIcon}
                         />
                     </div>
-                    <div>enharmonic flip</div>
+                    <div style={{ fontSize: "var(--control-label-font-size" }}>enharmonic flip</div>
                 </div>
         </div>
     );

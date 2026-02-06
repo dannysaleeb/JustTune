@@ -12,7 +12,7 @@ export default function PlaybackSettings({settings, setSetting}) {
             <RadioButton
                 selected={settings.playbackMode}
                 options={["piano", "triangle", "sine"]}
-                label="playback"
+                label="playback sound"
                 onChange={(option) => setSetting("playbackMode", option)}
                 renderOption={(option) => {
                     const icons = {

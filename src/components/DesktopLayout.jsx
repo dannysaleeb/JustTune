@@ -6,6 +6,7 @@ import Settings from "./Settings.jsx";
 import Notation from "./Notation.jsx";
 import PartialSelector from "./PartialSelector.jsx";
 import Piano from "./Piano.jsx"
+import Playback from "./Playback.jsx";
 
 export default function DesktopLayout({
   partials,
@@ -18,17 +19,27 @@ export default function DesktopLayout({
   setFlippedNotes,
   midiKey,
   setMidiKey,
-  setPlayTrigger
+  showInfo,
+  setShowInfo,
+  handleReset
 }) {
   return (
 
     <div className={styles.desktop}>
       
       <div className={styles.leftPanel}>
+        <Playback 
+          partials={partials} 
+          settings={settings}
+        />
+
         <Settings
           fundamental={fundamental}
           settings={settings}
           setSetting={setSetting}
+          showInfo={showInfo}
+          setShowInfo={setShowInfo}
+          handleReset={handleReset}
         />
       </div>
 
@@ -58,7 +69,6 @@ export default function DesktopLayout({
           midiKey={midiKey}
           setMidiKey={setMidiKey}
           setFlippedNotes={setFlippedNotes}
-          setPlayTrigger={setPlayTrigger} 
         />
       </div>
 

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import * as Tone from "tone";
 
 // Force high-priority routing for speakers
-if (Tone.context.latencyHint !== "playback") {
-  Tone.setContext(new Tone.Context({ latencyHint: "playback" }));
-}
+// if (Tone.context.latencyHint !== "playback") {
+//   Tone.setContext(new Tone.Context({ latencyHint: "playback" }));
+// }
 
 // --- Import samples ---
 import A0 from "../assets/audio/A0.mp3";
@@ -50,7 +50,7 @@ const NOTE_LIST = Object.keys(SAMPLE_MAP);
 // This happens while the user is still looking at the StartOverlay.
 const globalBuffers = new Tone.Buffers(SAMPLE_MAP);
 
-export default function Playback({ partials = [], settings, playTrigger }) {
+export default function Playback({ partials = [], settings }) {
   const [isLoaded, setIsLoaded] = useState(globalBuffers.loaded);
   const sampleFreqMap = useRef({});
   const activeSources = useRef([]);
@@ -81,20 +81,8 @@ export default function Playback({ partials = [], settings, playTrigger }) {
 
   // --- 3. Audio Handshake & Connection ---
   useEffect(() => {
-    const initAudio = async () => {
-      if (Tone.context.state !== "running") {
-        await Tone.start();
-      }
-      Tone.Destination.mute = false;
-      Tone.Destination.volume.value = 0;
-      masterGain.current = new Tone.Gain(1).toDestination();
-    };
-
-    initAudio();
-
-    return () => {
-      masterGain.current?.dispose();
-    };
+    masterGain.current = new Tone.Gain(1).toDestination();
+    return () => masterGain.current?.dispose();
   }, []);
 
   // --- 4. Logic & Calculations ---
@@ -181,14 +169,13 @@ export default function Playback({ partials = [], settings, playTrigger }) {
       .map(p => p.frequency.toFixed(2))
       .join("_");
 
-    return `${settings.playbackMode}|${settings.use12EDO}|${settings.centDeviation}|${freqs}|${playTrigger}`;
+    return `${settings.playbackMode}|${settings.use12EDO}|${settings.centDeviation}|${freqs}`;
   }, [
     settings.playbackMode,
     settings.use12EDO,
     settings.centDeviation,
     settings.maxPartials,
-    partials,
-    playTrigger
+    partials
   ]);
 
   useEffect(() => {
