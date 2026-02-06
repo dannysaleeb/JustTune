@@ -1,61 +1,19 @@
 .settingsContainer {
-	--tuning-font-size: clamp(0.65rem, 1.5vmin, 0.85rem);
-    
     display: flex;
     flex-direction: column;
     gap: 12px;
     padding: 10px;
     box-sizing: border-box;
     /* Centers all section content within the sidebar */
-    align-items: center; 
-}
-
-.sectionHeader {
-    font-family: "Amatica SC", sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #666;
-    margin: 0;
-    text-transform: uppercase;
-    text-align: center; 
-    width: 100%;
-}
-
-.settingsSection {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    /* Centers the header and the item container relative to each other */
-    align-items: center; 
+    align-items: center;
 }
 
 .settingsItemContainer {
   display: flex;
   flex-direction: row; 
-  align-items: center; /* Center centers horizontally */
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px; 
   width: 100%;
   padding: 5px 0;
-  /* This prevents internal text from pushing the height */
-  line-height: 0; 
-}
-.settingsContainer button {
-    width: var(--button-size);
-    height: var(--button-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.tuningLabel {
-    font-weight: bold;
-    font-size: var(--tuning-font-size);
-    /* Force text to stay in one line and center it */
-    display: block;
-    line-height: normal; 
-    text-align: center;
-    white-space: nowrap;
 }

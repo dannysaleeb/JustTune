@@ -1,4 +1,3 @@
-import React from "react";
 import doubleSharpsIcon from "../assets/icons/doublesharps.svg";
 import doubleSharpsInactive from "../assets/icons/doublesharps_inactive.svg";
 import showNaturalsIcon from "../assets/icons/shownaturals.svg";
@@ -21,32 +20,11 @@ const enharmonicSymbols = [flatIcon, naturalIcon, sharpIcon];
 export default function NotationSettings({ fundamental, settings, setSetting }) {
     const iconStyle = { height: "65%", width: "auto", pointerEvents: "none" };
 
-    const labelStyle = { 
-        fontFamily: '"Amatica SC"', 
-        fontWeight: 700, 
-        fontSize: "1rem", 
-        lineHeight: "1",
-        marginBottom: "8px",
-        textAlign: "center",
-        textTransform: "uppercase",
-        color: "#666"
-    };
-
     return (
         <div className={settingsStyles.settingsItemContainer}>
-            <div style={{ 
-                display: "flex", 
-                flexDirection: "row", 
-                alignItems: "center", 
-                justifyContent: "center", 
-                gap: "24px",
-                width: "100%"
-            }}>
-                
                 {/* LEFT GROUP: Global Display Toggles */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <span style={labelStyle}>Display</span>
-                    <div style={{ display: "flex", gap: "8px", alignItems: "center", minHeight: "var(--button-size)" }}>
+                <div>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "var(--control-gap)" }}>
                         <ToggleButton
                             value={settings.doubles}
                             onChange={() => setSetting("doubles", !settings.doubles)}
@@ -83,11 +61,11 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                             />
                         </ToggleButton>
                     </div>
+                    <div>notation</div>
                 </div>
 
                 {/* RIGHT GROUP: Enharmonic Control */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <span style={labelStyle}>Enharmonic</span>
+                <div>
                     <div style={{ flexShrink: 0, display: "flex", alignItems: "center", minHeight: "var(--button-size)" }}>
                         <DirectionalRadio
                             value={settings.enharmonicToggle}
@@ -107,8 +85,8 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                             rightArrowSrc={rightLeftIcon}
                         />
                     </div>
+                    <div>enharmonic flip</div>
                 </div>
-            </div>
         </div>
     );
 }

@@ -12,6 +12,7 @@ export default function PlaybackSettings({settings, setSetting}) {
             <RadioButton
                 selected={settings.playbackMode}
                 options={["piano", "triangle", "sine"]}
+                label="playback"
                 onChange={(option) => setSetting("playbackMode", option)}
                 renderOption={(option) => {
                     const icons = {
@@ -22,6 +23,28 @@ export default function PlaybackSettings({settings, setSetting}) {
                     
                     return icons[option]
                 }}
+            />
+
+            {/* Column 1: Tuning System */}
+            <RadioButton
+                // Map the boolean use12EDO back to the UI strings
+                selected={settings.use12EDO ? "12EDO" : "JI"}
+                options={["JI", "12EDO"]}
+                label="tuning"
+                // Update use12EDO based on the selection
+                onChange={(option) => setSetting("use12EDO", option === "12EDO")}
+                renderOption={(option) => (
+                    <span style={{ 
+                    fontSize: option === "12EDO" 
+                        ? "clamp(0.6rem, 1.2vw, 0.75rem)" 
+                        : "clamp(0.7rem, 1.5vw, 0.9rem)", 
+                    fontWeight: "bold",
+                    lineHeight: "1",
+                    whiteSpace: "nowrap"
+                    }}>
+                    {option}
+                    </span>
+                )}
             />
         </div>
     )

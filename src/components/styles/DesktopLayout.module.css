@@ -19,13 +19,15 @@
 
   --button-size: 47px;
   --control-padding: 8px;
-  --control-gap: 10px;
+  --control-gap: 5px;
 
   --font-scale: 1;
 
   --partial-font-size: 28px;
   --partial-font-weight: 500;
   --partial-gap: 6px;
+
+  --arrow-gap: 2px
 }
 
 .leftPanel {

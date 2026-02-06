@@ -7,7 +7,7 @@ button {
     
     height: var(--size);
     width: var(--size);
-    aspect-ratio: 1 / 1; 
+    /* aspect-ratio: 1 / 1;  */
     
     flex: none; 
 
@@ -21,22 +21,9 @@ button {
     -webkit-tap-highlight-color: transparent;
 
     font-size: calc(var(--size) * 0.4); 
-    line-height: 1;                     
-    overflow: hidden;                   
+    line-height: 1;                   
+    overflow: hidden;                
     box-sizing: border-box;
-}
-
-.independentToggle {
-    --size: var(--button-size);
-    width: var(--size);
-    height: var(--size);
-    aspect-ratio: 1 / 1;
-}
-
-.subToggle {
-    --size: var(--button-size);
-    width: var(--size);
-    height: var(--size);
 }
 
 button * {
@@ -58,9 +45,4 @@ button * {
     box-shadow:
         inset 2px 2px 4px rgba(0,0,0,0.35),
         inset -2px -2px 4px rgba(255,255,255,0.3);
-}
-
-.subToggle {
-    width: var(--size);
-    height: var(--size);
 }

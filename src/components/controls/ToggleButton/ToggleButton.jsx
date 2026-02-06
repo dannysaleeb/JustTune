@@ -11,8 +11,7 @@ export default function ToggleButton({
   const className = [
     styles.toggle,
     value ? styles.active : styles.inactive,
-    disabled && styles.disabled,
-    size === "sub" ? styles.subToggle : styles.independentToggle
+    disabled && styles.disabled
   ]
     .filter(Boolean)
     .join(" ");
