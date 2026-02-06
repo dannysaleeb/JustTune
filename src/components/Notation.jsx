@@ -13,7 +13,7 @@ export default function Notation({partials, settings, setFlippedNotes }) {
     containerRef.current.innerHTML = "";
     const {width, height} = containerRef.current.getBoundingClientRect();
 
-    const staveWidth = 475; // this will be derived from layout later
+    const staveWidth = 480; // this will be derived from layout later
 
     // draw stave
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
@@ -27,8 +27,8 @@ export default function Notation({partials, settings, setFlippedNotes }) {
     context.scale(0.85, 0.85)
 
     // Create the staves
-    const top = new Stave(40, 30, staveWidth);
-    const bottom = new Stave(40, 105, staveWidth);
+    const top = new Stave(70, 30, staveWidth);
+    const bottom = new Stave(70, 105, staveWidth);
 
     top.addClef('treble');
     bottom.addClef('bass');

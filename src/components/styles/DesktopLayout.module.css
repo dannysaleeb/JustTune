@@ -66,5 +66,8 @@
 }
 
 .pianoPanel {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   grid-row: 3 / 4;
 }
