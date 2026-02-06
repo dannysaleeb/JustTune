@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import * as Tone from "tone";
 
-// Force high-priority routing for speakers
-// if (Tone.context.latencyHint !== "playback") {
-//   Tone.setContext(new Tone.Context({ latencyHint: "playback" }));
-// }
-
 // --- Import samples ---
 import A0 from "../assets/audio/A0.mp3";
 import C1 from "../assets/audio/C1.mp3";
@@ -50,7 +45,7 @@ const NOTE_LIST = Object.keys(SAMPLE_MAP);
 // This happens while the user is still looking at the StartOverlay.
 const globalBuffers = new Tone.Buffers(SAMPLE_MAP);
 
-export default function Playback({ partials = [], settings }) {
+export default function Playback({ partials = [], settings, playTrigger }) {
   const [isLoaded, setIsLoaded] = useState(globalBuffers.loaded);
   const sampleFreqMap = useRef({});
   const activeSources = useRef([]);
@@ -169,13 +164,14 @@ export default function Playback({ partials = [], settings }) {
       .map(p => p.frequency.toFixed(2))
       .join("_");
 
-    return `${settings.playbackMode}|${settings.use12EDO}|${settings.centDeviation}|${freqs}`;
+    return `${settings.playbackMode}|${settings.use12EDO}|${settings.centDeviation}|${freqs}|${playTrigger}`;
   }, [
     settings.playbackMode,
     settings.use12EDO,
     settings.centDeviation,
     settings.maxPartials,
-    partials
+    partials,
+    playTrigger
   ]);
 
   useEffect(() => {

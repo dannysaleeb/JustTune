@@ -21,7 +21,9 @@ export default function DesktopLayout({
   setMidiKey,
   showInfo,
   setShowInfo,
-  handleReset
+  handleReset,
+  playTrigger,
+  setPlayTrigger
 }) {
   return (
 
@@ -31,6 +33,7 @@ export default function DesktopLayout({
         <Playback 
           partials={partials} 
           settings={settings}
+          playTrigger={playTrigger}
         />
 
         <Settings
@@ -69,6 +72,8 @@ export default function DesktopLayout({
           midiKey={midiKey}
           setMidiKey={setMidiKey}
           setFlippedNotes={setFlippedNotes}
+          playTrigger={playTrigger}
+          setPlayTrigger={setPlayTrigger}
         />
       </div>
 

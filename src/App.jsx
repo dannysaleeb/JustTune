@@ -72,7 +72,9 @@ function App() {
     showInfo,
     setShowInfo,
     handleReset,
-    handleMuteToggle
+    handleMuteToggle,
+    playTrigger,
+    setPlayTrigger
   }
 
   return (
