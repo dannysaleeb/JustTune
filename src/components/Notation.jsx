@@ -34,9 +34,9 @@ export default function Notation({partials, settings, setFlippedNotes }) {
     bottom.addClef('bass');
 
     if (settings.centDeviation === 50) {
-      Glyph.renderGlyph(context, 59, 32, 40, "accidentalQuarterToneSharpStein");
+      Glyph.renderGlyph(context, 89, 32, 40, "accidentalQuarterToneSharpStein");
     } else if (settings.centDeviation === -50) {
-      Glyph.renderGlyph(context, 55, 210, 40, "accidentalQuarterToneFlatStein");
+      Glyph.renderGlyph(context, 85, 210, 40, "accidentalQuarterToneFlatStein");
     }
 
     const brace = new StaveConnector(top, bottom).setType(3);
