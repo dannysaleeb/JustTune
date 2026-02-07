@@ -1,4 +1,5 @@
 import { COLOURS } from "../config.js";
+import { useState } from "react";
 
 import styles from "./styles/MobileLayout.module.css";
 
@@ -26,6 +27,9 @@ export default function MobileLayout({
   playTrigger,
   setPlayTrigger
 }) {
+
+  const [showSettings, setShowSettings] = useState(false);
+
   return (
     <div className={styles.mobile}>
       
@@ -40,18 +44,24 @@ export default function MobileLayout({
           setSetting={setSetting}
           setShowInfo={setShowInfo}
           handleReset={handleReset}
-        /> 
-        <SettingsMobile
-          fundamental={fundamental}
-          settings={settings}
-          setSetting={setSetting}
-          showInfo={showInfo}
-          setShowInfo={setShowInfo}
-          handleReset={handleReset}
+          setShowSettings={setShowSettings}
         />
-      </div>
 
-      {/* NEED MobileSettings, MobileControls etc. */}
+        {showSettings && 
+          <div className={styles.modalOverlay} onClick={() => setShowPopup(false)}>
+            <div className={`${styles.panel} ${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalBody}>
+                <SettingsMobile 
+                  fundamental={fundamental} 
+                  settings={settings} 
+                  setSetting={setSetting} 
+                />
+              </div>
+              <button className={styles.closeButton} onClick={() => setShowSettings(false)}>Close</button>
+            </div>
+          </div>
+        }
+      </div>
 
       <div className={styles.notationPanel}>
         <Notation 

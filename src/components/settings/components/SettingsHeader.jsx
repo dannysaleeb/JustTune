@@ -1,4 +1,5 @@
-import styles from "../../styles/Settings.module.css";
+import styles from "../../styles/MobileLayout.module.css";
+
 import { CiSettings } from "react-icons/ci";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2"; 
 
@@ -6,7 +7,7 @@ import InfoPopup from "./InfoPopup.jsx";
 import ResetButton from "./ResetButton.jsx";
 import ToggleButton from "./controls/ToggleButton/ToggleButton.jsx";
 
-export default function SettingsHeader({ settings, setSetting, setShowInfo, handleReset }) {
+export default function SettingsHeader({ settings, setSetting, setShowInfo, handleReset, setShowSettings }) {
   return (
     <div>
         <div className={`${styles.panel} ${styles.headerPanel}`}>
@@ -38,8 +39,8 @@ export default function SettingsHeader({ settings, setSetting, setShowInfo, hand
 
                 <div className={styles.settingsToggle}>
                     <ToggleButton
-                    onChange={() => setShowPopup(true)}
-                    title="Open Settings"
+                        onChange={() => setShowSettings(true)}
+                        title="Open Settings"
                     >
                     <CiSettings style={{ width: '1.5em', height: '1.5em' }} />
                     </ToggleButton>
