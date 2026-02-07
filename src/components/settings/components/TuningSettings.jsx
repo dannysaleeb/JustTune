@@ -3,10 +3,10 @@ import RadioButton from "./controls/RadioButton/RadioButton";
 import StepperDial from "./controls/StepperDial/StepperDial";
 import ToggleButton from "./controls/ToggleButton/ToggleButton";
 
-import quarterSharp from "../assets/icons/quartersharp.svg";
-import quarterFlat from "../assets/icons/quarterflat.svg";
+import quarterSharp from "../../../assets/icons/quartersharp.svg";
+import quarterFlat from "../../../assets/icons/quarterflat.svg";
 
-import settingsStyles from "./styles/Settings.module.css";
+import settingsStyles from "../../styles/Settings.module.css";
 
 export default function TuningSettings({ settings, setSetting }) {
   const isPlus50 = settings.centDeviation === 50;

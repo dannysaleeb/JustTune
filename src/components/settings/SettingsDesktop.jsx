@@ -1,11 +1,11 @@
-import Controls from "./Controls.jsx";
-import NotationSettings from "./NotationSettings";
-import TuningSettings from "./TuningSettings";
-import PlaybackSettings from "./PlaybackSettings";
+import Controls from "./components/Controls.jsx";
+import NotationSettings from "./components/NotationSettings.jsx";
+import TuningSettings from "./components/TuningSettings.jsx";
+import PlaybackSettings from "./components/PlaybackSettings.jsx";
 
-import styles from "./styles/Settings.module.css";
+import styles from "../styles/Settings.module.css";
 
-export default function Settings({ fundamental, settings, setSetting, showInfo, setShowInfo, handleReset }) {
+export default function SettingsDesktop({ fundamental, settings, setSetting, showInfo, setShowInfo, handleReset }) {
   return (
     <div className={styles.settingsContainer}>
 

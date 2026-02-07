@@ -3,7 +3,7 @@ import { PiWaveSineBold, PiWaveTriangleBold } from "react-icons/pi";
 
 // controls import
 import RadioButton from "./controls/RadioButton/RadioButton";
-import settingsStyles from "./styles/Settings.module.css";
+import settingsStyles from "../../styles/Settings.module.css";
 
 export default function PlaybackSettings({settings, setSetting}) {
     return (

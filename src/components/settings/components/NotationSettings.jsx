@@ -1,19 +1,19 @@
-import doubleSharpsIcon from "../assets/icons/doublesharps.svg";
-import doubleSharpsInactive from "../assets/icons/doublesharps_inactive.svg";
-import showNaturalsIcon from "../assets/icons/shownaturals.svg";
-import hideNaturalsIcon from "../assets/icons/hidenaturals.svg";
-import showColoursIcon from "../assets/icons/showcolours.svg";
-import hideColoursIcon from "../assets/icons/hidecolours.svg";
-import leftRightIcon from "../assets/icons/left_right.svg";
-import rightLeftIcon from "../assets/icons/right_left.svg";
+import doubleSharpsIcon from "../../../assets/icons/doublesharps.svg";
+import doubleSharpsInactive from "../../../assets/icons/doublesharps_inactive.svg";
+import showNaturalsIcon from "../../../assets/icons/shownaturals.svg";
+import hideNaturalsIcon from "../../../assets/icons/hidenaturals.svg";
+import showColoursIcon from "../../../assets/icons/showcolours.svg";
+import hideColoursIcon from "../../../assets/icons/hidecolours.svg";
+import leftRightIcon from "../../../assets/icons/left_right.svg";
+import rightLeftIcon from "../../../assets/icons/right_left.svg";
 
-import flatIcon from "../assets/icons/flat.svg";
-import naturalIcon from "../assets/icons/natural.svg";
-import sharpIcon from "../assets/icons/sharp.svg";
+import flatIcon from "../../../assets/icons/flat.svg";
+import naturalIcon from "../../../assets/icons/natural.svg";
+import sharpIcon from "../../../assets/icons/sharp.svg";
 
 import DirectionalRadio from "./controls/DirectionalRadio/DirectionalRadio";
 import ToggleButton from "./controls/ToggleButton/ToggleButton";
-import settingsStyles from "./styles/Settings.module.css";
+import settingsStyles from "../../styles/Settings.module.css";
 
 const enharmonicSymbols = [flatIcon, naturalIcon, sharpIcon];
 

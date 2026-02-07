@@ -2,7 +2,7 @@ import { COLOURS } from "../config.js";
 
 import styles from "./styles/DesktopLayout.module.css";
 
-import Settings from "./Settings.jsx";
+import SettingsDesktop from "./settings/SettingsDesktop.jsx";
 import Notation from "./Notation.jsx";
 import PartialSelector from "./PartialSelector.jsx";
 import Piano from "./Piano.jsx"
@@ -38,7 +38,7 @@ export default function DesktopLayout({
           playTrigger={playTrigger}
         />
 
-        <Settings
+        <SettingsDesktop
           fundamental={fundamental}
           settings={settings}
           setSetting={setSetting}

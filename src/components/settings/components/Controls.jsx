@@ -4,8 +4,8 @@ import ToggleButton from "./controls/ToggleButton/ToggleButton.jsx";
 
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2"; 
 
-import styles from "./styles/Controls.module.css"
-import settingsStyles from "./styles/Settings.module.css";
+import styles from "../../styles/Controls.module.css"
+import settingsStyles from "../../styles/Settings.module.css";
 
 export default function Controls({settings, setSetting, showInfo, setShowInfo, handleReset, handleMuteToggle }) {
     return (
