@@ -42,6 +42,7 @@ export default function MobileLayout({
         <SettingsHeader 
           settings={settings}
           setSetting={setSetting}
+          showInfo={showInfo}
           setShowInfo={setShowInfo}
           handleReset={handleReset}
           setShowSettings={setShowSettings}
