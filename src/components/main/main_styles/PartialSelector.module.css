@@ -1,13 +1,12 @@
 .partialSelectorGrid {
   display: grid;
 
-  grid-template-columns: repeat(8, 47px);
-  grid-template-rows: repeat(3, 47px);
+  grid-template-columns: var(--partials-template-columns);
+  grid-template-rows: var(--partials-template-rows);
 
   gap: var(--partial-gap);
   margin: 0 auto;
 
-  width: fit-content;
   max-width: 100%;
 
   box-sizing: border-box;

@@ -1,6 +1,9 @@
 .mobile {
+  all: unset;
   width: 100%;
+  height: 100svh;
   min-height: 100svh;
+  max-height: 100svh;
 
   display: grid;
   grid-template-columns: 1fr;
@@ -26,9 +29,12 @@
   --partial-font-size: clamp(14px, 4vw, 28px);
   --partial-gap: clamp(4px, 1vw, 8px);
 
-  /* optional, but useful */
   --panel-padding: clamp(8px, 3vw, 16px);
   --panel-gap: clamp(8px, 3vw, 20px);
+  --panel-width: 100%;
+
+  --partials-template-columns: repeat(8, 1fr);
+  --partials-template-rows: repeat(3, 1fr);
 }
 
 .panel {
@@ -47,27 +53,33 @@
   grid-row: 1;
 
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 
   padding: 8px 12px;
-  min-height: 56px;
+  /* min-height: 56px; */
 
   box-sizing: border-box;
 }
 
-.headerPanel .panel {
+/* .headerPanel .panel {
   padding: 8px 12px;
-}
+} */
 
-.headerPanel > * {
+/* .headerPanel > * {
   flex-shrink: 0;
-}
+} */
 
 .notationPanel,
 .partialsPanel,
 .pianoPanel {
   min-width: 0;
+}
+
+.notationPanel {
+  min-height: 100px;
 }
 
 .headerPanel { grid-column: 1; grid-row: 1;}
@@ -80,4 +92,100 @@
   width: 100%;
   max-width: 480px;
   aspect-ratio: 8 / 3;
+
+  box-sizing: border-box;
+  padding: 1px;
+}
+
+.pianoPanel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modalContent {
+  width: 100%; 
+  max-width: 400px;
+  box-shadow:
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset  1px  1px 2px rgba(0,0,0,1),
+    0 10px 30px rgba(0,0,0,0.5); 
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- CLEAN MODAL TEXT FIX --- */
+.modalBody {
+  text-align: center;
+  padding: 10px;
+}
+
+.modalBody h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.modalBody p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 12px 0;
+  color: #555;
+}
+
+.infoList {
+  /* Inherits from .modalBody p */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+  
+  /* List specific layout */
+  text-align: left;
+  list-style-position: outside;
+  margin: 20px 0 0 25px; 
+  padding: 0;
+}
+
+.infoList li {
+  margin-bottom: 8px;
+}
+
+.closeButton {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #e0e0e0;
+  cursor: pointer;
+  
+  /* Font Sync */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600; 
+  color: #444;   
+}
+
+.closeButton:active {
+  background: #ccc;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

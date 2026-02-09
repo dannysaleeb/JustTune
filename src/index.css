@@ -52,17 +52,16 @@ html.jt-desktop #app-frame {
 
 /* MOBILE LAYOUT */
 html.jt-mobile body {
-  /* to be updated to match Fin's */
   overflow: auto;
-  display: block;
-  background: #000;
-  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  /* height: auto; */
 }
 
 html.jt-mobile #app-frame {
-  /* to match Fin's... */
-  width: 100vw;
-  height: 100vh;
+  width: clamp(400px, 100vw, 600px);
+  height: 100%;
 
   overflow: auto;
 

@@ -28,6 +28,11 @@
   --partial-font-weight: 500;
   --partial-gap: 6px;
 
+  --partials-template-columns: repeat(8, 47px);
+  --partials-template-rows: repeat(3, 47px);
+
+  --piano-wrapper-max-width: 90%;
+
   --arrow-gap: 2px
 }
 
@@ -62,6 +67,9 @@
 }
 
 .partialsPanel {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   grid-row: 2 / 3;
 }
 
