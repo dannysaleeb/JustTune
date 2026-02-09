@@ -45,8 +45,12 @@ function PartialSelector({
   // Stop drag on mouse up anywhere
   useEffect(() => {
     const stopDrag = () => setIsDragging(false);
-    window.addEventListener("mouseup", stopDrag);
-    return () => window.removeEventListener("mouseup", stopDrag);
+    window.addEventListener("pointerup", stopDrag);
+    window.addEventListener("pointercancel", stopDrag);
+    return () => {
+      window.removeEventListener("pointerup", stopDrag);
+      window.removeEventListener("pointercancel", stopDrag);
+    };
   }, []);
 
   // Keyboard handling
@@ -92,15 +96,18 @@ function PartialSelector({
 
         return (
           <PartialButton
+            data-partial={num}
             key={num}
             number={num}
             selected={isSelected}
             disabled={disabled}
             style={{ "--partial-color": getColour(num) }}
 
-            onMouseDown={e => {
-              if (disabled || e.button !== 0) return;
+            onPointerDown={e => {
+              if (disabled) return;
+
               e.preventDefault();
+              e.currentTarget.setPointerCapture(e.pointerId);
 
               setIsDragging(true);
               setDragModeIsRemoving(isSelected);
@@ -116,23 +123,48 @@ function PartialSelector({
               });
             }}
 
-            onMouseEnter={() => {
-              if (!isDragging || disabled) return;
+            onPointerMove={(e) => {
+              if (!isDragging) return;
+
+              const target = document.elementFromPoint(
+                e.clientX,
+                e.clientY
+              );
+
+              if (!target) return;
+
+              const button = target.closest("[data-partial]");
+              if (!button) return;
+
+              const hoveredNum = Number(button.dataset.partial);
+              if (!hoveredNum) return;
+
+              const hoveredDisabled =
+                !fundamental ||
+                (!selectedSet.has(hoveredNum) && maxReached);
+
+              if (hoveredDisabled) return;
 
               setPartialNumbers(prev => {
-                const exists = prev.includes(num);
+                const exists = prev.includes(hoveredNum);
 
                 if (dragModeIsRemoving) {
-                  return exists ? prev.filter(n => n !== num) : prev;
+                  return exists
+                    ? prev.filter(n => n !== hoveredNum)
+                    : prev;
                 }
 
                 return exists || prev.length >= settings.maxPartials
                   ? prev
-                  : [...prev, num].sort((a, b) => a - b);
+                  : [...prev, hoveredNum].sort((a, b) => a - b);
               });
             }}
 
-            onMouseUp={() => setIsDragging(false)}
+
+            onPointerUp={(e) => {
+              e.currentTarget.releasePointerCapture(e.pointerId);
+              setIsDragging(false);
+            }}
           />
         );
       })}
