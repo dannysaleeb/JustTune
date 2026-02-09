@@ -33,7 +33,7 @@ export default function MobileLayout({
   return (
     <div className={styles.mobile}>
       
-      <div className={styles.headerPanel}>
+      <div className={`${styles.panel} ${styles.headerPanel}`}>
         <Playback
           partials={partials} 
           settings={settings}
@@ -49,7 +49,7 @@ export default function MobileLayout({
         />
 
         {showSettings && 
-          <div className={styles.modalOverlay} onClick={() => setShowPopup(false)}>
+          <div className={styles.modalOverlay} onClick={() => setShowSettings(false)}>
             <div className={`${styles.panel} ${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
               <div className={styles.modalBody}>
                 <SettingsMobile 
@@ -64,17 +64,15 @@ export default function MobileLayout({
         }
       </div>
 
-      <div className={styles.notationPanel}>
-        <Notation 
-          width={600}
-          height={280}
+      <div className={`${styles.panel} ${styles.notationPanel}`}>
+        <Notation
           partials={partials} 
           settings={settings} 
           setFlippedNotes={setFlippedNotes}
         />
       </div>
 
-      <div className={styles.partialsPanel}>
+      <div className={`${styles.panel} ${styles.partialsPanel}`}>
         <PartialSelector  
           fundamental={fundamental}
           partialNumbers={partialNumbers}
@@ -85,7 +83,7 @@ export default function MobileLayout({
         />
       </div>
 
-      <div className={styles.pianoPanel}>
+      <div className={`${styles.panel} ${styles.pianoPanel}`}>
         <Piano 
           midiKey={midiKey}
           setMidiKey={setMidiKey}

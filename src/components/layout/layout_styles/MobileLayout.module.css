@@ -1,15 +1,28 @@
 .mobile {
-  /* layout root */
   width: 100%;
-  min-height: 100vh;
+  min-height: 100svh;
 
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+
+  grid-template-rows:
+    auto
+    auto
+    auto
+    minmax(160px, 28vh);
+
+  gap: var(--panel-gap);
+
+  box-sizing: border-box;
+
+  padding: clamp(8px, 3vw, 14px);
 
   /* === RESPONSIVE VARIABLES LIVE HERE === */
 
   --button-size: clamp(40px, 6vmin, 48px);
+  --control-gap: clamp(6px, 2vw, 12px);
+  --control-label-font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+
   --partial-font-size: clamp(14px, 4vw, 28px);
   --partial-gap: clamp(4px, 1vw, 8px);
 
@@ -21,7 +34,7 @@
 .panel {
   background: #f2f2f2;
   border-radius: 16px;
-  padding: 1em;
+  padding: var(--panel-padding);
   min-width: 0;
   overflow: hidden;
   box-shadow:
@@ -30,16 +43,41 @@
 }
 
 .headerPanel {
-  flex: 0 0 auto;
-  width: 100%;
+  grid-column: 1;
+  grid-row: 1;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  min-height: 60px;
+
+  padding: 8px 12px;
+  min-height: 56px;
+
+  box-sizing: border-box;
+}
+
+.headerPanel .panel {
+  padding: 8px 12px;
+}
+
+.headerPanel > * {
+  flex-shrink: 0;
+}
+
+.notationPanel,
+.partialsPanel,
+.pianoPanel {
+  min-width: 0;
 }
 
 .headerPanel { grid-column: 1; grid-row: 1;}
 .notationPanel { grid-column: 1; grid-row: 2; }
 .partialsPanel { grid-column: 1; grid-row: 3; }
 .pianoPanel    { grid-column: 1; grid-row: 4; }
+
+.mobile .partialSelectorGrid {
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 8 / 3;
+}
