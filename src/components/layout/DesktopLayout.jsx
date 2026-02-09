@@ -29,7 +29,7 @@ export default function DesktopLayout({
 
     <div className={styles.desktop}>
       <div style={{ fontFamily: "Amatica SC", fontWeight: "100", fontSize: "95px", margin: "0", lineHeight: "0.8", paddingLeft: "4px"}}>
-        just tune
+        just tune <span style={{ fontSize: "28px" }}>v2.0</span>
       </div>
       <div className={styles.leftPanel}>
         <Playback 
