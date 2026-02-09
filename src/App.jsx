@@ -5,8 +5,8 @@ import useSettings from "./hooks/useSettings.jsx";
 import { Fundamental } from "./classes/Partials.js";
 
 import useLayoutMode from "./hooks/useLayoutMode";
-import DesktopLayout from "./components/DesktopLayout.jsx";
-import MobileLayout from "./components/MobileLayout.jsx";
+import DesktopLayout from "./components/layout/DesktopLayout.jsx";
+import MobileLayout from "./components/layout/MobileLayout.jsx";
 
 function App() {
 

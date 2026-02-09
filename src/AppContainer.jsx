@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AudioGate from "./components/AudioGate.jsx";
+import AudioGate from "./components/main/AudioGate.jsx";
 import App from "./App.jsx";
 
 export default function AppContainer() {

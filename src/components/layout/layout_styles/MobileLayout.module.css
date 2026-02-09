@@ -1,0 +1,45 @@
+.mobile {
+  /* layout root */
+  width: 100%;
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+
+  /* === RESPONSIVE VARIABLES LIVE HERE === */
+
+  --button-size: clamp(40px, 6vmin, 48px);
+  --partial-font-size: clamp(14px, 4vw, 28px);
+  --partial-gap: clamp(4px, 1vw, 8px);
+
+  /* optional, but useful */
+  --panel-padding: clamp(8px, 3vw, 16px);
+  --panel-gap: clamp(8px, 3vw, 20px);
+}
+
+.panel {
+  background: #f2f2f2;
+  border-radius: 16px;
+  padding: 1em;
+  min-width: 0;
+  overflow: hidden;
+  box-shadow:
+    inset -1px -1px 4px rgba(0,0,0,0.25),
+    inset  1px  1px 2px rgba(0,0,0,1);
+}
+
+.headerPanel {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 60px;
+}
+
+.headerPanel { grid-column: 1; grid-row: 1;}
+.notationPanel { grid-column: 1; grid-row: 2; }
+.partialsPanel { grid-column: 1; grid-row: 3; }
+.pianoPanel    { grid-column: 1; grid-row: 4; }

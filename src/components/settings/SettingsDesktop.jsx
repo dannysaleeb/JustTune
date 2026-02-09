@@ -1,9 +1,9 @@
-import Controls from "./components/Controls.jsx";
-import NotationSettings from "./components/NotationSettings.jsx";
-import TuningSettings from "./components/TuningSettings.jsx";
-import PlaybackSettings from "./components/PlaybackSettings.jsx";
+import Controls from "./settings_components/Controls.jsx";
+import NotationSettings from "./settings_components/NotationSettings.jsx";
+import TuningSettings from "./settings_components/TuningSettings.jsx";
+import PlaybackSettings from "./settings_components/PlaybackSettings.jsx";
 
-import styles from "../styles/Settings.module.css";
+import styles from "./settings_styles/Settings.module.css";
 
 export default function SettingsDesktop({ fundamental, settings, setSetting, showInfo, setShowInfo, handleReset }) {
   return (
