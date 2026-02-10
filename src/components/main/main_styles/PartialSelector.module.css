@@ -5,11 +5,18 @@
   grid-template-rows: var(--partials-template-rows);
 
   gap: var(--partial-gap);
-  margin: 0 auto;
 
-  max-width: 100%;
+  /* width: 100%; */
+  max-width: 480px;
+
+  aspect-ratio: 8 / 3;
 
   box-sizing: border-box;
 
   touch-action: none;
+}
+
+.partialSelectorGrid > * {
+  aspect-ratio: 1 / 1;
+  width: clamp(28px, 8vw, 56px)
 }

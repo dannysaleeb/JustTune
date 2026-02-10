@@ -55,14 +55,20 @@ html.jt-mobile body {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  /* align-items: center; */
   /* height: auto; */
 }
 
 html.jt-mobile #app-frame {
+  
   width: clamp(400px, 100vw, 600px);
   height: 100%;
+  min-height: 667px;
+  max-height: 760px;
 
-  overflow: auto;
+  margin: auto 0;
+
+  overflow: scroll;
 
   -webkit-overflow-scrolling: touch;
 }

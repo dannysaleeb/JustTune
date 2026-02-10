@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function useLayoutMode() {
   const [mode, setMode] = useState(
-    (window.innerWidth < 1100) 
+    (window.innerWidth < 1000) 
     ? "mobile" 
     : "desktop"
   );
@@ -10,7 +10,7 @@ export default function useLayoutMode() {
   useEffect(() => {
     const onResize = () => {
       setMode(
-        (window.innerWidth < 1100) 
+        (window.innerWidth < 1000) 
         ? "mobile" 
         : "desktop"
       );
