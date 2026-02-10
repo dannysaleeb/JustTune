@@ -1,258 +1,304 @@
-import { useRef, useEffect } from "react";
-import { Renderer, Stave, StaveConnector, Voice, Formatter, TextBracket, Glyph } from "vexflow";
+import { useRef, useEffect, useCallback } from "react";
+import {
+  Renderer,
+  Stave,
+  StaveConnector,
+  Voice,
+  Formatter,
+  TextBracket,
+  Glyph,
+} from "vexflow";
 import { TextBracketNoLineTop, TextBracketNoLineBottom } from "../../classes/VexPatches";
 
-export default function Notation({partials, settings, setFlippedNotes }) {
-
+/**
+ * Responsive + vertically centered VexFlow notation.
+ * - Uses ResizeObserver to redraw on container resize
+ * - Uses container width/height (SVG matches panel height)
+ * - Centers the "notation block" vertically within the available height
+ */
+export default function Notation({ partials, settings, setFlippedNotes }) {
   const containerRef = useRef(null);
 
-  useEffect(() => {
+  const render = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-    if (!containerRef.current) return;
+    // Clear previous SVG
+    el.innerHTML = "";
 
-    containerRef.current.innerHTML = "";
-    const {width, height} = containerRef.current.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
 
-    const staveWidth = 480; // this will be derived from layout later
+    if (!width) return;
 
-    // draw stave
-    const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
+    // If the panel hasn't resolved a height yet (common in some flex layouts),
+    // fall back to a sensible default. We'll still vertically center within that.
+    const svgHeight = height > 0 ? height : 250;
 
+    // Scale based on width (clamped)
+    const scale = Math.max(0.7, Math.min(0.95, width / 650));
 
-    // size of renderer from parent div
-    renderer.resize(width, 250);
+    // Convert screen units -> VexFlow "internal" units
+    // because we scale the context after renderer.resize().
+    const innerWidth = width / scale;
+    const innerHeight = svgHeight / scale;
+
+    const widthFactor = 0.9;
+
+    // Horizontal layout in internal units
+    const leftPad = 20;
+    const usableInnerWidth = Math.max(10, innerWidth - leftPad * 2);
+
+    const staveWidth = usableInnerWidth * widthFactor;
+
+    const staveX = (innerWidth - staveWidth) / 2;
+
+    // Vertical centering:
+    // This is the approximate "block height" used by two staves + gap + a bit of bracket room.
+    // Tweak notationHeight if your brackets feel tight.
+    const notationHeight = 190;
+
+    // Keep it from going negative (if the panel is very short).
+    const yOffset = Math.max(0, (innerHeight - notationHeight) / 2);
+
+    // Stave Y positions in internal units
+    const topY = yOffset;
+    const staveGap = 75; // distance between staves (internal units)
+    const bottomY = topY + staveGap;
+
+    // Create renderer sized to the actual panel
+    const renderer = new Renderer(el, Renderer.Backends.SVG);
+    renderer.resize(width, svgHeight);
 
     const context = renderer.getContext();
+    context.scale(scale, scale);
 
-    context.scale(0.85, 0.85)
+    // Create staves
+    const top = new Stave(staveX, topY, staveWidth);
+    const bottom = new Stave(staveX, bottomY, staveWidth);
 
-    // Create the staves
-    const top = new Stave(70, 30, staveWidth);
-    const bottom = new Stave(70, 105, staveWidth);
+    top.addClef("treble");
+    bottom.addClef("bass");
 
-    top.addClef('treble');
-    bottom.addClef('bass');
-
+    // Quarter-tone glyphs (positioned relative to staves)
     if (settings.centDeviation === 50) {
-      Glyph.renderGlyph(context, 89, 32, 40, "accidentalQuarterToneSharpStein");
+      Glyph.renderGlyph(
+        context,
+        staveX + 18,
+        topY + 2,
+        40,
+        "accidentalQuarterToneSharpStein"
+      );
     } else if (settings.centDeviation === -50) {
-      Glyph.renderGlyph(context, 85, 210, 40, "accidentalQuarterToneFlatStein");
+      // Keep your original intent, but tie to bottomY so it moves with centering.
+      // (If this ends up too low/high, we can tune this after CSS is sorted.)
+      Glyph.renderGlyph(
+        context,
+        staveX + 14,
+        bottomY + 105,
+        40,
+        "accidentalQuarterToneFlatStein"
+      );
     }
 
+    // Connectors
     const brace = new StaveConnector(top, bottom).setType(3);
     const lineLeft = new StaveConnector(top, bottom).setType(1);
     const lineRight = new StaveConnector(top, bottom).setType(7);
 
+    // Draw staves + connectors
     top.setContext(context).draw();
     bottom.setContext(context).draw();
-
     brace.setContext(context).draw();
     lineLeft.setContext(context).draw();
     lineRight.setContext(context).draw();
 
-    // return if no partials
     if (!partials || partials.length < 1) return;
 
-    // get vexflow StaveNotes
-    const notes = partials.map(partial => (
-      partial.getRenderable()
-    ));
+    const notes = partials.map((partial) => partial.getRenderable());
 
     // assign notes to relevant stave
     for (let i = 0; i < notes.length; i++) {
-      if (partials[i].note.clef === "treble") {
-        notes[i].setStave(top)
-      } else { 
-        notes[i].setStave(bottom) 
-      }
-    };
+      notes[i].setStave(partials[i].note.clef === "treble" ? top : bottom);
+    }
 
-    const voice = new Voice({
-      num_beats: notes.length,
-      beat_value: 4
-    });
+    const voice = new Voice({ num_beats: notes.length, beat_value: 4 });
     voice.addTickables(notes);
 
-    let octava = {
-      "8va": [],
-      "8vb": [],
-      "15ma": [],
-      "15mb": []
-    };
+    // --- octava detection (kept from your version) ---
+    let octava = { "8va": [], "8vb": [], "15ma": [], "15mb": [] };
 
     partials.forEach((partial, index) => {
       if (partial.note.octava) {
         switch (partial.note.octava) {
           case 1:
             octava["8va"].push(index);
-            break
+            break;
           case -1:
             octava["8vb"].push(index);
-            break
+            break;
           case 2:
             octava["15ma"].push(index);
-            break
+            break;
           case -2:
             octava["15mb"].push(index);
+            break;
           default:
-            break
+            break;
         }
-      };
+      }
     });
-
-    // draw brackets based on contents of octava ... 
 
     let bracket_top_one = null;
     let bracket_top_two = null;
     let bracket_bottom_one = null;
     let bracket_bottom_two = null;
 
-    // HANDLE 8VA SYMBOL/BRACKET
     if (octava["8va"].length > 0) {
       const start = notes[octava["8va"][0]];
       const stop = notes[octava["8va"][octava["8va"].length - 1]];
+      bracket_top_one =
+        start === stop
+          ? new TextBracketNoLineTop({
+              start,
+              stop,
+              text: "8va",
+              position: TextBracket.Position.TOP,
+            })
+          : new TextBracket({
+              start,
+              stop,
+              text: "8va",
+              position: TextBracket.Position.TOP,
+            });
+      bracket_top_one.setLine(3.5);
+    }
 
-      // use Annotation if start and stop are the same
-      if (start === stop) {
-        bracket_top_one = new TextBracketNoLineTop({
-          start: start,
-          stop: stop,
-          text: "8va",
-          position: TextBracket.Position.TOP
-        });
-        bracket_top_one.setLine(3.5);
-      } else {
-        bracket_top_one = new TextBracket({
-          start: start,
-          stop: stop,
-          text: "8va",
-          position: TextBracket.Position.TOP
-        });
-        bracket_top_one.setLine(3.5);
-      }      
-    };
-
-    // HANDLE 15ma SYMBOL BRACKET
     if (octava["15ma"].length > 0) {
       const start = notes[octava["15ma"][0]];
       const stop = notes[octava["15ma"][octava["15ma"].length - 1]];
 
-      // HANDLE vertically shifting bracket relative to highest pitch
-      const partials_midi = partials.map(partial => partial.midikey);
+      const partials_midi = partials.map((p) => p.midikey);
       const highest_midi = Math.max(...partials_midi);
-      
-      // into range 102-115 (13)
       const value = highest_midi - 107;
-      // clamp to 0 lower bound
       const lineHeight = value >= 0 ? value : 0;
+      const line = Math.round(lineHeight / 4) * 0.5 + 3.5;
 
-      // get increments of 0.5 above 3.5;
-      const line = (Math.round(lineHeight / 4) * 0.5) + 3.5;
+      bracket_top_two =
+        start === stop
+          ? new TextBracketNoLineTop({
+              start,
+              stop,
+              text: "15ma",
+              position: TextBracket.Position.TOP,
+            })
+          : new TextBracket({
+              start,
+              stop,
+              text: "15ma",
+              position: TextBracket.Position.TOP,
+            });
+      bracket_top_two.setLine(line);
+    }
 
-      // ! DO SAME FOR 8VA, 8VB, 15MB
-
-      // use Annotation if start and stop are the same
-      if (start === stop) {
-        bracket_top_two = new TextBracketNoLineTop({
-          start: start,
-          stop: stop,
-          text: "15ma",
-          position: TextBracket.Position.TOP
-        });
-        bracket_top_two.setLine(line);
-      } else {
-        bracket_top_two = new TextBracket({
-          start: start,
-          stop: stop,
-          text: "15ma",
-          position: TextBracket.Position.TOP
-        });
-        bracket_top_two.setLine(line);
-      }      
-    };
-
-    // HANDLE 8VB SYMBOL/BRACKET
     if (octava["8vb"].length > 0) {
       const start = notes[octava["8vb"][0]];
       const stop = notes[octava["8vb"][octava["8vb"].length - 1]];
 
-      // HANDLE vertically shifting bracket relative to highest pitch
-      const partials_midi = partials.map(partial => partial.midikey);
+      const partials_midi = partials.map((p) => p.midikey);
       const lowest_midi = Math.min(...partials_midi);
 
       let noBracketLine, bracketLine;
-
-      if (lowest_midi < 20) {noBracketLine = 7; bracketLine = 6} else {
-        noBracketLine = 4; bracketLine = 3;
-      };
-
-      // use Annotation if start and stop are the same
-      if (start === stop) {
-        bracket_bottom_one = new TextBracketNoLineBottom({
-          start: start,
-          stop: stop,
-          text: "8vb",
-          position: TextBracket.Position.BOTTOM
-        });
-        bracket_bottom_one.setLine(noBracketLine);
+      if (lowest_midi < 20) {
+        noBracketLine = 7;
+        bracketLine = 6;
       } else {
-        bracket_bottom_one = new TextBracket({
-          start: start,
-          stop: stop,
-          text: "8vb",
-          position: TextBracket.Position.BOTTOM
-        });
-        bracket_bottom_one.setLine(bracketLine);
-      }      
-    };
+        noBracketLine = 4;
+        bracketLine = 3;
+      }
 
-    new Formatter().joinVoices([voice]).format([voice], 350);
+      bracket_bottom_one =
+        start === stop
+          ? new TextBracketNoLineBottom({
+              start,
+              stop,
+              text: "8vb",
+              position: TextBracket.Position.BOTTOM,
+            })
+          : new TextBracket({
+              start,
+              stop,
+              text: "8vb",
+              position: TextBracket.Position.BOTTOM,
+            });
 
-    // constrain notes to set x positions
+      bracket_bottom_one.setLine(start === stop ? noBracketLine : bracketLine);
+    }
+
+    // Format to available stave width (responsive!)
+    new Formatter().joinVoices([voice]).format([voice], staveWidth * 0.72);
+
+    // Constrain notes (kept from your approach, now based on staveWidth)
     const margins = staveWidth * 0.2;
     const offset = (staveWidth - margins) / settings.maxPartials;
 
     for (let i = 0; i < notes.length; i++) {
-      notes[i].getTickContext().setX((offset * i) + (margins * 0.4))
-    };
+      notes[i].getTickContext().setX(offset * i + margins * 0.4);
+    }
 
     voice.draw(context);
-   
-    if (bracket_top_one instanceof TextBracket) { 
-      bracket_top_one.setContext(context).draw(); 
-    };
 
-    if (bracket_top_two instanceof TextBracket) {
-      bracket_top_two.setContext(context).draw();
-    }
+    if (bracket_top_one instanceof TextBracket) bracket_top_one.setContext(context).draw();
+    if (bracket_top_two instanceof TextBracket) bracket_top_two.setContext(context).draw();
+    if (bracket_bottom_one instanceof TextBracket) bracket_bottom_one.setContext(context).draw();
+    if (bracket_bottom_two instanceof TextBracket) bracket_bottom_two.setContext(context).draw();
 
-    if (bracket_bottom_one instanceof TextBracket) {
-      bracket_bottom_one.setContext(context).draw();
-    }
-
-    if (bracket_bottom_two instanceof TextBracket) {
-      bracket_bottom_two.setContext(context).draw();
-    };
-
-    // make click-able for enharmonic re-spelling
+    // click-to-flip enharmonics
     notes.forEach((note, index) => {
-      const ele = note.getSVGElement();
-      if (ele) {
-        ele.style.cursor = "pointer";
-        ele.addEventListener("click", () => {
-          // on click, flip bit at flippedNotes[partialNumber - 1], otherwise return existing fn
-          setFlippedNotes(prev => 
-            prev.map((fn, j) => 
-              j === partials[index].partialNumber - 1 ? !fn : fn
-            )
-          )
-        });
-      }
+      const svgEl = note.getSVGElement();
+      if (!svgEl) return;
+
+      svgEl.style.cursor = "pointer";
+      svgEl.addEventListener("click", () => {
+        setFlippedNotes((prev) =>
+          prev.map((fn, j) => (j === partials[index].partialNumber - 1 ? !fn : fn))
+        );
+      });
     });
 
-  }, [partials, settings.maxPartials, setFlippedNotes]);
+    // Make the produced SVG behave like a block element (avoids baseline gaps)
+    const svg = el.querySelector("svg");
+    if (svg) svg.style.display = "block";
+  }, [partials, settings.maxPartials, settings.centDeviation, setFlippedNotes]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    // Initial draw
+    render();
+
+    // Redraw on resize
+    const ro = new ResizeObserver(() => {
+      window.requestAnimationFrame(render);
+    });
+
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [render]);
 
   return (
-    <div ref={containerRef}></div>
-  )
+    <div
+      ref={containerRef}
+      style={{
+        width: "100%",
+        height: "100%", // IMPORTANT: lets the panel dictate the SVG height
+        overflow: "hidden",
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        WebkitTapHighlightColor: "transparent",
+      }}
+    />
+  );
 }

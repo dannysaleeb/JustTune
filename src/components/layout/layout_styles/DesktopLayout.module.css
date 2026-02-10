@@ -64,6 +64,8 @@
 .notationPanel {
   grid-row: 1 / 2;
   overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .partialsPanel {
