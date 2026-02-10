@@ -18,7 +18,7 @@ export default function SettingsHeader({ settings, setSetting, showInfo, setShow
             color: '#444',
             lineHeight: 1
         }}>
-            just tune
+            just tune <span style={{ fontSize: "20px" }}>v2.0</span>
         </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
