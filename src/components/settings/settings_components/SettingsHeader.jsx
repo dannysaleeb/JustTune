@@ -12,11 +12,10 @@ export default function SettingsHeader({ settings, setSetting, showInfo, setShow
     <>
         <span style={{ 
             fontFamily: '"Amatica SC", sans-serif', 
-            fontWeight: 500, 
-            fontSize: 'clamp(2rem, 5vw, 3rem)', 
-            textTransform: 'uppercase',
-            color: '#444',
-            lineHeight: 1
+            fontWeight: 100, 
+            fontSize: '40px',
+            lineHeight: 1,
+            paddingLeft: '5px'
         }}>
             just tune <span style={{ fontSize: "20px" }}>v2.0</span>
         </span>

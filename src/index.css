@@ -38,6 +38,8 @@ html.jt-desktop #app-frame {
   width: 1080px;
   height: 720px;
 
+  flex-shrink: 0;
+
   margin: auto 0;
   overflow: hidden;
   padding: 45px 62px;

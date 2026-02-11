@@ -59,14 +59,15 @@
 }
 
 .notationPanel {
-  min-height: 225px;
-  max-height: auto;
+  height: clamp(220px, 30vh, 260px);
 }
 
 .partialsPanel {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  height: clamp(135px, 24vh, 150px);
 
   min-height: 135px;
 }
@@ -127,7 +128,7 @@
 
 /* --- CLEAN MODAL TEXT FIX --- */
 .modalBody {
-  text-align: center;
+  text-align: left;
   padding: 10px;
 }
 
