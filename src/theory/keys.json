@@ -30,10 +30,19 @@
         }
     ],
     [
+        {
+            "degree": 1,
+            "key": [2, 1, 1, 2, 1, 1, 1],
+            "name": "D#",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
+        },
         {   
             "degree": 2,
             "key": [0, 0, -1, 0, 0, -1, -1],
-            "name": "Eb"
+            "name": "Eb",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         }
     ],
     [
@@ -75,9 +84,18 @@
     ],
     [
         {   
+            "degree": 4,
+            "key": [1, 1, 1, 2, 1, 1, 1],
+            "name": "G#",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
+        },
+        {   
             "degree": 5,
             "key": [0, -1, -1, 0, 0, -1, -1],
-            "name": "Ab"
+            "name": "Ab",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         }
     ],
     [
@@ -89,25 +107,25 @@
     ],
     [
         {   
+            "degree": 5,
+            "key": [2, 1, 1, 2, 2, 1, 1],
+            "name": "A#",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
+        },
+        {   
             "degree": 6,
             "key": [0, 0, -1, 0, 0, 0, -1],
-            "name": "Bb"
+            "name": "Bb",
+            "enharmonicCurrent": 1,
+            "enharmonicOther": -1
         }
     ],
     [
         {   
             "degree": 6,
             "key": [1, 1, 0, 1, 1, 1, 0],
-            "name": "B",
-            "enharmonicCurrent": 0,
-            "enharmonicOther": -1
-        },
-        {
-            "degree": 0,
-            "key": [-1, -1, -1, -1, -1, -1, -1],
-            "name": "Cb",
-            "enharmonicCurrent": 0,
-            "enharmonicOther": -1
+            "name": "B"
         }
     ]
 ]
