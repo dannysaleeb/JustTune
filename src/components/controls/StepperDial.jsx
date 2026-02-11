@@ -1,4 +1,4 @@
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import styles from "./controls_styles/StepperDial.module.css";
 
 export default function StepperDial({
@@ -31,13 +31,13 @@ export default function StepperDial({
       aria-valuenow={value}
     >
       <button
-        type="button" // Always good to specify button type
-        className={`${styles.chevron} ${styles.up}`}
-        onClick={increment}
+        type="button"
+        className={styles.arrow}
+        onClick={decrement}
         disabled={disabled || value >= max}
-        aria-label="Increase"
+        aria-label={"Decrease"}
       >
-        <FaChevronUp />
+        <HiChevronLeft />
       </button>
 
       <div className={styles.value}>
@@ -46,12 +46,12 @@ export default function StepperDial({
 
       <button
         type="button"
-        className={`${styles.chevron} ${styles.down}`}
-        onClick={decrement}
+        className={styles.arrow}
+        onClick={increment}
         disabled={disabled || value <= min}
-        aria-label="Decrease"
+        aria-label={"Increase"}
       >
-        <FaChevronDown />
+        <HiChevronRight />
       </button>
     </div>
   );

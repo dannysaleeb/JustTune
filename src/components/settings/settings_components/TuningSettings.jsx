@@ -35,14 +35,16 @@ export default function TuningSettings({ settings, setSetting }) {
     <div className={settingsStyles.settingsItemContainer}>
       {/* <div>STEPPER DIALS PLACEHOLDER</div> */}
       {/* Column 2: Frequency */}
-      <div></div>
-      {/* <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <StepperDial
-          value={settings.tuningFrequency}
-          min={415} max={450} step={1}
-          onChange={(v) => setSetting("tuningFrequency", v)}
-        />
-      </div> */}
+      <div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <StepperDial
+            value={settings.tuningFrequency}
+            min={415} max={450} step={1}
+            onChange={(v) => setSetting("tuningFrequency", v)}
+          />
+        </div>
+        <div style={{ fontSize: "var(--control-label-font-size" }}>A frequency (Hz)</div>
+      </div>
 
       {/* Column 3: Cents Offset */}
       {/* <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
