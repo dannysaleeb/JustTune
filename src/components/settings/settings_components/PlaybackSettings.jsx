@@ -1,7 +1,6 @@
 import { MdOutlinePiano } from "react-icons/md";
 import { PiWaveSineBold, PiWaveTriangleBold } from "react-icons/pi";
 
-// controls import
 import RadioButton from "../../controls/RadioButton";
 import settingsStyles from "../settings_styles/Settings.module.css";
 

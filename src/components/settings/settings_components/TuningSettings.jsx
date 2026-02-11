@@ -33,7 +33,6 @@ export default function TuningSettings({ settings, setSetting }) {
 
   return (
     <div className={settingsStyles.settingsItemContainer}>
-      {/* <div>STEPPER DIALS PLACEHOLDER</div> */}
       {/* Column 2: Frequency */}
       <div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -46,7 +45,8 @@ export default function TuningSettings({ settings, setSetting }) {
         <div style={{ fontSize: "var(--control-label-font-size" }}>A frequency (Hz)</div>
       </div>
 
-      {/* Column 3: Cents Offset */}
+
+      {/* Column 3: Cents Offset -- REMOVED FOR EASE ... */}
       {/* <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <StepperDial
           value={settings.centDeviation}
@@ -56,7 +56,6 @@ export default function TuningSettings({ settings, setSetting }) {
       </div> */}
 
       {/* Column 4: Quarter Tone Buttons */}
-      {/* !!! NEED TO DO SOMETHING DIFFERENT FOR THESE BUTTON CONTAINERS... !!! */}
       <div>
         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "var(--control-gap)" }}>
           <ToggleButton

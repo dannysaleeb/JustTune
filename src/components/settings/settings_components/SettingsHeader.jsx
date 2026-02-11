@@ -23,7 +23,6 @@ export default function SettingsHeader({ settings, setSetting, showInfo, setShow
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
         
             <InfoPopup onClick={() => setShowInfo(true)} />
-            {/* MODAL STUFF */}
 
             <ResetButton onReset={handleReset} />
             <ToggleButton

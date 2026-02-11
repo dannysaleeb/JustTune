@@ -90,6 +90,7 @@ export default function MobileLayout({
           setFlippedNotes={setFlippedNotes}
           playTrigger={playTrigger}
           setPlayTrigger={setPlayTrigger}
+          setSetting={setSetting}
         />
       </div>
 

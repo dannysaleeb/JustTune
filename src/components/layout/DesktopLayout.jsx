@@ -76,6 +76,7 @@ export default function DesktopLayout({
           setFlippedNotes={setFlippedNotes}
           playTrigger={playTrigger}
           setPlayTrigger={setPlayTrigger}
+          setSetting={setSetting}
         />
       </div>
 

@@ -12,8 +12,6 @@
 
   padding: clamp(8px, 3vw, 14px);
 
-  /* === RESPONSIVE VARIABLES LIVE HERE === */
-
   --button-size: clamp(32px, 6vmin, 48px);
   --control-gap: clamp(6px, 2vw, 12px);
   --control-label-font-size: clamp(0.7rem, 2.5vw, 0.9rem);
@@ -87,16 +85,6 @@
 .notationPanel { grid-column: 1; grid-row: 2; }
 .partialsPanel { grid-column: 1; grid-row: 3; }
 .pianoPanel    { grid-column: 1; grid-row: 4; }
-
-/* .mobile .partialSelectorGrid {
-  grid-template-columns: repeat(8, 1fr);
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 8 / 3;
-
-  box-sizing: border-box;
-  padding: 1px;
-} */
 
 .pianoPanel {
   display: flex;

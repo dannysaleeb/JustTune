@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styles from "./main_styles/Piano.module.css";
+import { DEFAULT_ENHARMONICS } from "../../config";
 
-export default function Piano({ midiKey, setMidiKey, setFlippedNotes, playTrigger, setPlayTrigger }) {
+export default function Piano({ midiKey, setMidiKey, setFlippedNotes, playTrigger, setPlayTrigger, setSetting }) {
   const WHITE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
   const BLACK_KEYS = [
     { offset: 1, left: "12.5%" },
@@ -14,9 +15,18 @@ export default function Piano({ midiKey, setMidiKey, setFlippedNotes, playTrigge
   const [viewOctave, setViewOctave] = useState(2);
 
   function selectFundamentalMidi(midi) {
+    const pitchClass = midi % 12;
+
+    if (DEFAULT_ENHARMONICS[pitchClass] !== undefined) {
+      setSetting("enharmonicToggle", DEFAULT_ENHARMONICS[pitchClass])
+    } else {
+      setSetting("enharmonicToggle", 0);
+    }
+
     if (midi === midiKey) {
       setPlayTrigger(playTrigger + 1)
     };
+
     setFlippedNotes(new Array(24).fill(false));
     setMidiKey(midi);
   }

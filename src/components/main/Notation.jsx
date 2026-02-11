@@ -10,12 +10,6 @@ import {
 } from "vexflow";
 import { TextBracketNoLineTop, TextBracketNoLineBottom } from "../../classes/VexPatches";
 
-/**
- * Responsive + vertically centered VexFlow notation.
- * - Uses ResizeObserver to redraw on container resize
- * - Uses container width/height (SVG matches panel height)
- * - Centers the "notation block" vertically within the available height
- */
 export default function Notation({ partials, settings, setFlippedNotes }) {
   const containerRef = useRef(null);
 
@@ -23,7 +17,6 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
     const el = containerRef.current;
     if (!el) return;
 
-    // Clear previous SVG
     el.innerHTML = "";
 
     const rect = el.getBoundingClientRect();
@@ -32,21 +25,15 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
 
     if (!width) return;
 
-    // If the panel hasn't resolved a height yet (common in some flex layouts),
-    // fall back to a sensible default. We'll still vertically center within that.
     const svgHeight = height > 0 ? height : 250;
 
-    // Scale based on width (clamped)
     const scale = Math.max(0.7, Math.min(0.95, width / 650));
 
-    // Convert screen units -> VexFlow "internal" units
-    // because we scale the context after renderer.resize().
     const innerWidth = width / scale;
     const innerHeight = svgHeight / scale;
 
     const widthFactor = 0.9;
 
-    // Horizontal layout in internal units
     const leftPad = 20;
     const usableInnerWidth = Math.max(10, innerWidth - leftPad * 2);
 
@@ -54,34 +41,26 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
 
     const staveX = (innerWidth - staveWidth) / 2;
 
-    // Vertical centering:
-    // This is the approximate "block height" used by two staves + gap + a bit of bracket room.
-    // Tweak notationHeight if your brackets feel tight.
     const notationHeight = 190;
 
-    // Keep it from going negative (if the panel is very short).
     const yOffset = Math.max(0, (innerHeight - notationHeight) / 2);
 
-    // Stave Y positions in internal units
     const topY = yOffset;
-    const staveGap = 75; // distance between staves (internal units)
+    const staveGap = 75;
     const bottomY = topY + staveGap;
 
-    // Create renderer sized to the actual panel
     const renderer = new Renderer(el, Renderer.Backends.SVG);
     renderer.resize(width, svgHeight);
 
     const context = renderer.getContext();
     context.scale(scale, scale);
 
-    // Create staves
     const top = new Stave(staveX, topY, staveWidth);
     const bottom = new Stave(staveX, bottomY, staveWidth);
 
     top.addClef("treble");
     bottom.addClef("bass");
 
-    // Quarter-tone glyphs (positioned relative to staves)
     if (settings.centDeviation === 50) {
       Glyph.renderGlyph(
         context,
@@ -91,8 +70,6 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
         "accidentalQuarterToneSharpStein"
       );
     } else if (settings.centDeviation === -50) {
-      // Keep your original intent, but tie to bottomY so it moves with centering.
-      // (If this ends up too low/high, we can tune this after CSS is sorted.)
       Glyph.renderGlyph(
         context,
         staveX + 14,
@@ -102,12 +79,10 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
       );
     }
 
-    // Connectors
     const brace = new StaveConnector(top, bottom).setType(3);
     const lineLeft = new StaveConnector(top, bottom).setType(1);
     const lineRight = new StaveConnector(top, bottom).setType(7);
 
-    // Draw staves + connectors
     top.setContext(context).draw();
     bottom.setContext(context).draw();
     brace.setContext(context).draw();
@@ -118,7 +93,6 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
 
     const notes = partials.map((partial) => partial.getRenderable());
 
-    // assign notes to relevant stave
     for (let i = 0; i < notes.length; i++) {
       notes[i].setStave(partials[i].note.clef === "treble" ? top : bottom);
     }
@@ -126,7 +100,7 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
     const voice = new Voice({ num_beats: notes.length, beat_value: 4 });
     voice.addTickables(notes);
 
-    // --- octava detection (kept from your version) ---
+    // --- octava detection ---
     let octava = { "8va": [], "8vb": [], "15ma": [], "15mb": [] };
 
     partials.forEach((partial, index) => {
@@ -236,10 +210,8 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
       bracket_bottom_one.setLine(start === stop ? noBracketLine : bracketLine);
     }
 
-    // Format to available stave width (responsive!)
     new Formatter().joinVoices([voice]).format([voice], staveWidth * 0.72);
 
-    // Constrain notes (kept from your approach, now based on staveWidth)
     const margins = staveWidth * 0.2;
     const offset = (staveWidth - margins) / settings.maxPartials;
 
@@ -254,7 +226,6 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
     if (bracket_bottom_one instanceof TextBracket) bracket_bottom_one.setContext(context).draw();
     if (bracket_bottom_two instanceof TextBracket) bracket_bottom_two.setContext(context).draw();
 
-    // click-to-flip enharmonics
     notes.forEach((note, index) => {
       const svgEl = note.getSVGElement();
       if (!svgEl) return;
@@ -267,7 +238,6 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
       });
     });
 
-    // Make the produced SVG behave like a block element (avoids baseline gaps)
     const svg = el.querySelector("svg");
     if (svg) svg.style.display = "block";
   }, [partials, settings.maxPartials, settings.centDeviation, setFlippedNotes]);
@@ -276,10 +246,8 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
     const el = containerRef.current;
     if (!el) return;
 
-    // Initial draw
     render();
 
-    // Redraw on resize
     const ro = new ResizeObserver(() => {
       window.requestAnimationFrame(render);
     });
@@ -293,7 +261,7 @@ export default function Notation({ partials, settings, setFlippedNotes }) {
       ref={containerRef}
       style={{
         width: "100%",
-        height: "100%", // IMPORTANT: lets the panel dictate the SVG height
+        height: "100%",
         overflow: "hidden",
         userSelect: "none",
         WebkitUserSelect: "none",

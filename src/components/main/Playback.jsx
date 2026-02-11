@@ -41,8 +41,6 @@ const SAMPLE_MAP = {
 
 const NOTE_LIST = Object.keys(SAMPLE_MAP);
 
-// ⭐ THE FIX: Start loading GLOBALLY as soon as the file is imported.
-// This happens while the user is still looking at the StartOverlay.
 const globalBuffers = new Tone.Buffers(SAMPLE_MAP);
 
 export default function Playback({ partials = [], settings, playTrigger }) {

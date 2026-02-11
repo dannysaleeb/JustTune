@@ -34,7 +34,7 @@ export default function StepperDial({
         type="button"
         className={styles.arrow}
         onClick={decrement}
-        disabled={disabled || value >= max}
+        disabled={disabled || value <= min}
         aria-label={"Decrease"}
       >
         <HiChevronLeft />
@@ -48,7 +48,7 @@ export default function StepperDial({
         type="button"
         className={styles.arrow}
         onClick={increment}
-        disabled={disabled || value <= min}
+        disabled={disabled || value >= max}
         aria-label={"Increase"}
       >
         <HiChevronRight />

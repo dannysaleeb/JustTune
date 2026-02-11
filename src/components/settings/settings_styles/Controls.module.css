@@ -39,12 +39,9 @@
 
 .headerPanel button {
   --button-size: 46px; 
-  width: var(--button-size) !important;
-  height: var(--button-size) !important;
 }
 
 .headerPanel button img {
-  height: 60% !important; 
   width: auto;
 }
 

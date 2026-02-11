@@ -22,7 +22,7 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
 
     return (
         <div className={settingsStyles.settingsItemContainer}>
-                {/* LEFT GROUP: Global Display Toggles */}
+                {/* Notation Toggles */}
                 <div>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "var(--control-gap)" }}>
                         <ToggleButton
@@ -64,7 +64,7 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                     <div style={{ fontSize: "var(--control-label-font-size" }}>notation</div>
                 </div>
 
-                {/* RIGHT GROUP: Enharmonic Control */}
+                {/* Enharmonic Control */}
                 <div>
                     <div style={{ flexShrink: 0, display: "flex", alignItems: "center", minHeight: "var(--button-size)" }}>
                         <DirectionalRadio
@@ -73,12 +73,12 @@ export default function NotationSettings({ fundamental, settings, setSetting }) 
                             onChange={(v) => setSetting("enharmonicToggle", v)}
                             leftSrc={
                                 fundamental
-                                    ? enharmonicSymbols[fundamental.enharmonicCurrent + 1]
+                                    ? enharmonicSymbols[fundamental.enharmonicOther + 1]
                                     : null
                             }
                             rightSrc={
                                 fundamental
-                                    ? enharmonicSymbols[fundamental.enharmonicOther + 1]
+                                    ? enharmonicSymbols[fundamental.enharmonicCurrent + 1]
                                     : null
                             }
                             leftArrowSrc={leftRightIcon}
