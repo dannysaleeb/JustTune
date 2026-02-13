@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: 'JustTune',
         short_name: 'JustTune',
-        description: 'My Awesome Music App',
+        description: 'Tuning App',
         theme_color: '#ffffff',
         icons: [
           {
