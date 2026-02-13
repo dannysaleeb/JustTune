@@ -1,0 +1,56 @@
+.dial {
+    --height: var(--button-size);
+    height: var(--height);
+    width: calc((var(--button-size) * 2) + var(--control-gap));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+    border: 2px solid black;
+    background: white;
+    box-shadow:
+      inset -2px -2px 4px rgba(255,255,255,0.4),
+      inset 2px 2px 4px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+
+    /* PREVENT SELECTION: Stops the number/box from turning blue on fast taps */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.arrow {
+    all: unset;
+    width: var(--height);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: calc(var(--height) * 0.5);
+    line-height: 1;
+
+    /* THE BLUE-KILLERS */
+    -webkit-tap-highlight-color: transparent; /* Mobile tap box */
+    outline: none;                             /* Desktop/Mobile focus ring */
+}
+
+/* Ensure blue stays away even when active/focused */
+.arrow:focus, 
+.arrow:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.value {
+    flex: 1;
+    text-align: center;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: calc(var(--height) * 0.35);
+    user-select: none;
+}

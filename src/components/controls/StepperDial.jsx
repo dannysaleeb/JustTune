@@ -1,0 +1,58 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import styles from "./controls_styles/StepperDial.module.css";
+
+export default function StepperDial({
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  format = (v) => v.toString(),
+  disabled = false
+}) {
+  const clamp = (v) => Math.min(max, Math.max(min, v));
+
+  const increment = () => {
+    if (disabled || value >= max) return;
+    onChange(clamp(value + step));
+  };
+
+  const decrement = () => {
+    if (disabled || value <= min) return;
+    onChange(clamp(value - step));
+  };
+
+  return (
+    <div
+      className={`${styles.dial} ${disabled ? styles.disabled : ""}`}
+      role="spinbutton"
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
+    >
+      <button
+        type="button"
+        className={styles.arrow}
+        onClick={decrement}
+        disabled={disabled || value <= min}
+        aria-label={"Decrease"}
+      >
+        <HiChevronLeft />
+      </button>
+
+      <div className={styles.value}>
+        {format(value)}
+      </div>
+
+      <button
+        type="button"
+        className={styles.arrow}
+        onClick={increment}
+        disabled={disabled || value >= max}
+        aria-label={"Increase"}
+      >
+        <HiChevronRight />
+      </button>
+    </div>
+  );
+}

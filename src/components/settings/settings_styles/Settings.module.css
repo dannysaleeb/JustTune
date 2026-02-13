@@ -1,0 +1,19 @@
+.settingsContainer {
+display: flex;
+flex-direction: column;
+gap: 12px;
+padding: 10px;
+box-sizing: border-box;
+align-items: center;
+}
+
+.settingsItemContainer {
+font-family: -apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", Helvetica, Arial, sans-serif;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+width: 100%;
+padding: 5px 0;
+}

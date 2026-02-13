@@ -1,0 +1,8 @@
+/* RadioGroup.module.css */
+.radioGroup {
+    display: flex;
+    flex-direction: row;
+    gap: var(--control-gap);
+    box-sizing: border-box;
+    margin: 0 auto; 
+}

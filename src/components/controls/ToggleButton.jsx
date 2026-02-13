@@ -1,0 +1,35 @@
+import styles from "./controls_styles/ToggleButton.module.css";
+
+export default function ToggleButton({
+  value,
+  disabled = false,
+  onChange,
+  title,
+  children,
+  size = "independent"
+}) {
+  const className = [
+    styles.toggle,
+    value ? styles.active : styles.inactive,
+    disabled && styles.disabled
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  function handleClick() {
+    if (disabled) return;
+    onChange?.(!value);
+  }
+
+  return (
+    <button
+      type="button"
+      className={className}
+      onClick={handleClick}
+      disabled={disabled}
+      title={title}
+    >
+      {children}
+    </button>
+  );
+}
