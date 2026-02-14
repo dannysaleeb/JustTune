@@ -12,8 +12,7 @@ dist
 dist-ssr
 *.local
 
-combine_scripts.py
-combined_codebase_2026-01-27T18:02:02.857991.txt
+.vite/
 
 # Editor directories and files
 .vscode/*
