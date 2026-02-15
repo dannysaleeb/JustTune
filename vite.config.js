@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg', 'favicon.png'],
       workbox: {
-        // Caches all generated JS/CSS and static assets
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
-        // Redirects to index.html if a route isn't found offline
+        // Updated globPatterns to include audio and fonts
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,mp3,wav,woff,woff2}'],
+        
         navigateFallback: '/JustTune/index.html',
         cleanupOutdatedCaches: true,
       },
