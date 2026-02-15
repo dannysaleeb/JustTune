@@ -3,35 +3,37 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/JustTune/',
+  // Base must match your GitHub repo name exactly
+  base: '/JustTune/', 
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // This helps the PWA find assets like icons/favicons
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
-      // --- ADD THIS SECTION ---
+      
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], // This caches your assets
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.startsWith('/JustTune/'),
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'just-tune-assets',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
-              },
-            },
-          },
-        ],
+        // 1. Tell Workbox to find and cache all build assets
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        
+        // 2. IMPORTANT for SPAs: If user refreshes on a sub-route or offline, 
+        // serve the main index.html from the correct path.
+        navigateFallback: '/JustTune/index.html',
+        
+        // 3. Prevent the 404 by ensuring the service worker doesn't 
+        // try to cache things outside its scope.
+        cleanupOutdatedCaches: true,
       },
-      // -----------------------
+
       manifest: {
         name: 'JustTune',
         short_name: 'JustTune',
         description: 'Tuning App',
         theme_color: '#ffffff',
+        // start_url and scope must align with your GitHub Pages subfolder
+        start_url: '/JustTune/',
+        scope: '/JustTune/',
+        display: 'standalone',
         icons: [
           {
             src: 'pwa-192x192.png',
