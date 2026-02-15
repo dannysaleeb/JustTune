@@ -41,6 +41,16 @@ const buttonStyle = {
   outline: "none"
 };
 
+// style install instructions
+const installStyle = {
+  marginTop: "30px",
+  fontSize: "0.85rem",
+  color: "#777",
+  textAlign: "center",
+  fontFamily: "system-ui, -apple-system, sans-serif",
+  lineHeight: "1.4"
+};
+
 const creditsStyle = {
   position: "absolute",
   bottom: "40px",
@@ -57,9 +67,7 @@ const creditsStyle = {
 export default function StartOverlay({ onStart }) {
   return (
     <div style={overlayStyle}>
-      <h1 style={titleStyle}>
-        Just Tune
-      </h1>
+      <h1 style={titleStyle}>Just Tune</h1>
       
       <button 
         style={buttonStyle} 
@@ -76,6 +84,16 @@ export default function StartOverlay({ onStart }) {
         Start
       </button>
 
+      {/* Install Section */}
+		<div className="install-guide" style={installStyle}>
+		  <p style={{ fontWeight: "600", marginBottom: "5px", color: "#555" }}>To use as an App:</p>
+		  <p style={{ margin: 0 }}>
+			<strong>iOS:</strong> Share > Add to Home Screen<br/>
+			<strong>PC:</strong> Address Bar (Install Icon) or Menu > Save & Share<br/>
+			<strong>Android:</strong> Menu (⋮) > Add to Home Screen
+		  </p>
+		</div>
+
       <div style={creditsStyle}>
         <p style={{ margin: "0 0 4px 0", color: "#666", fontWeight: "500" }}>
           Fintan O'Hare & Danny Saleeb
@@ -88,6 +106,13 @@ export default function StartOverlay({ onStart }) {
           mdw – University of Music and Performing Arts Vienna
         </p>
       </div>
+
+      {/* hide info if installed */}
+      <style>{`
+        @media (display-mode: standalone) {
+          .install-guide { display: none; }
+        }
+      `}</style>
     </div>
   );
 }
