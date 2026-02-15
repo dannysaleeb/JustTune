@@ -9,6 +9,24 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      // --- ADD THIS SECTION ---
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], // This caches your assets
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/JustTune/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'just-tune-assets',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+              },
+            },
+          },
+        ],
+      },
+      // -----------------------
       manifest: {
         name: 'JustTune',
         short_name: 'JustTune',
@@ -29,7 +47,7 @@ export default defineConfig({
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable' // Lets Android crop the icon into circles/squares
+            purpose: 'any maskable'
           }
         ]
       }
