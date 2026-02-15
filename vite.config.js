@@ -11,7 +11,7 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg', 'favicon.png'],
       workbox: {
         // Updated globPatterns to include audio and fonts
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,mp3,wav,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,mp3,wav,woff,woff2,ttf}'],
         
         navigateFallback: '/JustTune/index.html',
         cleanupOutdatedCaches: true,
