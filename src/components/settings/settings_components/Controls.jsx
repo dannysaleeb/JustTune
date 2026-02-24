@@ -37,10 +37,10 @@ export default function Controls({settings, setSetting, showInfo, setShowInfo, h
                 <div className={styles.modalOverlay} onClick={() => setShowInfo(false)}>
                 <div className={`${styles.panel} ${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
                     <div className={styles.modalBody}>
-                    <h2 className={styles.panelHeader}>About</h2>
-                    <p>Fintan O'Hare & Danny Saleeb</p>
-                    <p>Based on an original app by Martin Suckling</p>
-					<p>Commissioned by Clement Power with funding from the mdw - University of Music and Performing Arts Vienna</p>
+                    {/* <h2 className={styles.panelHeader}>About</h2> */}
+                    <span style={{ fontStyle: "italic" }}><p><strong>Just Tune</strong>, 2026 - version 2.0</p>
+                    <p>by Fintan O'Hare & Danny Saleeb, after an original app by Martin Suckling.</p>
+					<p>Commissioned by Clement Power with funding from the mdw - University of Music and Performing Arts Vienna.</p></span>
                     <div style={{ marginTop: '20px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
                         <ul className={styles.infoList}>
                         <li>Select a fundamental with the piano</li>

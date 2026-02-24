@@ -48,10 +48,22 @@ function App() {
   const handleReset = () => {
     resetSettings();
     setPlayTrigger(0);
-    setMidiKey(null);
     setPartialNumbers([]);
     setFlippedNotes(Array(24).fill(false));
   };
+
+  // Escape key for reset
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleReset();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleMuteToggle = async () => {
     setSetting("mute", !settings.mute);
