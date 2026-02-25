@@ -7,7 +7,7 @@ import SettingsHeader from "../settings/settings_components/SettingsHeader.jsx";
 import SettingsMobile from "../settings/SettingsMobile.jsx";
 import Notation from "../main/Notation.jsx";
 import PartialSelector from "../main/PartialSelector.jsx";
-import Piano from "../main/Piano.jsx"
+import Piano from "../main/Piano.jsx";
 import Playback from "../main/Playback.jsx";
 
 export default function MobileLayout({
@@ -94,29 +94,29 @@ export default function MobileLayout({
         />
       </div>
 
-		{showInfo && (
-		  <div className={styles.modalOverlay} onClick={() => setShowInfo(false)}>
-		    <div className={`${styles.panel} ${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
-		      <div className={styles.modalBody}>
-		        {/* Changed span to div to fix DOM nesting crash */}
-		        <div style={{ fontStyle: "italic" }}>
-		          <p><strong>Just Tune</strong>, 2026 - version 2.0</p>
-		          <p>by Fintan O'Hare & Danny Saleeb, after an original app by Martin Suckling.</p>
-		          <p>Commissioned by Clement Power with funding from the mdw - University of Music and Performing Arts Vienna.</p>
-		        </div>
-		
-		        <div style={{ marginTop: '20px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
-		          <ul className={styles.infoList}>
-		            <li>Select a fundamental with the piano</li>
-		            <li>Choose partials in the grid</li>
-		            <li>Display enharmonic by clicking a note</li>
-		          </ul>
-		        </div>
-		      </div>
-		      <button className={styles.closeButton} onClick={() => setShowInfo(false)}>Close</button>
-		    </div>
-		  </div>
-		)}
+      {showInfo && (
+        <div className={styles.modalOverlay} onClick={() => setShowInfo(false)}>
+          <div className={`${styles.panel} ${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalBody}>
+              {/* Fixed: Replaced span with div to allow nested <p> tags */}
+              <div style={{ fontStyle: "italic" }}>
+                <p><strong>Just Tune</strong>, 2026 - version 2.0</p>
+                <p>by Fintan O'Hare & Danny Saleeb, after an original app by Martin Suckling.</p>
+                <p>Commissioned by Clement Power with funding from the mdw - University of Music and Performing Arts Vienna.</p>
+              </div>
+              
+              <div style={{ marginTop: '20px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
+                <ul className={styles.infoList}>
+                  <li>Select a fundamental with the piano</li>
+                  <li>Choose partials in the grid</li>
+                  <li>Display enharmonic by clicking a note</li>
+                </ul>
+              </div>
+            </div>
+            <button className={styles.closeButton} onClick={() => setShowInfo(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
